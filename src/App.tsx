@@ -1,30 +1,27 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, { FC } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen } from './components/HomeScreen/HomeScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import { QuestionScreen } from './screens/QuestionScreen';
+import { colors } from './styles/colors';
 
 const Stack = createStackNavigator();
 
 export const App: FC = () => {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="light-content" />
-      <Stack.Navigator headerMode="none">
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <Stack.Navigator>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Welcome' }}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Question"
+          component={QuestionScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
