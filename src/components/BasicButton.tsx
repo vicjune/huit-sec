@@ -2,12 +2,21 @@ import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { colors } from '../styles/colors';
 
+type Size = 'normal' | 'small';
+
 interface ButtonProps {
   text: string;
   onPress?: () => void;
+  size?: Size;
 }
 
-export const BasicButton: FC<ButtonProps> = ({ text, onPress }) => {
+export const BasicButton: FC<ButtonProps> = ({
+  text,
+  onPress,
+  size = 'normal',
+}) => {
+  const styles = getStyles(size);
+
   return (
     <Pressable
       style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
@@ -22,22 +31,24 @@ export const BasicButton: FC<ButtonProps> = ({ text, onPress }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    borderColor: colors.basicButton,
-    borderWidth: 1,
-    padding: 15,
-  },
-  buttonPressed: {
-    backgroundColor: colors.basicButton,
-  },
-  buttonText: {
-    color: 'white',
-    textTransform: 'uppercase',
-    fontSize: 20,
-  },
-  buttonTextPressed: {
-    color: colors.background,
-  },
-});
+const getStyles = (size: Size) =>
+  StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      borderColor: colors.basicButton,
+      borderWidth: 1,
+      padding: size === 'normal' ? 15 : 12,
+      alignSelf: 'center',
+    },
+    buttonPressed: {
+      backgroundColor: colors.basicButton,
+    },
+    buttonText: {
+      color: 'white',
+      textTransform: 'uppercase',
+      fontSize: size === 'normal' ? 20 : 16,
+    },
+    buttonTextPressed: {
+      color: colors.background,
+    },
+  });

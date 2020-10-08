@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { HomeScreen } from './screens/HomeScreen';
 import { QuestionScreen } from './screens/QuestionScreen';
 import { colors } from './styles/colors';
+import { SwitchPlayerScreen } from './screens/SwitchPlayerScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,11 @@ export const App: FC = () => {
         <Stack.Screen
           name="Question"
           component={QuestionScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SwitchPlayer"
+          component={SwitchPlayerScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

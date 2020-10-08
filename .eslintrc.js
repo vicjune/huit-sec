@@ -13,7 +13,7 @@ module.exports = {
     'prettier/react',
     'prettier/@typescript-eslint',
   ],
-  ignorePatterns: ['node_modules/'],
+  ignorePatterns: ['node_modules/', 'scripts/'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'import', 'react'],
   env: {
@@ -91,6 +91,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off', // Some functions needs to be empty () => {}
     '@typescript-eslint/member-delimiter-style': 'off', // Handled by prettier
     '@typescript-eslint/explicit-module-boundary-types': 'off', // Not requiring return type on exported functions
+    '@typescript-eslint/ban-ts-comment': 'off',
 
     // Overrides plugin:import/errors and plugin:import/warnings
     'import/no-unresolved': 'off', // Handled by typescript

@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build-questions": "ts-node ./scripts/buildQuestions.ts"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
@@ -42,7 +43,8 @@
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
     "react-test-renderer": "16.13.1",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "uuid": "^8.3.1"
   },
   "husky": {
     "hooks": {

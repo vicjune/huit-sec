@@ -8,7 +8,7 @@ export const QuestionScreen: FC = () => {
 
   return (
     <ScreenWrapper>
-      <BasicButton text="Back" onPress={() => navigate('Home')} />
+      <BasicButton text="Back" onPress={() => navigate('SwitchPlayer')} />
     </ScreenWrapper>
   );
 };
