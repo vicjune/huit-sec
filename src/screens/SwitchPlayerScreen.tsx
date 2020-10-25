@@ -1,37 +1,73 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
+import Animated, { Easing } from 'react-native-reanimated';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
-interface SwitchPlayerScreenProps {}
+const BUTTON_TIMEOUT = 3000; // 3s
 
-export const SwitchPlayerScreen: FC<SwitchPlayerScreenProps> = ({}) => {
+export const SwitchPlayerScreen: FC = () => {
   const navigate = usePreventNavigation();
+  const [displayButton, setDisplayButton] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const styles = getStyles();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDisplayButton(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.ease,
+      }).start();
+    }, BUTTON_TIMEOUT);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [fadeAnim]);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
       <Text style={styles.mainText}>Passez le téléphone au joueur suivant</Text>
-      <BasicButton
-        text="Aller à la question"
-        onPress={() => navigate('Question')}
-        size="small"
-      />
+      <Animated.View
+        style={{
+          ...styles.buttonWrapper,
+          opacity: fadeAnim,
+        }}
+      >
+        <BasicButton
+          disabled={!displayButton}
+          text="C'est fait"
+          onPress={() => navigate('Question')}
+          size="small"
+        />
+      </Animated.View>
     </ScreenWrapper>
   );
 };
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    justifyContent: 'space-around',
-    paddingLeft: 30,
-    paddingRight: 30,
-  },
-  mainText: {
-    color: colors.text,
-    fontSize: 30,
-    textAlign: 'center',
-  },
-});
+const getStyles = () =>
+  StyleSheet.create({
+    wrapper: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingLeft: 30,
+      paddingRight: 30,
+    },
+    mainText: {
+      color: colors.text,
+      fontSize: 30,
+      textAlign: 'center',
+      opacity: 0.5,
+    },
+    buttonWrapper: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });

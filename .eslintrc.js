@@ -113,6 +113,8 @@ module.exports = {
       rules: {
         'no-unused-vars': 'off', // Replaced by @typescript-eslint/no-unused-vars
         '@typescript-eslint/no-unused-vars': ['warn', { args: 'none' }], // Replaces no-unused-vars
+        'no-shadow': 'off', // Replaced by @typescript-eslint/no-shadow
+        '@typescript-eslint/no-shadow': ['warn'], // Replaces no-shadow
       },
     },
   ],

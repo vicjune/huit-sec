@@ -1,3 +1,5 @@
+import { BundleId, Question } from '../src/types/Question';
+
 // @ts-ignore
 const fs = require('fs');
 const { v4: genUuid } = require('uuid');
@@ -21,19 +23,30 @@ const writeFile = (path: string, content: any) => {
   }
 };
 
-const rawQuestions: string[] = readFile(rawQuestionsFile) || [];
-const existingQuestions: { id: string; text: string }[] =
-  readFile(parsedQuestionsFile) || [];
+const getBundle = (questionNumber: number) => {
+  if (questionNumber <= 100) return BundleId.BASE;
+  if (questionNumber <= 200) return BundleId.BUNDLE_1;
+  if (questionNumber <= 300) return BundleId.BUNDLE_2;
+  return BundleId.BUNDLE_3;
+};
 
-const parsedQuestions = rawQuestions
+const rawQuestions: string[] = readFile(rawQuestionsFile) || [];
+const existingQuestions: Question[] = readFile(parsedQuestionsFile) || [];
+
+const parsedQuestions: Question[] = rawQuestions
   .filter(
     (question) => !existingQuestions.find(({ text }) => text === question),
   )
-  .map((question, i) => ({
-    number: i + existingQuestions.length,
-    id: genUuid(),
-    text: question,
-  }));
+  .map((question, i) => {
+    const number = i + existingQuestions.length + 1;
+
+    return {
+      number,
+      id: genUuid(),
+      text: question,
+      bundle: getBundle(number),
+    };
+  });
 
 const mergedQuestions = [...existingQuestions, ...parsedQuestions];
 

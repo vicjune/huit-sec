@@ -8,12 +8,14 @@ interface ButtonProps {
   text: string;
   onPress?: () => void;
   size?: Size;
+  disabled?: boolean;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
   text,
   onPress,
   size = 'normal',
+  disabled,
 }) => {
   const styles = getStyles(size);
 
@@ -21,6 +23,7 @@ export const BasicButton: FC<ButtonProps> = ({
     <Pressable
       style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
       onPress={onPress}
+      disabled={disabled}
     >
       {({ pressed }) => (
         <Text style={[styles.buttonText, pressed && styles.buttonTextPressed]}>
