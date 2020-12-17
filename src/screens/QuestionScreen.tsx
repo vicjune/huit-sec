@@ -62,9 +62,7 @@ export const QuestionScreen: FC = () => {
       </View>
       <BasicButton
         style={styles.menuButton}
-        text="menu"
-        round
-        size="small"
+        icon="bars"
         onPress={menuButtonPressed}
       />
     </ScreenWrapper>
@@ -75,7 +73,7 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 60,
+    paddingTop: 70,
     paddingBottom: 40,
   },
   questionText: {
@@ -92,9 +90,12 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
   menuButton: {
+    opacity: 0.5,
     position: 'absolute',
     bottom: 20,
     left: 20,
+    borderWidth: 0,
+    borderRadius: 100,
   },
   menuButtonText: {
     color: colors.text,

@@ -1,16 +1,17 @@
 import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
 
 type Size = 'normal' | 'small';
 
 interface ButtonProps {
-  text: string;
+  text?: string;
   onPress?: () => void;
   size?: Size;
   disabled?: boolean;
-  round?: boolean;
   style?: Record<string, unknown>;
+  icon?: string;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
@@ -18,10 +19,10 @@ export const BasicButton: FC<ButtonProps> = ({
   onPress,
   size = 'normal',
   disabled,
-  round,
   style,
+  icon,
 }) => {
-  const styles = getStyles(size, round);
+  const styles = getStyles(size, !text);
 
   return (
     <Pressable
@@ -33,23 +34,40 @@ export const BasicButton: FC<ButtonProps> = ({
       disabled={disabled}
     >
       {({ pressed }) => (
-        <Text style={[styles.buttonText, pressed && styles.buttonTextPressed]}>
-          {text}
-        </Text>
+        <>
+          {icon && (
+            <Icon
+              name={icon}
+              size={size === 'normal' ? 24 : 16}
+              color={pressed ? colors.background : colors.basicButton}
+              style={styles.icon}
+            />
+          )}
+          {text && (
+            <Text
+              style={[styles.buttonText, pressed && styles.buttonTextPressed]}
+            >
+              {text}
+            </Text>
+          )}
+        </>
       )}
     </Pressable>
   );
 };
 
-const getStyles = (size: Size, round?: boolean) =>
+const getStyles = (size: Size, noText: boolean) =>
   StyleSheet.create({
     button: {
       alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
       borderColor: colors.basicButton,
       borderWidth: 1,
       padding: size === 'normal' ? 15 : 12,
       alignSelf: 'center',
-      borderRadius: round ? 100 : 0,
+      width: noText ? (size === 'normal' ? 50 : 40) : undefined,
+      height: noText ? (size === 'normal' ? 50 : 40) : undefined,
     },
     buttonPressed: {
       backgroundColor: colors.basicButton,
@@ -61,5 +79,8 @@ const getStyles = (size: Size, round?: boolean) =>
     },
     buttonTextPressed: {
       color: colors.background,
+    },
+    icon: {
+      marginRight: !noText ? 10 : 0,
     },
   });

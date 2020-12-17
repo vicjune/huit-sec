@@ -40,6 +40,7 @@ export const SwitchPlayerScreen: FC = () => {
         <BasicButton
           disabled={!displayButton}
           text="C'est fait"
+          icon="check"
           onPress={() => navigate('Question')}
           size="small"
         />
@@ -61,7 +62,6 @@ const getStyles = () =>
       color: colors.text,
       fontSize: 30,
       textAlign: 'center',
-      opacity: 0.5,
       marginTop: 'auto',
       marginBottom: 'auto',
     },
