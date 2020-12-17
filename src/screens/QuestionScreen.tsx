@@ -25,41 +25,47 @@ export const QuestionScreen: FC = () => {
     return unsubscribe;
   }, [navigation, setQuestion, getRandomQuestion]);
 
+  const menuButtonPressed = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['Quitter', 'Passer la question', 'Annuler'],
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            navigate('Home');
+            break;
+          case 1:
+            setQuestion(getRandomQuestion());
+            break;
+        }
+      },
+    );
+  };
+
   return (
     <ScreenWrapper style={styles.wrapper}>
       <View>
         <Text style={styles.questionNbr}>
           #{leadingZeros(question?.number)}
         </Text>
-        <Text style={styles.mainText}>{question?.text}</Text>
+        <Text style={styles.questionText}>{question?.text}</Text>
+      </View>
+      <View style={styles.mainAction}>
+        <BasicButton
+          text="Prochain joueur"
+          onPress={() => navigate('SwitchPlayer')}
+          size="small"
+        />
       </View>
       <BasicButton
-        text="Prochain joueur"
-        onPress={() => navigate('SwitchPlayer')}
+        style={styles.menuButton}
+        text="menu"
+        round
         size="small"
-      />
-      <BasicButton
-        text="modal"
-        onPress={() =>
-          showActionSheetWithOptions(
-            {
-              options: ['Passer la question', 'Quitter'],
-              cancelButtonIndex: 2,
-              destructiveButtonIndex: 1,
-            },
-            (buttonIndex) => {
-              switch (buttonIndex) {
-                case 0:
-                  setQuestion(getRandomQuestion());
-                  break;
-                case 1:
-                  navigate('Home');
-                  break;
-              }
-            },
-          )
-        }
-        size="small"
+        onPress={menuButtonPressed}
       />
     </ScreenWrapper>
   );
@@ -67,14 +73,12 @@ export const QuestionScreen: FC = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    justifyContent: 'space-between',
     paddingLeft: 30,
     paddingRight: 30,
     paddingTop: 60,
     paddingBottom: 40,
   },
-  mainText: {
+  questionText: {
     color: colors.text,
     fontSize: 26,
   },
@@ -82,5 +86,17 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 18,
     opacity: 0.5,
+  },
+  mainAction: {
+    marginBottom: 'auto',
+    marginTop: 'auto',
+  },
+  menuButton: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+  },
+  menuButtonText: {
+    color: colors.text,
   },
 });

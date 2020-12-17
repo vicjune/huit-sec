@@ -9,6 +9,8 @@ interface ButtonProps {
   onPress?: () => void;
   size?: Size;
   disabled?: boolean;
+  round?: boolean;
+  style?: Record<string, unknown>;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
@@ -16,12 +18,17 @@ export const BasicButton: FC<ButtonProps> = ({
   onPress,
   size = 'normal',
   disabled,
+  round,
+  style,
 }) => {
-  const styles = getStyles(size);
+  const styles = getStyles(size, round);
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+      style={({ pressed }) => [
+        { ...styles.button, ...style },
+        pressed && styles.buttonPressed,
+      ]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -34,7 +41,7 @@ export const BasicButton: FC<ButtonProps> = ({
   );
 };
 
-const getStyles = (size: Size) =>
+const getStyles = (size: Size, round?: boolean) =>
   StyleSheet.create({
     button: {
       alignItems: 'center',
@@ -42,6 +49,7 @@ const getStyles = (size: Size) =>
       borderWidth: 1,
       padding: size === 'normal' ? 15 : 12,
       alignSelf: 'center',
+      borderRadius: round ? 100 : 0,
     },
     buttonPressed: {
       backgroundColor: colors.basicButton,

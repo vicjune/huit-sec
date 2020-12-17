@@ -51,22 +51,21 @@ export const SwitchPlayerScreen: FC = () => {
 const getStyles = () =>
   StyleSheet.create({
     wrapper: {
-      flex: 1,
-      justifyContent: 'center',
       paddingLeft: 30,
       paddingRight: 30,
+      alignItems: 'center',
+      flexDirection: 'column',
+      paddingBottom: 40,
     },
     mainText: {
       color: colors.text,
       fontSize: 30,
       textAlign: 'center',
       opacity: 0.5,
+      marginTop: 'auto',
+      marginBottom: 'auto',
     },
     buttonWrapper: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 40,
       justifyContent: 'center',
       alignItems: 'center',
     },

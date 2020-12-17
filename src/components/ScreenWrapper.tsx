@@ -10,7 +10,9 @@ interface ScreenWrapperProps {
 export const ScreenWrapper: FC<ScreenWrapperProps> = ({ children, style }) => {
   return (
     <View style={styles.wrapper}>
-      <SafeAreaView style={style}>{children}</SafeAreaView>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={{ ...style, ...styles.inside }}>{children}</View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -18,6 +20,13 @@ export const ScreenWrapper: FC<ScreenWrapperProps> = ({ children, style }) => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: colors.background,
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  inside: {
+    position: 'relative',
     flex: 1,
   },
 });
