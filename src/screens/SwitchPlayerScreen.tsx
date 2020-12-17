@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { colors } from '../styles/colors';
@@ -30,6 +31,12 @@ export const SwitchPlayerScreen: FC = () => {
 
   return (
     <ScreenWrapper style={styles.wrapper}>
+      <Icon
+        name="forward"
+        size={60}
+        color={colors.basicButton}
+        style={styles.icon}
+      />
       <Text style={styles.mainText}>Passez le téléphone au joueur suivant</Text>
       <Animated.View
         style={{
@@ -58,11 +65,15 @@ const getStyles = () =>
       flexDirection: 'column',
       paddingBottom: 40,
     },
+    icon: {
+      marginTop: 'auto',
+      marginBottom: 40,
+      opacity: 0.8,
+    },
     mainText: {
       color: colors.text,
       fontSize: 30,
       textAlign: 'center',
-      marginTop: 'auto',
       marginBottom: 'auto',
     },
     buttonWrapper: {

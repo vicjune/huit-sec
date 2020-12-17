@@ -1,7 +1,8 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Animated, { Easing } from 'react-native-reanimated';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { colors } from '../styles/colors';
@@ -10,20 +11,38 @@ import { leadingZeros } from '../utils/leadingZeros';
 import { useGetRandomQuestion } from '../utils/useGetRandomQuestion';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
+const ACTION_TIMEOUT = 2000; // 2s
+
 export const QuestionScreen: FC = () => {
   const navigation = useNavigation();
   const navigate = usePreventNavigation();
   const getRandomQuestion = useGetRandomQuestion();
   const [question, setQuestion] = useState<Question | null>(null);
   const { showActionSheetWithOptions } = useActionSheet();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubFocus = navigation.addListener('focus', () => {
       setQuestion(getRandomQuestion());
+
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          easing: Easing.ease,
+        }).start();
+      }, ACTION_TIMEOUT);
     });
 
-    return unsubscribe;
-  }, [navigation, setQuestion, getRandomQuestion]);
+    const unsubBlur = navigation.addListener('blur', () => {
+      fadeAnim.setValue(0);
+    });
+
+    return () => {
+      unsubFocus();
+      unsubBlur();
+    };
+  }, [navigation, setQuestion, getRandomQuestion, fadeAnim]);
 
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
@@ -53,13 +72,18 @@ export const QuestionScreen: FC = () => {
         </Text>
         <Text style={styles.questionText}>{question?.text}</Text>
       </View>
-      <View style={styles.mainAction}>
+      <Animated.View
+        style={{
+          ...styles.mainAction,
+          opacity: fadeAnim,
+        }}
+      >
         <BasicButton
           text="Prochain joueur"
           onPress={() => navigate('SwitchPlayer')}
           size="small"
         />
-      </View>
+      </Animated.View>
       <BasicButton
         style={styles.menuButton}
         icon="bars"
