@@ -66,8 +66,8 @@ const getStyles = (size: Size, noText: boolean) =>
       borderWidth: 1,
       padding: size === 'normal' ? 15 : 12,
       alignSelf: 'center',
-      width: noText ? (size === 'normal' ? 50 : 40) : undefined,
-      height: noText ? (size === 'normal' ? 50 : 40) : undefined,
+      width: noText ? (size === 'normal' ? 60 : 40) : undefined,
+      height: noText ? (size === 'normal' ? 60 : 40) : undefined,
     },
     buttonPressed: {
       backgroundColor: colors.basicButton,

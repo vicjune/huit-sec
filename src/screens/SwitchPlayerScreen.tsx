@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
@@ -10,24 +11,33 @@ import { usePreventNavigation } from '../utils/usePreventNavigation';
 const BUTTON_TIMEOUT = 3000; // 3s
 
 export const SwitchPlayerScreen: FC = () => {
+  const navigation = useNavigation();
   const navigate = usePreventNavigation();
   const [displayButton, setDisplayButton] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDisplayButton(true);
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.ease,
-      }).start();
-    }, BUTTON_TIMEOUT);
+    const unsubFocus = navigation.addListener('focus', () => {
+      setTimeout(() => {
+        setDisplayButton(true);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          easing: Easing.ease,
+        }).start();
+      }, BUTTON_TIMEOUT);
+    });
+
+    const unsubBlur = navigation.addListener('blur', () => {
+      fadeAnim.setValue(0);
+    });
+
     return () => {
-      clearTimeout(timeout);
+      unsubFocus();
+      unsubBlur();
     };
-  }, [fadeAnim]);
+  }, [navigation, fadeAnim]);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -37,7 +47,8 @@ export const SwitchPlayerScreen: FC = () => {
         color={colors.basicButton}
         style={styles.icon}
       />
-      <Text style={styles.mainText}>Passez le téléphone au joueur suivant</Text>
+      <Text style={styles.label}>Passe le téléphone à</Text>
+      <Text style={styles.name}>Victor</Text>
       <Animated.View
         style={{
           ...styles.buttonWrapper,
@@ -67,12 +78,19 @@ const getStyles = () =>
     },
     icon: {
       marginTop: 'auto',
-      marginBottom: 40,
+      marginBottom: 50,
       opacity: 0.8,
     },
-    mainText: {
+    label: {
       color: colors.text,
       fontSize: 30,
+      textAlign: 'center',
+      marginBottom: 10,
+      opacity: 0.8,
+    },
+    name: {
+      color: colors.text,
+      fontSize: 40,
       textAlign: 'center',
       marginBottom: 'auto',
     },

@@ -11,7 +11,7 @@ export const HomeScreen: FC = () => {
     <ScreenWrapper style={styles.container}>
       <BasicButton
         text="Nouvelle partie"
-        onPress={() => navigation.navigate('Question')}
+        onPress={() => navigation.navigate('SwitchPlayer')}
       />
     </ScreenWrapper>
   );
