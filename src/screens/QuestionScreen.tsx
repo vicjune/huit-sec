@@ -4,6 +4,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as Icon } from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
+import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
 import { FullscreenMessage } from '../components/FullscreenMessage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -15,6 +16,7 @@ import { usePreventNavigation } from '../utils/usePreventNavigation';
 
 const DEFAULT_TIMER = 8000; // 8s
 const INTERVAL = 1000; // 1s
+const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
 
 export const QuestionScreen: FC = () => {
   const navigation = useNavigation();
@@ -25,12 +27,14 @@ export const QuestionScreen: FC = () => {
   const [timerRunning, setTimerRunning] = useState(false);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const [verdict, setVerdict] = useState(false);
+  const [playerAnsweringScreen, setPlayerAnsweringScreen] = useState(false);
   const [timeoutScreen, setTimeoutScreen] = useState(false);
   const [validScreen, setValidScreen] = useState(false);
   const [invalidScreen, setInvalidScreen] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const overlay = timeoutScreen || validScreen || invalidScreen;
+  const overlay =
+    playerAnsweringScreen || timeoutScreen || validScreen || invalidScreen;
 
   const startTimer = useCallback(() => {
     setTimerRunning(true);
@@ -49,6 +53,7 @@ export const QuestionScreen: FC = () => {
   const resetScreen = useCallback(() => {
     resetTimer();
     setVerdict(false);
+    setPlayerAnsweringScreen(false);
     setTimeoutScreen(false);
     setValidScreen(false);
     setInvalidScreen(false);
@@ -64,6 +69,7 @@ export const QuestionScreen: FC = () => {
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
       setQuestion(getRandomQuestion());
+      setPlayerAnsweringScreen(true);
     });
 
     const unsubBlur = navigation.addListener('blur', () => {
@@ -208,6 +214,17 @@ export const QuestionScreen: FC = () => {
           onPress={menuButtonPressed}
         />
       </ScreenWrapper>
+      {playerAnsweringScreen && (
+        <FullscreenMessage
+          text="Question pour Sophie"
+          icon="chatbox-ellipses"
+          IconElem={IonIcon}
+          closeScreen={() => {
+            setPlayerAnsweringScreen(false);
+          }}
+          duration={PLAYER_ANSWERING_DURATION}
+        />
+      )}
       {timeoutScreen && (
         <FullscreenMessage
           text="Temps écoulé!"

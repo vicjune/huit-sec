@@ -12,6 +12,7 @@ interface FullscreenMessageProps {
   text?: string;
   icon?: string;
   IconElem?: ElementType;
+  duration?: number;
 }
 
 export const FullscreenMessage: FC<FullscreenMessageProps> = ({
@@ -20,6 +21,7 @@ export const FullscreenMessage: FC<FullscreenMessageProps> = ({
   text,
   icon,
   IconElem = FAIcon,
+  duration = SCREEN_DURATION,
 }) => {
   const styles = getStyles();
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -37,12 +39,12 @@ export const FullscreenMessage: FC<FullscreenMessageProps> = ({
         duration: 100,
         easing: Easing.ease,
       }).start(closeScreen);
-    }, SCREEN_DURATION);
+    }, duration);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [fadeAnim, closeScreen]);
+  }, [fadeAnim, closeScreen, duration]);
 
   return (
     <Animated.View style={{ ...styles.wrapper, opacity: fadeAnim, ...style }}>
@@ -70,6 +72,7 @@ const getStyles = () =>
       bottom: 0,
       left: 0,
       right: 0,
+      padding: 20,
     },
     icon: {
       marginBottom: 40,
@@ -78,5 +81,6 @@ const getStyles = () =>
     text: {
       fontSize: 40,
       color: colors.text,
+      textAlign: 'center',
     },
   });
