@@ -5,6 +5,7 @@ import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { Sound, useSound } from '../components/Sound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
@@ -16,6 +17,7 @@ export const SwitchPlayerScreen: FC = () => {
   const [displayButton, setDisplayButton] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
+  const { playSound } = useSound();
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
@@ -59,7 +61,10 @@ export const SwitchPlayerScreen: FC = () => {
           disabled={!displayButton}
           text="C'est fait"
           icon="check"
-          onPress={() => navigate('Question')}
+          onPress={() => {
+            playSound(Sound.CLICK);
+            navigate('Question');
+          }}
           size="small"
         />
       </Animated.View>

@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from './Overlay';
+import { useSound, Sound } from './Sound';
 
 const DEFAULT_TIMER = 8000; // 8s
 const INTERVAL = 1000; // 1s
@@ -22,14 +23,7 @@ export const Timer: FC<TimerProps> = ({
   const [timer, setTimer] = useState<number>(DEFAULT_TIMER);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const { displayOverlay } = useOverlay();
-
-  const startTimer = useCallback(() => {
-    setTimerRunning(true);
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - INTERVAL);
-    }, INTERVAL);
-    setIntervalRef(interval);
-  }, [setTimerRunning, setTimer, setIntervalRef]);
+  const { playSound } = useSound();
 
   useEffect(() => {
     if (!timerRunning) {
@@ -40,6 +34,7 @@ export const Timer: FC<TimerProps> = ({
 
   useEffect(() => {
     if (timer <= 0) {
+      playSound(Sound.TIMEUP);
       displayOverlay({
         text: 'Temps écoulé!',
         icon: 'stopwatch',
@@ -47,7 +42,20 @@ export const Timer: FC<TimerProps> = ({
       }).then(onComplete);
       setTimerRunning(false);
     }
-  }, [timer, displayOverlay, setTimerRunning, onComplete]);
+  }, [timer, displayOverlay, setTimerRunning, onComplete, playSound]);
+
+  const startTimer = useCallback(() => {
+    playSound(Sound.BLIP);
+    setTimerRunning(true);
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        const newTimer = prev - INTERVAL;
+        if (newTimer > 0) playSound(Sound.TICK);
+        return newTimer;
+      });
+    }, INTERVAL);
+    setIntervalRef(interval);
+  }, [setTimerRunning, setTimer, setIntervalRef, playSound]);
 
   if (timerRunning) {
     return <Text style={styles.timer}>{Math.floor(timer / 1000)}</Text>;

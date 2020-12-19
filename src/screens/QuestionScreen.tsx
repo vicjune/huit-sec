@@ -7,6 +7,7 @@ import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
 import { useOverlay } from '../components/Overlay';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { Sound, useSound } from '../components/Sound';
 import { Timer } from '../components/Timer';
 import { Verdict } from '../components/Verdict';
 import { colors } from '../styles/colors';
@@ -26,6 +27,7 @@ export const QuestionScreen: FC = () => {
   const [verdict, setVerdict] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
+  const { playSound } = useSound();
 
   const resetScreen = useCallback(() => {
     setTimerRunning(false);
@@ -106,7 +108,10 @@ export const QuestionScreen: FC = () => {
         </View>
         {(timerRunning || verdict) && (
           <Pressable
-            onPress={resetScreen}
+            onPress={() => {
+              playSound(Sound.CLICK);
+              resetScreen();
+            }}
             style={({ pressed }) => [
               styles.resetButton,
               pressed && styles.resetButtonPressed,

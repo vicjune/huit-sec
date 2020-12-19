@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
 import { useOverlay } from './Overlay';
+import { Sound, useSound } from './Sound';
 
 interface VerdictProps {
   onValid: () => void;
@@ -12,6 +13,7 @@ interface VerdictProps {
 export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
   const styles = getStyles();
   const { displayOverlay } = useOverlay();
+  const { playSound } = useSound();
 
   return (
     <>
@@ -19,6 +21,7 @@ export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
       <View style={styles.verdict}>
         <Pressable
           onPress={async () => {
+            playSound(Sound.WRONG);
             await displayOverlay({
               text: "C'est refusé!",
               icon: 'times',
@@ -45,6 +48,7 @@ export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
         </Pressable>
         <Pressable
           onPress={async () => {
+            playSound(Sound.CORRECT);
             await displayOverlay({
               text: "C'est validé!",
               icon: 'check',

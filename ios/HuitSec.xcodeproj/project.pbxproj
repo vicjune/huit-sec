@@ -19,6 +19,12 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* HuitSecTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HuitSecTests.m */; };
 		33AD160F72E047869C70FC14 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9268525A466D4D8E93786840 /* MaterialIcons.ttf */; };
+		44FD29A1258E4AB700604050 /* tick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29A0258E4AB700604050 /* tick.mp3 */; };
+		44FD29E1258E526D00604050 /* bad_buzzer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29E0258E526D00604050 /* bad_buzzer.mp3 */; };
+		44FD29E7258E593E00604050 /* correct.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29E6258E593E00604050 /* correct.mp3 */; };
+		44FD29ED258E5F1E00604050 /* blip.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29EC258E5F1E00604050 /* blip.mp3 */; };
+		44FD29F4258E63E100604050 /* click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29F2258E63E100604050 /* click.mp3 */; };
+		44FD29F5258E63E100604050 /* timesup_buzzer.wav in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29F3258E63E100604050 /* timesup_buzzer.wav */; };
 		514BB53B689E4604A0167762 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 090DEC8A10C64DB795C2DF69 /* Zocial.ttf */; };
 		572933E6202146DBAE91D1FF /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4523E8A5DC8A47C0ABA26BF1 /* Ionicons.ttf */; };
 		5E284C4D35EB4E9B96E7017F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F26B2AD96FA4AD292EE8C7E /* EvilIcons.ttf */; };
@@ -72,6 +78,12 @@
 		2D02E4901E0B4A5D006451C7 /* HuitSec-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HuitSec-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		309C827ED61BAC2563C0DDC2 /* Pods-HuitSec-HuitSecTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec-HuitSecTests.release.xcconfig"; path = "Target Support Files/Pods-HuitSec-HuitSecTests/Pods-HuitSec-HuitSecTests.release.xcconfig"; sourceTree = "<group>"; };
 		43AD329074974DBCBAC0296C /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		44FD29A0258E4AB700604050 /* tick.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = tick.mp3; path = ../../android/app/src/main/res/raw/tick.mp3; sourceTree = "<group>"; };
+		44FD29E0258E526D00604050 /* bad_buzzer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bad_buzzer.mp3; path = ../../android/app/src/main/res/raw/bad_buzzer.mp3; sourceTree = "<group>"; };
+		44FD29E6258E593E00604050 /* correct.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = correct.mp3; path = ../../android/app/src/main/res/raw/correct.mp3; sourceTree = "<group>"; };
+		44FD29EC258E5F1E00604050 /* blip.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = blip.mp3; path = ../../android/app/src/main/res/raw/blip.mp3; sourceTree = "<group>"; };
+		44FD29F2258E63E100604050 /* click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = click.mp3; path = ../../android/app/src/main/res/raw/click.mp3; sourceTree = "<group>"; };
+		44FD29F3258E63E100604050 /* timesup_buzzer.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = timesup_buzzer.wav; path = ../../android/app/src/main/res/raw/timesup_buzzer.wav; sourceTree = "<group>"; };
 		4523E8A5DC8A47C0ABA26BF1 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		4BF44FD18B444C8994EA2129 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		5DAA48C1067BEC8B372C936F /* libPods-HuitSec-HuitSecTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HuitSec-HuitSecTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,6 +216,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		44FD299F258E4A9100604050 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				44FD29F2258E63E100604050 /* click.mp3 */,
+				44FD29F3258E63E100604050 /* timesup_buzzer.wav */,
+				44FD29EC258E5F1E00604050 /* blip.mp3 */,
+				44FD29E6258E593E00604050 /* correct.mp3 */,
+				44FD29E0258E526D00604050 /* bad_buzzer.mp3 */,
+				44FD29A0258E4AB700604050 /* tick.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +239,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				44FD299F258E4A9100604050 /* Sounds */,
 				13B07FAE1A68108700A75B9A /* HuitSec */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* HuitSecTests */,
@@ -400,12 +426,17 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				989372A4303F4170B73780F1 /* AntDesign.ttf in Resources */,
 				9F406DA08165417BAE2513A5 /* Entypo.ttf in Resources */,
+				44FD29E1258E526D00604050 /* bad_buzzer.mp3 in Resources */,
+				44FD29F4258E63E100604050 /* click.mp3 in Resources */,
+				44FD29E7258E593E00604050 /* correct.mp3 in Resources */,
 				5E284C4D35EB4E9B96E7017F /* EvilIcons.ttf in Resources */,
+				44FD29ED258E5F1E00604050 /* blip.mp3 in Resources */,
 				F5CCFD62585C44C885A50A93 /* Feather.ttf in Resources */,
 				CF6A334B57F744AFB72B6249 /* FontAwesome.ttf in Resources */,
 				F3358F5FB99F423AB7ECA472 /* FontAwesome5_Brands.ttf in Resources */,
 				A62B345D198B41108168D3FC /* FontAwesome5_Regular.ttf in Resources */,
 				2457BFD6536941D5A3273CF6 /* FontAwesome5_Solid.ttf in Resources */,
+				44FD29F5258E63E100604050 /* timesup_buzzer.wav in Resources */,
 				69ABD459BAF243A1A524B34D /* Fontisto.ttf in Resources */,
 				695634C105AA49C88B9618BC /* Foundation.ttf in Resources */,
 				572933E6202146DBAE91D1FF /* Ionicons.ttf in Resources */,
@@ -413,6 +444,7 @@
 				33AD160F72E047869C70FC14 /* MaterialIcons.ttf in Resources */,
 				1F7AD0AF79F44D7E9B295722 /* Octicons.ttf in Resources */,
 				D6A7D9B223CA416A9F5097F0 /* SimpleLineIcons.ttf in Resources */,
+				44FD29A1258E4AB700604050 /* tick.mp3 in Resources */,
 				514BB53B689E4604A0167762 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
