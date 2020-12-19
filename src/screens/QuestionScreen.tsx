@@ -2,11 +2,11 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { default as Icon } from 'react-native-vector-icons/Entypo';
+import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
-import { FullscreenMessage } from '../components/FullscreenMessage';
+import { useOverlay } from '../components/Overlay';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { colors } from '../styles/colors';
 import { Question } from '../types/Question';
@@ -27,14 +27,8 @@ export const QuestionScreen: FC = () => {
   const [timerRunning, setTimerRunning] = useState(false);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const [verdict, setVerdict] = useState(false);
-  const [playerAnsweringScreen, setPlayerAnsweringScreen] = useState(false);
-  const [timeoutScreen, setTimeoutScreen] = useState(false);
-  const [validScreen, setValidScreen] = useState(false);
-  const [invalidScreen, setInvalidScreen] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
-
-  const overlay =
-    playerAnsweringScreen || timeoutScreen || validScreen || invalidScreen;
+  const { displayOverlay } = useOverlay();
 
   const startTimer = useCallback(() => {
     setTimerRunning(true);
@@ -53,23 +47,28 @@ export const QuestionScreen: FC = () => {
   const resetScreen = useCallback(() => {
     resetTimer();
     setVerdict(false);
-    setPlayerAnsweringScreen(false);
-    setTimeoutScreen(false);
-    setValidScreen(false);
-    setInvalidScreen(false);
   }, [setVerdict, resetTimer]);
 
   useEffect(() => {
     if (timer <= 0) {
-      setTimeoutScreen(true);
+      displayOverlay({
+        text: 'Temps écoulé!',
+        icon: 'stopwatch',
+        IconElem: EIcon,
+      }).then(() => setVerdict(true));
       resetTimer();
     }
-  }, [timer, resetTimer]);
+  }, [timer, displayOverlay, resetTimer]);
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
       setQuestion(getRandomQuestion());
-      setPlayerAnsweringScreen(true);
+      displayOverlay({
+        text: 'Question pour Sophie',
+        icon: 'chatbox-ellipses',
+        IconElem: IonIcon,
+        duration: PLAYER_ANSWERING_DURATION,
+      });
     });
 
     const unsubBlur = navigation.addListener('blur', () => {
@@ -80,7 +79,7 @@ export const QuestionScreen: FC = () => {
       unsubFocus();
       unsubBlur();
     };
-  }, [navigation, setQuestion, getRandomQuestion, resetScreen]);
+  }, [navigation, setQuestion, getRandomQuestion, resetScreen, displayOverlay]);
 
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
@@ -106,91 +105,109 @@ export const QuestionScreen: FC = () => {
   return (
     <>
       <ScreenWrapper style={styles.wrapper}>
-        <View style={styles.playerAnswering}>
-          <Text style={styles.playerAnsweringLabel}>Pose la question à</Text>
-          <FAIcon name="arrow-right" size={20} color={colors.basicButton} />
-          <Text style={styles.playerAnsweringName}>Sophie</Text>
-        </View>
         <View>
           <Text style={styles.questionNbr}>
             #{leadingZeros(question?.number)}
           </Text>
           <Text style={styles.questionText}>{question?.text}</Text>
         </View>
-        {!overlay && (
-          <View style={styles.mainAction}>
-            {timerRunning && (
-              <Text style={styles.timer}>{Math.floor(timer / 1000)}</Text>
-            )}
-            {!timerRunning && !verdict && (
-              <>
+        {!verdict && (
+          <View style={styles.playerAnswering}>
+            <Text style={styles.playerAnsweringLabel}>Pose la question à</Text>
+            <FAIcon name="arrow-right" size={20} color={colors.basicButton} />
+            <Text style={styles.playerAnsweringName}>Sophie</Text>
+          </View>
+        )}
+        <View style={styles.mainAction}>
+          {timerRunning && (
+            <Text style={styles.timer}>{Math.floor(timer / 1000)}</Text>
+          )}
+          {!timerRunning && !verdict && (
+            <>
+              <Pressable
+                onPress={startTimer}
+                style={({ pressed }) => [
+                  styles.timerButton,
+                  pressed && styles.timerButtonPressed,
+                ]}
+              >
+                {({ pressed }) => (
+                  <EIcon
+                    name="controller-play"
+                    size={60}
+                    color={pressed ? colors.background : colors.basicButton}
+                    style={styles.timerButtonIcon}
+                  />
+                )}
+              </Pressable>
+              <Text style={styles.timerButtonText}>
+                {DEFAULT_TIMER / 1000}s
+              </Text>
+            </>
+          )}
+          {verdict && (
+            <>
+              <Text style={styles.verdictText}>
+                Tu valides la réponse de Sophie ?
+              </Text>
+              <View style={styles.verdict}>
                 <Pressable
-                  onPress={startTimer}
+                  onPress={async () => {
+                    await displayOverlay({
+                      text: "C'est refusé!",
+                      icon: 'times',
+                      IconElem: FAIcon,
+                      style: styles.invalidScreen,
+                    });
+                    navigate('SwitchPlayer');
+                  }}
                   style={({ pressed }) => [
-                    styles.timerButton,
-                    pressed && styles.timerButtonPressed,
+                    styles.verdictButton,
+                    styles.verdictButtonInvalid,
+                    pressed && styles.verdictButtonInvalidPressed,
                   ]}
                 >
                   {({ pressed }) => (
-                    <Icon
-                      name="controller-play"
-                      size={60}
-                      color={pressed ? colors.background : colors.basicButton}
-                      style={styles.timerButtonIcon}
-                    />
+                    <>
+                      <FAIcon
+                        name="times"
+                        size={70}
+                        color={pressed ? colors.background : colors.invalid}
+                      />
+                    </>
                   )}
                 </Pressable>
-                <Text style={styles.timerButtonText}>8s</Text>
-              </>
-            )}
-            {verdict && (
-              <>
-                <Text style={styles.verdictText}>
-                  Tu valides la réponse de Sophie ?
-                </Text>
-                <View style={styles.verdict}>
-                  <Pressable
-                    onPress={() => setInvalidScreen(true)}
-                    style={({ pressed }) => [
-                      styles.verdictButton,
-                      styles.verdictButtonInvalid,
-                      pressed && styles.verdictButtonInvalidPressed,
-                    ]}
-                  >
-                    {({ pressed }) => (
-                      <>
-                        <FAIcon
-                          name="times"
-                          size={70}
-                          color={pressed ? colors.background : colors.invalid}
-                        />
-                      </>
-                    )}
-                  </Pressable>
-                  <Pressable
-                    onPress={() => setValidScreen(true)}
-                    style={({ pressed }) => [
-                      styles.verdictButton,
-                      styles.verdictButtonValid,
-                      pressed && styles.verdictButtonValidPressed,
-                    ]}
-                  >
-                    {({ pressed }) => (
-                      <>
-                        <FAIcon
-                          name="check"
-                          size={70}
-                          color={pressed ? colors.background : colors.valid}
-                        />
-                      </>
-                    )}
-                  </Pressable>
-                </View>
-              </>
-            )}
-          </View>
-        )}
-        {(timerRunning || verdict) && !overlay && (
+                <Pressable
+                  onPress={async () => {
+                    await displayOverlay({
+                      text: "C'est validé!",
+                      icon: 'check',
+                      IconElem: FAIcon,
+                      style: styles.validScreen,
+                    });
+                    navigate('SwitchPlayer');
+                  }}
+                  style={({ pressed }) => [
+                    styles.verdictButton,
+                    styles.verdictButtonValid,
+                    pressed && styles.verdictButtonValidPressed,
+                  ]}
+                >
+                  {({ pressed }) => (
+                    <>
+                      <FAIcon
+                        name="check"
+                        size={70}
+                        color={pressed ? colors.background : colors.valid}
+                      />
+                    </>
+                  )}
+                </Pressable>
+              </View>
+            </>
+          )}
+        </View>
+        {(timerRunning || verdict) && (
           <Pressable
             onPress={resetScreen}
             style={({ pressed }) => [
@@ -214,50 +231,6 @@ export const QuestionScreen: FC = () => {
           onPress={menuButtonPressed}
         />
       </ScreenWrapper>
-      {playerAnsweringScreen && (
-        <FullscreenMessage
-          text="Question pour Sophie"
-          icon="chatbox-ellipses"
-          IconElem={IonIcon}
-          closeScreen={() => {
-            setPlayerAnsweringScreen(false);
-          }}
-          duration={PLAYER_ANSWERING_DURATION}
-        />
-      )}
-      {timeoutScreen && (
-        <FullscreenMessage
-          text="Temps écoulé!"
-          icon="stopwatch"
-          IconElem={Icon}
-          closeScreen={() => {
-            setTimeoutScreen(false);
-            setVerdict(true);
-          }}
-        />
-      )}
-      {validScreen && (
-        <FullscreenMessage
-          text="C'est validé!"
-          icon="check"
-          closeScreen={() => {
-            setValidScreen(false);
-            navigate('SwitchPlayer');
-          }}
-          style={styles.validScreen}
-        />
-      )}
-      {invalidScreen && (
-        <FullscreenMessage
-          text="C'est refusé!"
-          icon="times"
-          closeScreen={() => {
-            setInvalidScreen(false);
-            navigate('SwitchPlayer');
-          }}
-          style={styles.invalidScreen}
-        />
-      )}
     </>
   );
 };
@@ -266,7 +239,7 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 30,
+    paddingTop: 40,
     paddingBottom: 20,
   },
   questionText: {
@@ -277,7 +250,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 16,
     opacity: 0.5,
-    marginTop: 40,
   },
   mainAction: {
     marginBottom: 'auto',
@@ -298,7 +270,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    opacity: 0.5,
+    opacity: 0.4,
+    marginTop: 60,
   },
   playerAnsweringLabel: {
     color: colors.text,
