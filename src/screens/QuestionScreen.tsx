@@ -2,20 +2,19 @@ import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
 import { useOverlay } from '../components/Overlay';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { Timer } from '../components/Timer';
+import { Verdict } from '../components/Verdict';
 import { colors } from '../styles/colors';
 import { Question } from '../types/Question';
 import { leadingZeros } from '../utils/leadingZeros';
 import { useGetRandomQuestion } from '../utils/useGetRandomQuestion';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
-const DEFAULT_TIMER = 8000; // 8s
-const INTERVAL = 1000; // 1s
 const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
 
 export const QuestionScreen: FC = () => {
@@ -23,42 +22,15 @@ export const QuestionScreen: FC = () => {
   const navigate = usePreventNavigation();
   const getRandomQuestion = useGetRandomQuestion();
   const [question, setQuestion] = useState<Question | null>(null);
-  const [timer, setTimer] = useState<number>(DEFAULT_TIMER);
   const [timerRunning, setTimerRunning] = useState(false);
-  const [intervalRef, setIntervalRef] = useState<any>(null);
   const [verdict, setVerdict] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
 
-  const startTimer = useCallback(() => {
-    setTimerRunning(true);
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - INTERVAL);
-    }, INTERVAL);
-    setIntervalRef(interval);
-  }, [setTimerRunning, setTimer, setIntervalRef]);
-
-  const resetTimer = useCallback(() => {
-    clearInterval(intervalRef);
-    setTimerRunning(false);
-    setTimer(DEFAULT_TIMER);
-  }, [setTimerRunning, setTimer, intervalRef]);
-
   const resetScreen = useCallback(() => {
-    resetTimer();
+    setTimerRunning(false);
     setVerdict(false);
-  }, [setVerdict, resetTimer]);
-
-  useEffect(() => {
-    if (timer <= 0) {
-      displayOverlay({
-        text: 'Temps écoulé!',
-        icon: 'stopwatch',
-        IconElem: EIcon,
-      }).then(() => setVerdict(true));
-      resetTimer();
-    }
-  }, [timer, displayOverlay, resetTimer]);
+  }, [setVerdict, setTimerRunning]);
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
@@ -119,92 +91,17 @@ export const QuestionScreen: FC = () => {
           </View>
         )}
         <View style={styles.mainAction}>
-          {timerRunning && (
-            <Text style={styles.timer}>{Math.floor(timer / 1000)}</Text>
-          )}
-          {!timerRunning && !verdict && (
-            <>
-              <Pressable
-                onPress={startTimer}
-                style={({ pressed }) => [
-                  styles.timerButton,
-                  pressed && styles.timerButtonPressed,
-                ]}
-              >
-                {({ pressed }) => (
-                  <EIcon
-                    name="controller-play"
-                    size={60}
-                    color={pressed ? colors.background : colors.basicButton}
-                    style={styles.timerButtonIcon}
-                  />
-                )}
-              </Pressable>
-              <Text style={styles.timerButtonText}>
-                {DEFAULT_TIMER / 1000}s
-              </Text>
-            </>
-          )}
-          {verdict && (
-            <>
-              <Text style={styles.verdictText}>
-                Tu valides la réponse de Sophie ?
-              </Text>
-              <View style={styles.verdict}>
-                <Pressable
-                  onPress={async () => {
-                    await displayOverlay({
-                      text: "C'est refusé!",
-                      icon: 'times',
-                      IconElem: FAIcon,
-                      style: styles.invalidScreen,
-                    });
-                    navigate('SwitchPlayer');
-                  }}
-                  style={({ pressed }) => [
-                    styles.verdictButton,
-                    styles.verdictButtonInvalid,
-                    pressed && styles.verdictButtonInvalidPressed,
-                  ]}
-                >
-                  {({ pressed }) => (
-                    <>
-                      <FAIcon
-                        name="times"
-                        size={70}
-                        color={pressed ? colors.background : colors.invalid}
-                      />
-                    </>
-                  )}
-                </Pressable>
-                <Pressable
-                  onPress={async () => {
-                    await displayOverlay({
-                      text: "C'est validé!",
-                      icon: 'check',
-                      IconElem: FAIcon,
-                      style: styles.validScreen,
-                    });
-                    navigate('SwitchPlayer');
-                  }}
-                  style={({ pressed }) => [
-                    styles.verdictButton,
-                    styles.verdictButtonValid,
-                    pressed && styles.verdictButtonValidPressed,
-                  ]}
-                >
-                  {({ pressed }) => (
-                    <>
-                      <FAIcon
-                        name="check"
-                        size={70}
-                        color={pressed ? colors.background : colors.valid}
-                      />
-                    </>
-                  )}
-                </Pressable>
-              </View>
-            </>
+          {verdict ? (
+            <Verdict
+              onValid={() => navigate('SwitchPlayer')}
+              onInvalid={() => navigate('SwitchPlayer')}
+            />
+          ) : (
+            <Timer
+              onComplete={() => setVerdict(true)}
+              timerRunning={timerRunning}
+              setTimerRunning={setTimerRunning}
+            />
           )}
         </View>
         {(timerRunning || verdict) && (
@@ -281,35 +178,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 30,
   },
-  timerButton: {
-    alignSelf: 'center',
-    height: 100,
-    width: 100,
-    borderRadius: 100,
-    borderWidth: 5,
-    borderColor: colors.basicButton,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.8,
-  },
-  timerButtonPressed: {
-    backgroundColor: colors.basicButton,
-  },
-  timerButtonIcon: {
-    marginLeft: 5,
-  },
-  timerButtonText: {
-    fontSize: 40,
-    color: colors.text,
-    alignSelf: 'center',
-    opacity: 0.5,
-    marginTop: 10,
-  },
-  timer: {
-    alignSelf: 'center',
-    fontSize: 160,
-    color: colors.text,
-  },
   resetButton: {
     alignSelf: 'center',
     justifyContent: 'center',
@@ -325,43 +193,5 @@ const styles = StyleSheet.create({
   },
   resetButtonIcon: {
     marginLeft: 1,
-  },
-  verdict: {
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-  },
-  verdictButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 120,
-    width: 120,
-    borderRadius: 120,
-    borderWidth: 5,
-  },
-  verdictButtonValid: {
-    borderColor: colors.valid,
-  },
-  verdictButtonInvalid: {
-    borderColor: colors.invalid,
-  },
-  verdictButtonValidPressed: {
-    backgroundColor: colors.valid,
-  },
-  verdictButtonInvalidPressed: {
-    backgroundColor: colors.invalid,
-  },
-  verdictText: {
-    textAlign: 'center',
-    fontSize: 25,
-    opacity: 0.5,
-    color: colors.text,
-    marginBottom: 20,
-  },
-  validScreen: {
-    backgroundColor: colors.overlayValid,
-  },
-  invalidScreen: {
-    backgroundColor: colors.overlayInvalid,
   },
 });
