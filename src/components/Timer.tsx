@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, Vibration } from 'react-native';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from './Overlay';
@@ -35,6 +35,8 @@ export const Timer: FC<TimerProps> = ({
   useEffect(() => {
     if (timer <= 0) {
       playSound(Sound.TIMEUP);
+      Vibration.vibrate();
+
       displayOverlay({
         text: 'Temps écoulé!',
         icon: 'stopwatch',
