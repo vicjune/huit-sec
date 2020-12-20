@@ -56,9 +56,8 @@ export const HomeScreen: FC = () => {
 const getStyles = (input: boolean) =>
   StyleSheet.create({
     container: {
-      justifyContent: 'center',
+      paddingTop: 40,
       alignItems: 'center',
-      flex: 1,
     },
     inputWrapper: {
       marginTop: 'auto',

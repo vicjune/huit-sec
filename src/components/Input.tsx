@@ -23,6 +23,11 @@ export const Input: FC<InputProps> = ({
 
   return (
     <View style={{ ...styles.wrapper, ...style }}>
+      {!!placeholder && !value && (
+        <View style={styles.placeholderWrapper}>
+          <Text style={styles.placeholder}>{placeholder}</Text>
+        </View>
+      )}
       <TextInput
         style={styles.input}
         onChangeText={onChange}
@@ -30,14 +35,10 @@ export const Input: FC<InputProps> = ({
         value={value}
         autoCompleteType="name"
         autoFocus
+        blurOnSubmit={false}
         enablesReturnKeyAutomatically
         editable={!disabled}
       />
-      {!!placeholder && !value && (
-        <View style={styles.placeholderWrapper}>
-          <Text style={styles.placeholder}>{placeholder}</Text>
-        </View>
-      )}
     </View>
   );
 };

@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build-questions": "ts-node ./scripts/buildQuestions.ts",
-    "rn-link": "react-native link && pod-install"
+    "rn-link": "react-native link && npx pod-install"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
@@ -44,6 +44,7 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-get-random-values": "^1.5.0",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",

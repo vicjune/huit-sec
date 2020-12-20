@@ -77,7 +77,6 @@ const getStyles = () =>
       paddingRight: 30,
       alignItems: 'center',
       flexDirection: 'column',
-      paddingBottom: 40,
     },
     icon: {
       marginTop: 'auto',
@@ -100,5 +99,6 @@ const getStyles = () =>
     buttonWrapper: {
       justifyContent: 'center',
       alignItems: 'center',
+      marginBottom: 40,
     },
   });

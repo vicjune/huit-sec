@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     paddingTop: 40,
-    paddingBottom: 20,
   },
   questionText: {
     color: colors.white,
@@ -209,6 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     height: 60,
     width: 60,
+    marginBottom: 20,
   },
   resetButtonPressed: {
     backgroundColor: colors.white,
