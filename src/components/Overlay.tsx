@@ -12,6 +12,7 @@ import Animated, { Easing } from 'react-native-reanimated';
 import { colors } from '../styles/colors';
 
 const SCREEN_DURATION = 1500; // 1.5s
+const FADE_DURATION = 100; // 0.1s
 
 interface OverlayProps {
   text: string;
@@ -47,8 +48,10 @@ export const OverlayProvider: FC = ({ children }) => {
   };
 
   const closeOverlay = () => {
-    setOverlayProps(null);
     closeCallback();
+    setTimeout(() => {
+      setOverlayProps(null);
+    }, FADE_DURATION);
   };
 
   return (
@@ -84,16 +87,17 @@ export const Overlay: FC = () => {
 
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 100,
+      duration: FADE_DURATION,
       easing: Easing.ease,
     }).start();
 
     const timeout = setTimeout(() => {
+      closeOverlay();
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 100,
+        duration: FADE_DURATION,
         easing: Easing.ease,
-      }).start(closeOverlay);
+      }).start();
     }, duration);
 
     return () => {
