@@ -10,6 +10,7 @@ import { Modal, ModalProvider } from './components/Modal';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Overlay, OverlayProvider } from './components/Overlay';
 import { SoundProvider } from './components/Sound';
+import { GlobalStateProvider } from './components/GlobalState';
 
 const Stack = createStackNavigator();
 
@@ -19,31 +20,33 @@ export const App: FC = () => {
       <SoundProvider>
         <ModalProvider>
           <OverlayProvider>
-            <NavigationContainer>
-              <StatusBar
-                barStyle="light-content"
-                backgroundColor={colors.background}
-              />
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  options={{ headerShown: false }}
+            <GlobalStateProvider>
+              <NavigationContainer>
+                <StatusBar
+                  barStyle="light-content"
+                  backgroundColor={colors.background}
                 />
-                <Stack.Screen
-                  name="Question"
-                  component={QuestionScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="SwitchPlayer"
-                  component={SwitchPlayerScreen}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-              <Modal />
-              <Overlay />
-            </NavigationContainer>
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="Home"
+                    component={HomeScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Question"
+                    component={QuestionScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="SwitchPlayer"
+                    component={SwitchPlayerScreen}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+                <Modal />
+                <Overlay />
+              </NavigationContainer>
+            </GlobalStateProvider>
           </OverlayProvider>
         </ModalProvider>
       </SoundProvider>

@@ -113,7 +113,7 @@ export const Overlay: FC = () => {
       <IconElem
         name={icon}
         size={100}
-        color={colors.basicButton}
+        color={colors.white}
         style={styles.icon}
       />
       <Text style={styles.text}>{text}</Text>
@@ -140,7 +140,7 @@ const getStyles = () =>
     },
     text: {
       fontSize: 40,
-      color: colors.text,
+      color: colors.white,
       textAlign: 'center',
     },
   });

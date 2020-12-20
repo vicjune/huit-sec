@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
+import { useGlobalState } from '../components/GlobalState';
 import { useOverlay } from '../components/Overlay';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../components/Sound';
@@ -28,6 +29,7 @@ export const QuestionScreen: FC = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
+  const { goodAnswer, badAnswer, playerAnswering } = useGlobalState();
 
   const resetScreen = useCallback(() => {
     setTimerRunning(false);
@@ -38,7 +40,7 @@ export const QuestionScreen: FC = () => {
     const unsubFocus = navigation.addListener('focus', () => {
       setQuestion(getRandomQuestion());
       displayOverlay({
-        text: 'Question pour Sophie',
+        text: `Question pour ${playerAnswering?.name}`,
         icon: 'chatbox-ellipses',
         IconElem: IonIcon,
         duration: PLAYER_ANSWERING_DURATION,
@@ -53,7 +55,14 @@ export const QuestionScreen: FC = () => {
       unsubFocus();
       unsubBlur();
     };
-  }, [navigation, setQuestion, getRandomQuestion, resetScreen, displayOverlay]);
+  }, [
+    navigation,
+    setQuestion,
+    getRandomQuestion,
+    resetScreen,
+    displayOverlay,
+    playerAnswering,
+  ]);
 
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
@@ -88,15 +97,23 @@ export const QuestionScreen: FC = () => {
         {!verdict && (
           <View style={styles.playerAnswering}>
             <Text style={styles.playerAnsweringLabel}>Pose la question à</Text>
-            <FAIcon name="arrow-right" size={20} color={colors.basicButton} />
-            <Text style={styles.playerAnsweringName}>Sophie</Text>
+            <FAIcon name="arrow-right" size={20} color={colors.white} />
+            <Text style={styles.playerAnsweringName}>
+              {playerAnswering?.name}
+            </Text>
           </View>
         )}
         <View style={styles.mainAction}>
           {verdict ? (
             <Verdict
-              onValid={() => navigate('SwitchPlayer')}
-              onInvalid={() => navigate('SwitchPlayer')}
+              onValid={() => {
+                goodAnswer();
+                navigate('SwitchPlayer');
+              }}
+              onInvalid={() => {
+                badAnswer();
+                navigate('SwitchPlayer');
+              }}
             />
           ) : (
             <Timer
@@ -121,7 +138,7 @@ export const QuestionScreen: FC = () => {
               <FAIcon
                 name="undo"
                 size={30}
-                color={pressed ? colors.background : colors.basicButton}
+                color={pressed ? colors.background : colors.white}
                 style={styles.resetButtonIcon}
               />
             )}
@@ -145,11 +162,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   questionText: {
-    color: colors.text,
+    color: colors.white,
     fontSize: 28,
   },
   questionNbr: {
-    color: colors.text,
+    color: colors.white,
     fontSize: 16,
     opacity: 0.5,
   },
@@ -166,7 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   menuButtonText: {
-    color: colors.text,
+    color: colors.white,
   },
   playerAnswering: {
     flexDirection: 'row',
@@ -176,25 +193,25 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
   playerAnsweringLabel: {
-    color: colors.text,
+    color: colors.white,
     fontSize: 18,
   },
   playerAnsweringName: {
-    color: colors.text,
+    color: colors.white,
     fontSize: 30,
   },
   resetButton: {
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: colors.basicButton,
+    borderColor: colors.white,
     borderWidth: 1,
     borderRadius: 100,
     height: 60,
     width: 60,
   },
   resetButtonPressed: {
-    backgroundColor: colors.basicButton,
+    backgroundColor: colors.white,
   },
   resetButtonIcon: {
     marginLeft: 1,

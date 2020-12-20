@@ -76,7 +76,7 @@ export const Timer: FC<TimerProps> = ({
           <EIcon
             name="controller-play"
             size={60}
-            color={pressed ? colors.background : colors.basicButton}
+            color={pressed ? colors.background : colors.white}
             style={styles.timerButtonIcon}
           />
         )}
@@ -94,20 +94,20 @@ const getStyles = () =>
       width: 100,
       borderRadius: 100,
       borderWidth: 5,
-      borderColor: colors.basicButton,
+      borderColor: colors.white,
       alignItems: 'center',
       justifyContent: 'center',
       opacity: 0.8,
     },
     timerButtonPressed: {
-      backgroundColor: colors.basicButton,
+      backgroundColor: colors.white,
     },
     timerButtonIcon: {
       marginLeft: 5,
     },
     timerButtonText: {
       fontSize: 40,
-      color: colors.text,
+      color: colors.white,
       alignSelf: 'center',
       opacity: 0.5,
       marginTop: 10,
@@ -115,6 +115,6 @@ const getStyles = () =>
     timer: {
       alignSelf: 'center',
       fontSize: 160,
-      color: colors.text,
+      color: colors.white,
     },
   });

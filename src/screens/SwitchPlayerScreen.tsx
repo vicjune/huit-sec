@@ -4,6 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BasicButton } from '../components/BasicButton';
+import { useGlobalState } from '../components/GlobalState';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../components/Sound';
 import { colors } from '../styles/colors';
@@ -18,9 +19,11 @@ export const SwitchPlayerScreen: FC = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
   const { playSound } = useSound();
+  const { newTurn, playerAsking } = useGlobalState();
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
+      newTurn();
       setTimeout(() => {
         setDisplayButton(true);
         Animated.timing(fadeAnim, {
@@ -39,18 +42,13 @@ export const SwitchPlayerScreen: FC = () => {
       unsubFocus();
       unsubBlur();
     };
-  }, [navigation, fadeAnim]);
+  }, [navigation, fadeAnim, newTurn]);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
-      <Icon
-        name="forward"
-        size={60}
-        color={colors.basicButton}
-        style={styles.icon}
-      />
+      <Icon name="forward" size={60} color={colors.white} style={styles.icon} />
       <Text style={styles.label}>Passe le téléphone à</Text>
-      <Text style={styles.name}>Victor</Text>
+      <Text style={styles.name}>{playerAsking?.name}</Text>
       <Animated.View
         style={{
           ...styles.buttonWrapper,
@@ -87,14 +85,14 @@ const getStyles = () =>
       opacity: 0.8,
     },
     label: {
-      color: colors.text,
+      color: colors.white,
       fontSize: 30,
       textAlign: 'center',
       marginBottom: 10,
       opacity: 0.8,
     },
     name: {
-      color: colors.text,
+      color: colors.white,
       fontSize: 40,
       textAlign: 'center',
       marginBottom: 'auto',

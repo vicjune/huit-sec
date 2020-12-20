@@ -22,7 +22,7 @@ export const BasicButton: FC<ButtonProps> = ({
   style,
   icon,
 }) => {
-  const styles = getStyles(size, !text);
+  const styles = getStyles(size, !text, disabled);
 
   return (
     <Pressable
@@ -39,7 +39,7 @@ export const BasicButton: FC<ButtonProps> = ({
             <Icon
               name={icon}
               size={size === 'normal' ? 24 : 16}
-              color={pressed ? colors.background : colors.basicButton}
+              color={pressed ? colors.background : colors.white}
               style={styles.icon}
             />
           )}
@@ -56,21 +56,22 @@ export const BasicButton: FC<ButtonProps> = ({
   );
 };
 
-const getStyles = (size: Size, noText: boolean) =>
+const getStyles = (size: Size, noText: boolean, disabled?: boolean) =>
   StyleSheet.create({
     button: {
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      borderColor: colors.basicButton,
+      borderColor: colors.white,
       borderWidth: 1,
       padding: size === 'normal' ? 15 : 12,
       alignSelf: 'center',
       width: noText ? (size === 'normal' ? 60 : 40) : undefined,
       height: noText ? (size === 'normal' ? 60 : 40) : undefined,
+      opacity: disabled ? 0.5 : 1,
     },
     buttonPressed: {
-      backgroundColor: colors.basicButton,
+      backgroundColor: colors.white,
     },
     buttonText: {
       color: 'white',

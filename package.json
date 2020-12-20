@@ -9,12 +9,13 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build-questions": "ts-node ./scripts/buildQuestions.ts",
-    "rn-link": "react-native link"
+    "rn-link": "react-native link && pod-install"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
     "@expo/react-native-action-sheet": "^3.8.0",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/eslint-config": "^1.1.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.7.4",
@@ -23,6 +24,7 @@
     "@types/react-native": "^0.63.2",
     "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-test-renderer": "^16.9.2",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "babel-eslint": "^10.1.0",
