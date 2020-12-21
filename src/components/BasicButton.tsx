@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ElementType, FC } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
@@ -12,6 +12,7 @@ interface ButtonProps {
   disabled?: boolean;
   style?: Record<string, unknown>;
   icon?: string;
+  IconElem?: ElementType;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
@@ -21,6 +22,7 @@ export const BasicButton: FC<ButtonProps> = ({
   disabled,
   style,
   icon,
+  IconElem = Icon,
 }) => {
   const styles = getStyles(size, !text, disabled);
 
@@ -36,7 +38,7 @@ export const BasicButton: FC<ButtonProps> = ({
       {({ pressed }) => (
         <>
           {icon && (
-            <Icon
+            <IconElem
               name={icon}
               size={size === 'normal' ? 24 : 16}
               color={pressed ? colors.background : colors.white}

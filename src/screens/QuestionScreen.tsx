@@ -74,9 +74,11 @@ export const QuestionScreen: FC = () => {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
+            playSound(Sound.CLICK);
             navigate('Home');
             break;
           case 1:
+            playSound(Sound.CLICK);
             setQuestion(getRandomQuestion());
             resetScreen();
             break;
@@ -194,10 +196,12 @@ const styles = StyleSheet.create({
   playerAnsweringLabel: {
     color: colors.white,
     fontSize: 18,
+    marginRight: 10,
   },
   playerAnsweringName: {
     color: colors.white,
     fontSize: 30,
+    marginLeft: 10,
   },
   resetButton: {
     alignSelf: 'center',

@@ -11,6 +11,8 @@ import { v4 as genUuid } from 'uuid';
 import { pickRandomItem } from '../utils/pickRandomItem';
 
 const STORAGE_PLAYERS_KEY = '@playerNames';
+export const VALID_POINTS = 3;
+export const INVALID_POINTS = -1;
 
 interface GlobalStateContext {
   players: Player[];
@@ -18,6 +20,7 @@ interface GlobalStateContext {
   playerAsking?: Player;
   addPlayer: (name: string) => void;
   removePlayer: (id: string) => void;
+  removeAllPlayers: () => void;
   newTurn: () => void;
   goodAnswer: () => void;
   badAnswer: () => void;
@@ -27,6 +30,7 @@ const globalStateContext = createContext<GlobalStateContext>({
   players: [],
   addPlayer: () => {},
   removePlayer: () => {},
+  removeAllPlayers: () => {},
   newTurn: () => {},
   goodAnswer: () => {},
   badAnswer: () => {},
@@ -65,14 +69,14 @@ export const GlobalStateProvider: FC = ({ children }) => {
   }, []);
 
   const addPlayer = (playerName: string) => {
+    storage.set(STORAGE_PLAYERS_KEY, [
+      ...globalState.players.map(({ name }) => name),
+      playerName,
+    ]);
     setGlobalState((prev) => ({
       ...prev,
       players: [...prev.players, getNewPlayer(playerName)],
     }));
-    storage.set(
-      STORAGE_PLAYERS_KEY,
-      globalState.players.map(({ name }) => name),
-    );
   };
 
   const removePlayer = (toRemoveId: string) => {
@@ -82,29 +86,40 @@ export const GlobalStateProvider: FC = ({ children }) => {
     if (playerToRemoveIndex < 0) return;
     const newPlayers = [...globalState.players];
     newPlayers.splice(playerToRemoveIndex, 1);
+    storage.set(
+      STORAGE_PLAYERS_KEY,
+      newPlayers.map(({ name }) => name),
+    );
     setGlobalState((prev) => ({ ...prev, players: newPlayers }));
   };
 
+  const removeAllPlayers = () => {
+    setGlobalState((prev) => ({ ...prev, players: [] }));
+    storage.remove(STORAGE_PLAYERS_KEY);
+  };
+
   const newTurn = () => {
-    const playersNotAnswering = globalState.players.filter(
-      ({ id }) => globalState.playerAnsweringId !== id,
-    );
-    const newPlayerAnswering = pickRandomItem(playersNotAnswering);
     const playersNotAsking = globalState.players.filter(
       ({ id }) => globalState.playerAskingId !== id,
     );
     const newPlayerAsking = pickRandomItem(playersNotAsking);
+    const newPlayersAnswering = globalState.players.filter(
+      ({ id }) =>
+        ![globalState.playerAnsweringId, newPlayerAsking?.id].includes(id),
+    );
+    const newPlayerAnswering = pickRandomItem(newPlayersAnswering);
     setGlobalState((prev) => ({
       ...prev,
-      playerAskingId: newPlayerAnswering?.id,
-      playerAnsweringId: newPlayerAsking?.id,
+      playerAskingId: newPlayerAsking?.id,
+      playerAnsweringId: newPlayerAnswering?.id,
     }));
   };
 
   const answer = (good: boolean) => {
     if (playerAnsweringIndex < 0) return;
     const newPlayers = [...globalState.players];
-    const newScore = playerAnswering.score + (good ? 3 : -1);
+    const newScore =
+      playerAnswering.score + (good ? VALID_POINTS : INVALID_POINTS);
     newPlayers[playerAnsweringIndex] = {
       ...playerAnswering,
       score: newScore < 0 ? 0 : newScore,
@@ -121,6 +136,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
         playerAsking,
         addPlayer,
         removePlayer,
+        removeAllPlayers,
         goodAnswer: () => answer(true),
         badAnswer: () => answer(false),
       }}

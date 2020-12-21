@@ -16,6 +16,7 @@ const FADE_DURATION = 100; // 0.1s
 
 interface OverlayProps {
   text: string;
+  bottomText?: string;
   icon: string;
   IconElem: ElementType;
   style?: Record<string, unknown>;
@@ -106,7 +107,7 @@ export const Overlay: FC = () => {
   }, [fadeAnim, overlayProps, closeOverlay]);
 
   if (!overlayProps) return null;
-  const { style, icon, IconElem, text } = overlayProps;
+  const { style, icon, IconElem, text, bottomText } = overlayProps;
 
   return (
     <Animated.View style={{ ...styles.wrapper, opacity: fadeAnim, ...style }}>
@@ -117,6 +118,7 @@ export const Overlay: FC = () => {
         style={styles.icon}
       />
       <Text style={styles.text}>{text}</Text>
+      {bottomText && <Text style={styles.bottomText}>{bottomText}</Text>}
     </Animated.View>
   );
 };
@@ -135,6 +137,7 @@ const getStyles = () =>
       padding: 20,
     },
     icon: {
+      marginTop: 'auto',
       marginBottom: 40,
       opacity: 0.8,
     },
@@ -142,5 +145,12 @@ const getStyles = () =>
       fontSize: 40,
       color: colors.white,
       textAlign: 'center',
+      marginBottom: 'auto',
+    },
+    bottomText: {
+      textAlign: 'center',
+      fontSize: 80,
+      color: colors.white,
+      marginBottom: 40,
     },
   });

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
+import { INVALID_POINTS, useGlobalState, VALID_POINTS } from './GlobalState';
 import { useOverlay } from './Overlay';
 import { Sound, useSound } from './Sound';
 
@@ -14,16 +15,20 @@ export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
   const styles = getStyles();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
+  const { playerAnswering } = useGlobalState();
 
   return (
     <>
-      <Text style={styles.verdictText}>Tu valides la réponse de Sophie ?</Text>
+      <Text style={styles.verdictText}>
+        Tu valides la réponse de {playerAnswering?.name} ?
+      </Text>
       <View style={styles.verdict}>
         <Pressable
           onPress={async () => {
             playSound(Sound.WRONG);
             await displayOverlay({
               text: "C'est refusé!",
+              bottomText: INVALID_POINTS.toString(),
               icon: 'times',
               IconElem: FAIcon,
               style: styles.invalidScreen,
@@ -51,6 +56,7 @@ export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
             playSound(Sound.CORRECT);
             await displayOverlay({
               text: "C'est validé!",
+              bottomText: `+${VALID_POINTS}`,
               icon: 'check',
               IconElem: FAIcon,
               style: styles.validScreen,
@@ -109,7 +115,7 @@ const getStyles = () =>
       textAlign: 'center',
       fontSize: 25,
       opacity: 0.5,
-      color: colors.text,
+      color: colors.white,
       marginBottom: 20,
     },
     validScreen: {

@@ -34,7 +34,6 @@ export const Input: FC<InputProps> = ({
         onSubmitEditing={onSubmit}
         value={value}
         autoCompleteType="name"
-        autoFocus
         blurOnSubmit={false}
         enablesReturnKeyAutomatically
         editable={!disabled}
