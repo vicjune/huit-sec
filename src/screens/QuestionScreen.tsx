@@ -6,7 +6,9 @@ import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../components/GlobalState';
+import { useModal } from '../components/Modal';
 import { useOverlay } from '../components/Overlay';
+import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../components/Sound';
 import { Timer } from '../components/Timer';
@@ -30,6 +32,7 @@ export const QuestionScreen: FC = () => {
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
   const { goodAnswer, badAnswer, playerAnswering } = useGlobalState();
+  const { openModal } = useModal();
 
   const resetScreen = useCallback(() => {
     setTimerRunning(false);
@@ -67,8 +70,13 @@ export const QuestionScreen: FC = () => {
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
       {
-        options: ['Quitter', 'Passer la question', 'Annuler'],
-        cancelButtonIndex: 2,
+        options: [
+          'Quitter',
+          'Passer la question',
+          'Voir les scores',
+          'Annuler',
+        ],
+        cancelButtonIndex: 3,
         destructiveButtonIndex: 0,
       },
       (buttonIndex) => {
@@ -82,6 +90,9 @@ export const QuestionScreen: FC = () => {
             setQuestion(getRandomQuestion());
             resetScreen();
             break;
+          case 2:
+            playSound(Sound.CLICK);
+            openModal(<ScoreModal />);
         }
       },
     );
@@ -182,9 +193,6 @@ const styles = StyleSheet.create({
     left: 20,
     borderWidth: 0,
     borderRadius: 100,
-  },
-  menuButtonText: {
-    color: colors.white,
   },
   playerAnswering: {
     flexDirection: 'row',

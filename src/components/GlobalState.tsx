@@ -21,6 +21,7 @@ interface GlobalStateContext {
   addPlayer: (name: string) => void;
   removePlayer: (id: string) => void;
   removeAllPlayers: () => void;
+  resetScores: () => void;
   newTurn: () => void;
   goodAnswer: () => void;
   badAnswer: () => void;
@@ -31,6 +32,7 @@ const globalStateContext = createContext<GlobalStateContext>({
   addPlayer: () => {},
   removePlayer: () => {},
   removeAllPlayers: () => {},
+  resetScores: () => {},
   newTurn: () => {},
   goodAnswer: () => {},
   badAnswer: () => {},
@@ -127,6 +129,13 @@ export const GlobalStateProvider: FC = ({ children }) => {
     setGlobalState((prev) => ({ ...prev, players: newPlayers }));
   };
 
+  const resetScores = () => {
+    setGlobalState((prev) => ({
+      ...prev,
+      players: prev.players.map((player) => ({ ...player, score: 0 })),
+    }));
+  };
+
   return (
     <globalStateContext.Provider
       value={{
@@ -137,6 +146,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
         addPlayer,
         removePlayer,
         removeAllPlayers,
+        resetScores,
         goodAnswer: () => answer(true),
         badAnswer: () => answer(false),
       }}

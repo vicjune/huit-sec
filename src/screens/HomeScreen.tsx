@@ -21,6 +21,7 @@ export const HomeScreen: FC = () => {
     addPlayer,
     removePlayer,
     removeAllPlayers,
+    resetScores,
   } = useGlobalState();
   const styles = getStyles(!!newPlayerInput);
 
@@ -42,6 +43,7 @@ export const HomeScreen: FC = () => {
           disabled={players.length < PLAYERS_MIN}
           onPress={() => {
             playSound(Sound.CLICK);
+            resetScores();
             navigation.navigate('SwitchPlayer');
           }}
         />

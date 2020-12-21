@@ -1,10 +1,13 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../components/GlobalState';
+import { useModal } from '../components/Modal';
+import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../components/Sound';
 import { colors } from '../styles/colors';
@@ -20,6 +23,8 @@ export const SwitchPlayerScreen: FC = () => {
   const styles = getStyles();
   const { playSound } = useSound();
   const { newTurn, playerAsking } = useGlobalState();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const { openModal } = useModal();
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
@@ -44,6 +49,27 @@ export const SwitchPlayerScreen: FC = () => {
     };
   }, [navigation, fadeAnim, newTurn]);
 
+  const menuButtonPressed = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['Quitter', 'Voir les scores', 'Annuler'],
+        cancelButtonIndex: 2,
+        destructiveButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            playSound(Sound.CLICK);
+            navigate('Home');
+            break;
+          case 1:
+            playSound(Sound.CLICK);
+            openModal(<ScoreModal />);
+        }
+      },
+    );
+  };
+
   return (
     <ScreenWrapper style={styles.wrapper}>
       <Icon name="forward" size={60} color={colors.white} style={styles.icon} />
@@ -55,7 +81,7 @@ export const SwitchPlayerScreen: FC = () => {
           opacity: fadeAnim,
         }}
       >
-        <BasicButton
+        {/* <BasicButton
           disabled={!displayButton}
           text="C'est fait"
           icon="check"
@@ -64,8 +90,39 @@ export const SwitchPlayerScreen: FC = () => {
             navigate('Question');
           }}
           size="small"
-        />
+        /> */}
+        <Pressable
+          disabled={!displayButton}
+          onPress={() => {
+            playSound(Sound.CLICK);
+            navigate('Question');
+          }}
+          style={({ pressed }) => [
+            styles.button,
+            pressed && styles.buttonPressed,
+          ]}
+        >
+          {({ pressed }) => (
+            <>
+              <Icon
+                name="check"
+                size={55}
+                color={pressed ? colors.background : colors.white}
+              />
+              <Text
+                style={[styles.buttonText, pressed && styles.buttonTextPressed]}
+              >
+                C'est fait
+              </Text>
+            </>
+          )}
+        </Pressable>
       </Animated.View>
+      <BasicButton
+        style={styles.menuButton}
+        icon="bars"
+        onPress={menuButtonPressed}
+      />
     </ScreenWrapper>
   );
 };
@@ -99,6 +156,37 @@ const getStyles = () =>
     buttonWrapper: {
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 40,
+      marginBottom: 'auto',
+    },
+    button: {
+      alignSelf: 'center',
+      height: 120,
+      width: 120,
+      borderRadius: 120,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity: 0.8,
+      paddingBottom: 5,
+    },
+    buttonPressed: {
+      backgroundColor: colors.white,
+    },
+    buttonText: {
+      fontSize: 16,
+      color: colors.white,
+      alignSelf: 'center',
+    },
+    buttonTextPressed: {
+      color: colors.background,
+    },
+    menuButton: {
+      opacity: 0.5,
+      position: 'absolute',
+      bottom: 20,
+      left: 20,
+      borderWidth: 0,
+      borderRadius: 100,
     },
   });
