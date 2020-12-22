@@ -79,7 +79,12 @@ export const HomeScreen: FC = () => {
                   removePlayer(id);
                 }}
               >
-                <Icon name="circle-with-cross" size={30} color={colors.white} />
+                <Icon
+                  name="circle-with-cross"
+                  size={30}
+                  color={colors.white}
+                  style={styles.playerIcon}
+                />
               </Pressable>
             </View>
           ))}
@@ -163,7 +168,7 @@ const getStyles = (input: boolean) =>
       alignItems: 'center',
       margin: 5,
       borderWidth: 1,
-      borderColor: colors.white,
+      borderColor: colors.chipsBorder,
       borderRadius: 20,
       paddingLeft: 10,
     },
@@ -175,6 +180,9 @@ const getStyles = (input: boolean) =>
     },
     playerButton: {
       padding: 3,
+    },
+    playerIcon: {
+      opacity: 0.8,
     },
     inputWrapper: {
       flexDirection: 'row',

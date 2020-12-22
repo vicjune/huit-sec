@@ -8,4 +8,5 @@ export const colors = {
   invalid: 'hsl(0, 100%, 50%)',
   inputBackground: 'hsla(0, 0%, 100%, 0.1)',
   border: 'hsla(0, 0%, 100%, 0.1)',
+  chipsBorder: 'hsla(0, 0%, 100%, 0.5)',
 };
