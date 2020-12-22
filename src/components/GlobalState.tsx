@@ -9,9 +9,12 @@ import { Player } from '../types/Players';
 import { storage } from '../utils/storage';
 import { v4 as genUuid } from 'uuid';
 import { pickRandomItem } from '../utils/pickRandomItem';
+import { Question } from '../types/Question';
+import { default as questionsJSON } from '../json/questions.json';
 
 const STORAGE_PLAYERS_KEY = '@playerNames';
 const STORAGE_VICTORY_KEY = '@victoryScore';
+const STORAGE_QUESTIONS_SEEN_KEY = '@questionsSeen';
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
 const DEFAULT_SCORE_VICTORY = 10;
@@ -25,10 +28,12 @@ interface GlobalStateContext {
   removeAllPlayers: () => void;
   resetScores: () => void;
   newTurn: () => void;
+  newQuestion: () => void;
   goodAnswer: () => boolean;
   badAnswer: () => boolean;
   scoreVictory: number;
   setScoreVictory: (scoreVictory: number) => void;
+  currentQuestion?: Question;
 }
 
 const globalStateContext = createContext<GlobalStateContext>({
@@ -42,6 +47,7 @@ const globalStateContext = createContext<GlobalStateContext>({
   badAnswer: () => false,
   scoreVictory: 0,
   setScoreVictory: () => {},
+  newQuestion: () => {},
 });
 
 interface GlobalState {
@@ -49,6 +55,9 @@ interface GlobalState {
   playerAnsweringId?: string;
   playerAskingId?: string;
   scoreVictory: number;
+  questions: Question[];
+  questionAlreadySeenIds: string[];
+  currentQuestion?: Question;
 }
 
 const getNewPlayer = (name: string) => ({ id: genUuid(), name, score: 0 });
@@ -56,6 +65,8 @@ const getNewPlayer = (name: string) => ({ id: genUuid(), name, score: 0 });
 export const GlobalStateProvider: FC = ({ children }) => {
   const [globalState, setGlobalState] = useState<GlobalState>({
     players: [],
+    questions: [],
+    questionAlreadySeenIds: [],
     scoreVictory: DEFAULT_SCORE_VICTORY,
   });
 
@@ -76,10 +87,24 @@ export const GlobalStateProvider: FC = ({ children }) => {
         players: playerNames.map(getNewPlayer),
       }));
     });
+
     storage.get<number>(STORAGE_VICTORY_KEY).then((scoreVictory) => {
       if (!scoreVictory) return;
       setGlobalState((prev) => ({ ...prev, scoreVictory }));
     });
+
+    storage
+      .get<string[]>(STORAGE_QUESTIONS_SEEN_KEY)
+      .then((questionAlreadySeenIds) => {
+        if (!questionAlreadySeenIds) return;
+        setGlobalState((prev) => ({ ...prev, questionAlreadySeenIds }));
+      });
+
+    // TODO: Bundles
+    setGlobalState((prev) => ({
+      ...prev,
+      questions: questionsJSON as Question[],
+    }));
   }, []);
 
   const addPlayer = (playerName: string) => {
@@ -154,6 +179,30 @@ export const GlobalStateProvider: FC = ({ children }) => {
     storage.set(STORAGE_VICTORY_KEY, scoreVictory);
   };
 
+  const newQuestion = () => {
+    const questionsNotSeen = globalState.questions.filter(
+      ({ id }) => !globalState.questionAlreadySeenIds.includes(id),
+    );
+
+    const newCurrentQuestion = pickRandomItem(
+      questionsNotSeen.length ? questionsNotSeen : globalState.questions,
+    );
+    if (!newCurrentQuestion) return;
+
+    const questionAlreadySeenIds = [
+      ...(questionsNotSeen.length ? globalState.questionAlreadySeenIds : []),
+      newCurrentQuestion.id,
+    ];
+
+    setGlobalState((prev) => ({
+      ...prev,
+      currentQuestion: newCurrentQuestion,
+      questionAlreadySeenIds,
+    }));
+
+    storage.set(STORAGE_QUESTIONS_SEEN_KEY, questionAlreadySeenIds);
+  };
+
   return (
     <globalStateContext.Provider
       value={{
@@ -169,6 +218,8 @@ export const GlobalStateProvider: FC = ({ children }) => {
         badAnswer: () => answer(false),
         scoreVictory: globalState.scoreVictory,
         setScoreVictory,
+        currentQuestion: globalState.currentQuestion,
+        newQuestion,
       }}
     >
       {children}

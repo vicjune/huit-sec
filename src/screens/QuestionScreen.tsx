@@ -15,9 +15,7 @@ import { Sound, useSound } from '../components/Sound';
 import { Timer } from '../components/Timer';
 import { Verdict } from '../components/Verdict';
 import { colors } from '../styles/colors';
-import { Question } from '../types/Question';
 import { leadingZeros } from '../utils/leadingZeros';
-import { useGetRandomQuestion } from '../utils/useGetRandomQuestion';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
 const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
@@ -25,14 +23,18 @@ const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
 export const QuestionScreen: FC = () => {
   const navigation = useNavigation();
   const navigate = usePreventNavigation();
-  const getRandomQuestion = useGetRandomQuestion();
-  const [question, setQuestion] = useState<Question | null>(null);
   const [timerRunning, setTimerRunning] = useState(false);
   const [verdict, setVerdict] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const { goodAnswer, badAnswer, playerAnswering } = useGlobalState();
+  const {
+    goodAnswer,
+    badAnswer,
+    playerAnswering,
+    currentQuestion,
+    newQuestion,
+  } = useGlobalState();
   const { openModal } = useModal();
 
   const resetScreen = useCallback(() => {
@@ -42,7 +44,7 @@ export const QuestionScreen: FC = () => {
 
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
-      setQuestion(getRandomQuestion());
+      newQuestion();
       displayOverlay({
         text: `Question pour ${playerAnswering?.name}`,
         icon: 'chatbox-ellipses',
@@ -59,14 +61,7 @@ export const QuestionScreen: FC = () => {
       unsubFocus();
       unsubBlur();
     };
-  }, [
-    navigation,
-    setQuestion,
-    getRandomQuestion,
-    resetScreen,
-    displayOverlay,
-    playerAnswering,
-  ]);
+  }, [navigation, newQuestion, resetScreen, displayOverlay, playerAnswering]);
 
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
@@ -86,7 +81,7 @@ export const QuestionScreen: FC = () => {
             navigate(Screen.HOME);
             break;
           case 1:
-            setQuestion(getRandomQuestion());
+            newQuestion();
             resetScreen();
             break;
           case 2:
@@ -115,9 +110,9 @@ export const QuestionScreen: FC = () => {
       <ScreenWrapper style={styles.wrapper}>
         <View>
           <Text style={styles.questionNbr}>
-            #{leadingZeros(question?.number)}
+            #{leadingZeros(currentQuestion?.number)}
           </Text>
-          <Text style={styles.questionText}>{question?.text}</Text>
+          <Text style={styles.questionText}>{currentQuestion?.text}</Text>
         </View>
         {!verdict && (
           <View style={styles.playerAnswering}>
