@@ -13,6 +13,7 @@ import { pickRandomItem } from '../utils/pickRandomItem';
 const STORAGE_PLAYERS_KEY = '@playerNames';
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
+const DEFAULT_SCORE_VICTORY = 15;
 
 interface GlobalStateContext {
   players: Player[];
@@ -25,6 +26,8 @@ interface GlobalStateContext {
   newTurn: () => void;
   goodAnswer: () => void;
   badAnswer: () => void;
+  scoreVictory: number;
+  setScoreVictory: (scoreVictory: number) => void;
 }
 
 const globalStateContext = createContext<GlobalStateContext>({
@@ -36,12 +39,15 @@ const globalStateContext = createContext<GlobalStateContext>({
   newTurn: () => {},
   goodAnswer: () => {},
   badAnswer: () => {},
+  scoreVictory: 0,
+  setScoreVictory: () => {},
 });
 
 interface GlobalState {
   players: Player[];
   playerAnsweringId?: string;
   playerAskingId?: string;
+  scoreVictory: number;
 }
 
 const getNewPlayer = (name: string) => ({ id: genUuid(), name, score: 0 });
@@ -49,6 +55,7 @@ const getNewPlayer = (name: string) => ({ id: genUuid(), name, score: 0 });
 export const GlobalStateProvider: FC = ({ children }) => {
   const [globalState, setGlobalState] = useState<GlobalState>({
     players: [],
+    scoreVictory: DEFAULT_SCORE_VICTORY,
   });
 
   const playerAnsweringIndex = globalState.players.findIndex(
@@ -136,6 +143,10 @@ export const GlobalStateProvider: FC = ({ children }) => {
     }));
   };
 
+  const setScoreVictory = (scoreVictory: number) => {
+    setGlobalState((prev) => ({ ...prev, scoreVictory }));
+  };
+
   return (
     <globalStateContext.Provider
       value={{
@@ -149,6 +160,8 @@ export const GlobalStateProvider: FC = ({ children }) => {
         resetScores,
         goodAnswer: () => answer(true),
         badAnswer: () => answer(false),
+        scoreVictory: globalState.scoreVictory,
+        setScoreVictory,
       }}
     >
       {children}

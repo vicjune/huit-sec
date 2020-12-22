@@ -7,5 +7,5 @@ export const colors = {
   valid: 'hsl(120, 100%, 50%)',
   invalid: 'hsl(0, 100%, 50%)',
   inputBackground: 'hsla(0, 0%, 100%, 0.1)',
-  border: 'hsla(0, 0%, 100%, 0.4)',
+  border: 'hsla(0, 0%, 100%, 0.1)',
 };

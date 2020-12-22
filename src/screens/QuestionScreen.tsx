@@ -1,9 +1,10 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
+import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../components/GlobalState';
 import { useModal } from '../components/Modal';
@@ -31,7 +32,13 @@ export const QuestionScreen: FC = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const { goodAnswer, badAnswer, playerAnswering } = useGlobalState();
+  const {
+    goodAnswer,
+    badAnswer,
+    playerAnswering,
+    scoreVictory,
+    players,
+  } = useGlobalState();
   const { openModal } = useModal();
 
   const resetScreen = useCallback(() => {
@@ -83,7 +90,7 @@ export const QuestionScreen: FC = () => {
         switch (buttonIndex) {
           case 0:
             playSound(Sound.CLICK);
-            navigate('Home');
+            navigate(Screen.HOME);
             break;
           case 1:
             playSound(Sound.CLICK);
@@ -96,6 +103,20 @@ export const QuestionScreen: FC = () => {
         }
       },
     );
+  };
+
+  const onValid = () => {
+    goodAnswer();
+    if (players.find(({ score }) => score >= scoreVictory)) {
+      navigate(Screen.VICTORY);
+    } else {
+      navigate(Screen.SWITCH_PLAYER);
+    }
+  };
+
+  const onInvalid = () => {
+    badAnswer();
+    navigate(Screen.SWITCH_PLAYER);
   };
 
   return (
@@ -118,16 +139,7 @@ export const QuestionScreen: FC = () => {
         )}
         <View style={styles.mainAction}>
           {verdict ? (
-            <Verdict
-              onValid={() => {
-                goodAnswer();
-                navigate('SwitchPlayer');
-              }}
-              onInvalid={() => {
-                badAnswer();
-                navigate('SwitchPlayer');
-              }}
-            />
+            <Verdict onValid={onValid} onInvalid={onInvalid} />
           ) : (
             <Timer
               onComplete={() => setVerdict(true)}
@@ -137,29 +149,22 @@ export const QuestionScreen: FC = () => {
           )}
         </View>
         {(timerRunning || verdict) && (
-          <Pressable
+          <BasicButton
             onPress={() => {
               playSound(Sound.CLICK);
               resetScreen();
             }}
-            style={({ pressed }) => [
-              styles.resetButton,
-              pressed && styles.resetButtonPressed,
-            ]}
-          >
-            {({ pressed }) => (
-              <FAIcon
-                name="undo"
-                size={30}
-                color={pressed ? colors.background : colors.white}
-                style={styles.resetButtonIcon}
-              />
-            )}
-          </Pressable>
+            small
+            icon="undo"
+            IconElem={FAIcon}
+            style={styles.resetButton}
+          />
         )}
         <BasicButton
+          small
           style={styles.menuButton}
           icon="bars"
+          IconElem={FAIcon}
           onPress={menuButtonPressed}
         />
       </ScreenWrapper>
@@ -192,7 +197,6 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 20,
     borderWidth: 0,
-    borderRadius: 100,
   },
   playerAnswering: {
     flexDirection: 'row',
@@ -212,20 +216,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   resetButton: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: colors.white,
-    borderWidth: 1,
-    borderRadius: 100,
-    height: 60,
-    width: 60,
     marginBottom: 20,
-  },
-  resetButtonPressed: {
-    backgroundColor: colors.white,
-  },
-  resetButtonIcon: {
-    marginLeft: 1,
   },
 });

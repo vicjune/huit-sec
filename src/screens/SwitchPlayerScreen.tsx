@@ -1,9 +1,10 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import React, { FC, useEffect, useRef } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../components/GlobalState';
 import { useModal } from '../components/Modal';
@@ -18,7 +19,6 @@ const BUTTON_TIMEOUT = 3000; // 3s
 export const SwitchPlayerScreen: FC = () => {
   const navigation = useNavigation();
   const navigate = usePreventNavigation();
-  const [displayButton, setDisplayButton] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
   const { playSound } = useSound();
@@ -30,7 +30,6 @@ export const SwitchPlayerScreen: FC = () => {
     const unsubFocus = navigation.addListener('focus', () => {
       newTurn();
       setTimeout(() => {
-        setDisplayButton(true);
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 500,
@@ -60,7 +59,7 @@ export const SwitchPlayerScreen: FC = () => {
         switch (buttonIndex) {
           case 0:
             playSound(Sound.CLICK);
-            navigate('Home');
+            navigate(Screen.HOME);
             break;
           case 1:
             playSound(Sound.CLICK);
@@ -81,46 +80,21 @@ export const SwitchPlayerScreen: FC = () => {
           opacity: fadeAnim,
         }}
       >
-        {/* <BasicButton
-          disabled={!displayButton}
+        <BasicButton
           text="C'est fait"
           icon="check"
+          IconElem={Icon}
           onPress={() => {
             playSound(Sound.CLICK);
-            navigate('Question');
+            navigate(Screen.QUESTION);
           }}
-          size="small"
-        /> */}
-        <Pressable
-          disabled={!displayButton}
-          onPress={() => {
-            playSound(Sound.CLICK);
-            navigate('Question');
-          }}
-          style={({ pressed }) => [
-            styles.button,
-            pressed && styles.buttonPressed,
-          ]}
-        >
-          {({ pressed }) => (
-            <>
-              <Icon
-                name="check"
-                size={55}
-                color={pressed ? colors.background : colors.white}
-              />
-              <Text
-                style={[styles.buttonText, pressed && styles.buttonTextPressed]}
-              >
-                C'est fait
-              </Text>
-            </>
-          )}
-        </Pressable>
+        />
       </Animated.View>
       <BasicButton
+        small
         style={styles.menuButton}
         icon="bars"
+        IconElem={Icon}
         onPress={menuButtonPressed}
       />
     </ScreenWrapper>
@@ -158,35 +132,11 @@ const getStyles = () =>
       alignItems: 'center',
       marginBottom: 'auto',
     },
-    button: {
-      alignSelf: 'center',
-      height: 120,
-      width: 120,
-      borderRadius: 120,
-      borderWidth: 1,
-      borderColor: colors.border,
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 0.8,
-      paddingBottom: 5,
-    },
-    buttonPressed: {
-      backgroundColor: colors.white,
-    },
-    buttonText: {
-      fontSize: 16,
-      color: colors.white,
-      alignSelf: 'center',
-    },
-    buttonTextPressed: {
-      color: colors.background,
-    },
     menuButton: {
       opacity: 0.5,
       position: 'absolute',
       bottom: 20,
       left: 20,
       borderWidth: 0,
-      borderRadius: 100,
     },
   });

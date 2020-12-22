@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
 import { useGlobalState } from './GlobalState';
 import { Sound, useSound } from './Sound';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import Icon from 'react-native-vector-icons/Entypo';
 import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
 import { useModal } from './Modal';
@@ -30,9 +30,8 @@ export const ScoreModal: FC = () => {
         ))}
       </ScrollView>
       <BasicButton
-        text="Retour"
-        icon="arrow-left"
-        size="small"
+        icon="cross"
+        small
         IconElem={Icon}
         onPress={() => {
           playSound(Sound.CLICK);
@@ -47,9 +46,9 @@ export const ScoreModal: FC = () => {
 const getStyles = () =>
   StyleSheet.create({
     title: {
-      marginTop: 40,
-      marginBottom: 40,
-      textAlign: 'center',
+      marginTop: 20,
+      marginBottom: 20,
+      marginLeft: 30,
       color: colors.white,
       fontSize: 40,
     },
@@ -84,6 +83,6 @@ const getStyles = () =>
     },
     closeButton: {
       marginTop: 'auto',
-      marginBottom: 40,
+      marginBottom: 20,
     },
   });

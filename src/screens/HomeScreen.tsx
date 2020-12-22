@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../components/GlobalState';
 import { Input } from '../components/Input';
@@ -8,7 +8,11 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../components/Sound';
 import { colors } from '../styles/colors';
 import Icon from 'react-native-vector-icons/Entypo';
+import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useModal } from '../components/Modal';
+import { SettingsModal } from '../components/SettingsModal';
+import { Screen } from '../App';
 
 const PLAYERS_MIN = 2;
 
@@ -16,6 +20,7 @@ export const HomeScreen: FC = () => {
   const navigation = useNavigation();
   const [newPlayerInput, setNewPlayerInput] = useState('');
   const { playSound } = useSound();
+  const { openModal } = useModal();
   const {
     players,
     addPlayer,
@@ -37,14 +42,15 @@ export const HomeScreen: FC = () => {
     <ScreenWrapper style={styles.container}>
       <View style={styles.startButton}>
         <BasicButton
-          text="Lancer la partie"
+          text="Lancer"
           icon="arrow-bold-right"
           IconElem={Icon}
           disabled={players.length < PLAYERS_MIN}
           onPress={() => {
+            Keyboard.dismiss();
             playSound(Sound.CLICK);
             resetScores();
-            navigation.navigate('SwitchPlayer');
+            navigation.navigate(Screen.SWITCH_PLAYER);
           }}
         />
         {players.length < PLAYERS_MIN && (
@@ -103,6 +109,16 @@ export const HomeScreen: FC = () => {
           <Icon name="circle-with-plus" size={40} color={colors.white} />
         </Pressable>
       </View>
+      <BasicButton
+        small
+        icon="settings-sharp"
+        IconElem={IonIcon}
+        style={styles.settingsButton}
+        onPress={() => {
+          playSound(Sound.CLICK);
+          openModal(<SettingsModal />);
+        }}
+      />
     </ScreenWrapper>
   );
 };
@@ -119,8 +135,8 @@ const getStyles = (input: boolean) =>
       textAlign: 'center',
       color: colors.white,
       fontSize: 14,
-      opacity: 0.5,
-      marginTop: 5,
+      opacity: 0.3,
+      marginTop: 10,
     },
     playersNumberClear: {
       flexDirection: 'row',
@@ -182,5 +198,12 @@ const getStyles = (input: boolean) =>
       flexShrink: 0,
       paddingRight: 10,
       opacity: input ? 1 : 0.5,
+    },
+    settingsButton: {
+      opacity: 0.5,
+      borderWidth: 0,
+      position: 'absolute',
+      top: 10,
+      left: 10,
     },
   });

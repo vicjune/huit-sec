@@ -11,8 +11,16 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Overlay, OverlayProvider } from './components/Overlay';
 import { SoundProvider } from './components/Sound';
 import { GlobalStateProvider } from './components/GlobalState';
+import { VictoryScreen } from './screens/VictoryScreen';
 
 const Stack = createStackNavigator();
+
+export enum Screen {
+  HOME = 'HOME',
+  QUESTION = 'QUESTION',
+  SWITCH_PLAYER = 'SWITCH_PLAYER',
+  VICTORY = 'VICTORY',
+}
 
 export const App: FC = () => {
   return (
@@ -28,18 +36,23 @@ export const App: FC = () => {
                 />
                 <Stack.Navigator>
                   <Stack.Screen
-                    name="Home"
+                    name={Screen.HOME}
                     component={HomeScreen}
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
-                    name="Question"
+                    name={Screen.QUESTION}
                     component={QuestionScreen}
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
-                    name="SwitchPlayer"
+                    name={Screen.SWITCH_PLAYER}
                     component={SwitchPlayerScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name={Screen.VICTORY}
+                    component={VictoryScreen}
                     options={{ headerShown: false }}
                   />
                 </Stack.Navigator>
