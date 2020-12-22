@@ -14,6 +14,7 @@ export enum Sound {
   TIMEUP,
   WRONG,
   CORRECT,
+  VICTORY,
 }
 
 interface SoundContext {
@@ -29,7 +30,6 @@ export const SoundProvider: FC = ({ children }) => {
 
   useEffect(() => {
     RnSound.setCategory('Ambient');
-
     setSounds({
       [Sound.CLICK]: new RnSound('click.mp3', RnSound.MAIN_BUNDLE),
       [Sound.TICK]: new RnSound('tick.mp3', RnSound.MAIN_BUNDLE),
@@ -37,6 +37,7 @@ export const SoundProvider: FC = ({ children }) => {
       [Sound.TIMEUP]: new RnSound('timesup_buzzer.wav', RnSound.MAIN_BUNDLE),
       [Sound.WRONG]: new RnSound('bad_buzzer.mp3', RnSound.MAIN_BUNDLE),
       [Sound.CORRECT]: new RnSound('correct.mp3', RnSound.MAIN_BUNDLE),
+      [Sound.VICTORY]: new RnSound('kids_cheering.mp3', RnSound.MAIN_BUNDLE),
     });
   }, []);
 

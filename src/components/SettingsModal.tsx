@@ -4,16 +4,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
 import { BasicButton } from './BasicButton';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Sound, useSound } from './Sound';
 import { useModal } from './Modal';
 import { useGlobalState } from './GlobalState';
 
-const MIN_SCORE_VICTORY = 10;
+const MIN_SCORE_VICTORY = 1;
 const MAX_SCORE_VICTORY = 30;
 
 export const SettingsModal: FC = () => {
   const styles = getStyles();
-  const { playSound } = useSound();
   const { closeModal } = useModal();
   const { scoreVictory, setScoreVictory } = useGlobalState();
 
@@ -64,10 +62,7 @@ export const SettingsModal: FC = () => {
         icon="cross"
         small
         IconElem={Icon}
-        onPress={() => {
-          playSound(Sound.CLICK);
-          closeModal();
-        }}
+        onPress={closeModal}
         style={styles.closeButton}
       />
     </>

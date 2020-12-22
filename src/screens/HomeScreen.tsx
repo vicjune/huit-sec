@@ -34,7 +34,6 @@ export const HomeScreen: FC = () => {
     const cleanedName = newPlayerInput.trim();
     setNewPlayerInput('');
     if (!cleanedName) return;
-    playSound(Sound.CLICK);
     addPlayer(cleanedName);
   };
 
@@ -63,13 +62,7 @@ export const HomeScreen: FC = () => {
           <Text style={styles.playersNumber}>
             {players.length} joueur{players.length > 1 ? 's' : ''}
           </Text>
-          <Pressable
-            style={styles.clearButton}
-            onPress={() => {
-              playSound(Sound.CLICK);
-              removeAllPlayers();
-            }}
-          >
+          <Pressable style={styles.clearButton} onPress={removeAllPlayers}>
             <Icon name="cross" size={30} color={colors.white} />
             <Text style={styles.clearButtonText}>Tout retirer</Text>
           </Pressable>
@@ -83,7 +76,6 @@ export const HomeScreen: FC = () => {
               <Pressable
                 style={styles.playerButton}
                 onPress={() => {
-                  playSound(Sound.CLICK);
                   removePlayer(id);
                 }}
               >
@@ -115,7 +107,6 @@ export const HomeScreen: FC = () => {
         IconElem={IonIcon}
         style={styles.settingsButton}
         onPress={() => {
-          playSound(Sound.CLICK);
           openModal(<SettingsModal />);
         }}
       />

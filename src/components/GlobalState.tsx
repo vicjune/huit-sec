@@ -11,9 +11,10 @@ import { v4 as genUuid } from 'uuid';
 import { pickRandomItem } from '../utils/pickRandomItem';
 
 const STORAGE_PLAYERS_KEY = '@playerNames';
+const STORAGE_VICTORY_KEY = '@victoryScore';
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
-const DEFAULT_SCORE_VICTORY = 15;
+const DEFAULT_SCORE_VICTORY = 10;
 
 interface GlobalStateContext {
   players: Player[];
@@ -24,8 +25,8 @@ interface GlobalStateContext {
   removeAllPlayers: () => void;
   resetScores: () => void;
   newTurn: () => void;
-  goodAnswer: () => void;
-  badAnswer: () => void;
+  goodAnswer: () => boolean;
+  badAnswer: () => boolean;
   scoreVictory: number;
   setScoreVictory: (scoreVictory: number) => void;
 }
@@ -37,8 +38,8 @@ const globalStateContext = createContext<GlobalStateContext>({
   removeAllPlayers: () => {},
   resetScores: () => {},
   newTurn: () => {},
-  goodAnswer: () => {},
-  badAnswer: () => {},
+  goodAnswer: () => false,
+  badAnswer: () => false,
   scoreVictory: 0,
   setScoreVictory: () => {},
 });
@@ -74,6 +75,10 @@ export const GlobalStateProvider: FC = ({ children }) => {
         ...prev,
         players: playerNames.map(getNewPlayer),
       }));
+    });
+    storage.get<number>(STORAGE_VICTORY_KEY).then((scoreVictory) => {
+      if (!scoreVictory) return;
+      setGlobalState((prev) => ({ ...prev, scoreVictory }));
     });
   }, []);
 
@@ -125,7 +130,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
   };
 
   const answer = (good: boolean) => {
-    if (playerAnsweringIndex < 0) return;
+    if (playerAnsweringIndex < 0) return false;
     const newPlayers = [...globalState.players];
     const newScore =
       playerAnswering.score + (good ? VALID_POINTS : INVALID_POINTS);
@@ -134,6 +139,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
       score: newScore < 0 ? 0 : newScore,
     };
     setGlobalState((prev) => ({ ...prev, players: newPlayers }));
+    return newScore >= globalState.scoreVictory;
   };
 
   const resetScores = () => {
@@ -145,6 +151,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
 
   const setScoreVictory = (scoreVictory: number) => {
     setGlobalState((prev) => ({ ...prev, scoreVictory }));
+    storage.set(STORAGE_VICTORY_KEY, scoreVictory);
   };
 
   return (

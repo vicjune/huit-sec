@@ -58,11 +58,9 @@ export const SwitchPlayerScreen: FC = () => {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            playSound(Sound.CLICK);
             navigate(Screen.HOME);
             break;
           case 1:
-            playSound(Sound.CLICK);
             openModal(<ScoreModal />);
         }
       },

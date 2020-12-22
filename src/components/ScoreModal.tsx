@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
 import { useGlobalState } from './GlobalState';
-import { Sound, useSound } from './Sound';
 import Icon from 'react-native-vector-icons/Entypo';
 import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
@@ -12,7 +11,6 @@ import { useModal } from './Modal';
 export const ScoreModal: FC = () => {
   const styles = getStyles();
   const { players } = useGlobalState();
-  const { playSound } = useSound();
   const { closeModal } = useModal();
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
@@ -33,10 +31,7 @@ export const ScoreModal: FC = () => {
         icon="cross"
         small
         IconElem={Icon}
-        onPress={() => {
-          playSound(Sound.CLICK);
-          closeModal();
-        }}
+        onPress={closeModal}
         style={styles.closeButton}
       />
     </>

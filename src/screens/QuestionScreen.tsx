@@ -32,13 +32,7 @@ export const QuestionScreen: FC = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const {
-    goodAnswer,
-    badAnswer,
-    playerAnswering,
-    scoreVictory,
-    players,
-  } = useGlobalState();
+  const { goodAnswer, badAnswer, playerAnswering } = useGlobalState();
   const { openModal } = useModal();
 
   const resetScreen = useCallback(() => {
@@ -89,16 +83,13 @@ export const QuestionScreen: FC = () => {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            playSound(Sound.CLICK);
             navigate(Screen.HOME);
             break;
           case 1:
-            playSound(Sound.CLICK);
             setQuestion(getRandomQuestion());
             resetScreen();
             break;
           case 2:
-            playSound(Sound.CLICK);
             openModal(<ScoreModal />);
         }
       },
@@ -106,8 +97,8 @@ export const QuestionScreen: FC = () => {
   };
 
   const onValid = () => {
-    goodAnswer();
-    if (players.find(({ score }) => score >= scoreVictory)) {
+    const victory = goodAnswer();
+    if (victory) {
       navigate(Screen.VICTORY);
     } else {
       navigate(Screen.SWITCH_PLAYER);

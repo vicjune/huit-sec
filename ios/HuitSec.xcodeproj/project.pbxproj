@@ -19,6 +19,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* HuitSecTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HuitSecTests.m */; };
 		33AD160F72E047869C70FC14 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9268525A466D4D8E93786840 /* MaterialIcons.ttf */; };
+		44DB0BB025925A9300C87BD3 /* kids_cheering.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44DB0BAF25925A9300C87BD3 /* kids_cheering.mp3 */; };
 		44FD29A1258E4AB700604050 /* tick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29A0258E4AB700604050 /* tick.mp3 */; };
 		44FD29E1258E526D00604050 /* bad_buzzer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29E0258E526D00604050 /* bad_buzzer.mp3 */; };
 		44FD29E7258E593E00604050 /* correct.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29E6258E593E00604050 /* correct.mp3 */; };
@@ -78,6 +79,7 @@
 		2D02E4901E0B4A5D006451C7 /* HuitSec-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HuitSec-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		309C827ED61BAC2563C0DDC2 /* Pods-HuitSec-HuitSecTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec-HuitSecTests.release.xcconfig"; path = "Target Support Files/Pods-HuitSec-HuitSecTests/Pods-HuitSec-HuitSecTests.release.xcconfig"; sourceTree = "<group>"; };
 		43AD329074974DBCBAC0296C /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		44DB0BAF25925A9300C87BD3 /* kids_cheering.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = kids_cheering.mp3; path = ../../android/app/src/main/res/raw/kids_cheering.mp3; sourceTree = "<group>"; };
 		44FD29A0258E4AB700604050 /* tick.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = tick.mp3; path = ../../android/app/src/main/res/raw/tick.mp3; sourceTree = "<group>"; };
 		44FD29E0258E526D00604050 /* bad_buzzer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bad_buzzer.mp3; path = ../../android/app/src/main/res/raw/bad_buzzer.mp3; sourceTree = "<group>"; };
 		44FD29E6258E593E00604050 /* correct.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = correct.mp3; path = ../../android/app/src/main/res/raw/correct.mp3; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 		44FD299F258E4A9100604050 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				44DB0BAF25925A9300C87BD3 /* kids_cheering.mp3 */,
 				44FD29F2258E63E100604050 /* click.mp3 */,
 				44FD29F3258E63E100604050 /* timesup_buzzer.wav */,
 				44FD29EC258E5F1E00604050 /* blip.mp3 */,
@@ -444,6 +447,7 @@
 				33AD160F72E047869C70FC14 /* MaterialIcons.ttf in Resources */,
 				1F7AD0AF79F44D7E9B295722 /* Octicons.ttf in Resources */,
 				D6A7D9B223CA416A9F5097F0 /* SimpleLineIcons.ttf in Resources */,
+				44DB0BB025925A9300C87BD3 /* kids_cheering.mp3 in Resources */,
 				44FD29A1258E4AB700604050 /* tick.mp3 in Resources */,
 				514BB53B689E4604A0167762 /* Zocial.ttf in Resources */,
 			);
