@@ -4,12 +4,12 @@ import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import Icon from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
-import { Sound, useSound } from '../components/Sound';
+import { Sound, useSound } from '../contexts/Sound';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { Screen } from '../App';
-import { useModal } from '../components/Modal';
+import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
-import { useGlobalState } from '../components/GlobalState';
+import { useGlobalState } from '../contexts/GlobalState';
 import { colors } from '../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 
@@ -35,15 +35,10 @@ export const VictoryScreen: FC = () => {
   }, [navigation, playSound]);
 
   return (
-    <ScreenWrapper style={styles.wrapper}>
+    <ScreenWrapper>
       <View style={styles.winner}>
         <Text style={styles.winnerLabel}>C'est gagné!</Text>
-        <FAIcon
-          style={styles.winnerIcon}
-          name="crown"
-          size={80}
-          color={colors.white}
-        />
+        <FAIcon name="crown" size={80} color={colors.first} />
         <Text style={styles.winnerName}>{winner?.name}</Text>
       </View>
       <BasicButton
@@ -70,9 +65,7 @@ export const VictoryScreen: FC = () => {
 
 const getStyles = () =>
   StyleSheet.create({
-    wrapper: {},
     winner: {
-      justifyContent: 'center',
       alignItems: 'center',
       flex: 1,
     },
@@ -80,13 +73,12 @@ const getStyles = () =>
       color: colors.white,
       fontSize: 40,
       textAlign: 'center',
-      marginTop: 20,
-    },
-    winnerIcon: {
-      opacity: 0.3,
+      marginTop: 10,
+      marginBottom: 'auto',
     },
     winnerLabel: {
-      marginBottom: 40,
+      marginTop: 40,
+      marginBottom: 'auto',
       opacity: 0.6,
       color: colors.white,
       fontSize: 50,

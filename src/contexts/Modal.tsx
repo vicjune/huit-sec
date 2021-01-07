@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from 'react';
 import { Modal as RnModal } from 'react-native';
-import { ScreenWrapper } from './ScreenWrapper';
+import { ScreenWrapper } from '../components/ScreenWrapper';
 
 interface ModalContext {
   openModal: (content: ReactNode) => void;

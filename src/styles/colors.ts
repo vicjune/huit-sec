@@ -9,4 +9,10 @@ export const colors = {
   inputBackground: 'hsla(0, 0%, 100%, 0.1)',
   border: 'hsla(0, 0%, 100%, 0.1)',
   chipsBorder: 'hsla(0, 0%, 100%, 0.5)',
+  first: 'hsl(44, 100%, 50%)',
+  firstShadow: 'hsla(44, 100%, 50%, 0.5)',
+  second: 'hsl(0, 0%, 80%)',
+  secondShadow: 'hsla(0, 0%, 80%, 0.5)',
+  third: 'hsl(32, 100%, 40%)',
+  thirdShadow: 'hsla(32, 100%, 40%, 0.5)',
 };

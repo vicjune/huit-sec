@@ -2,11 +2,11 @@ import React, { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
-import { useGlobalState } from './GlobalState';
+import { useGlobalState } from '../contexts/GlobalState';
 import Icon from 'react-native-vector-icons/Entypo';
 import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
-import { useModal } from './Modal';
+import { useModal } from '../contexts/Modal';
 
 export const ScoreModal: FC = () => {
   const styles = getStyles();
@@ -19,13 +19,25 @@ export const ScoreModal: FC = () => {
     <>
       <Text style={styles.title}>Scores</Text>
       <ScrollView alwaysBounceVertical={false} style={styles.players}>
-        {sortedPlayers.map(({ id, name, score }, i) => (
-          <View style={styles.player} key={id}>
-            <Text style={styles.rank}>{getRank(i)}</Text>
-            <Text style={styles.playerName}>{name}</Text>
-            <Text style={styles.score}>{score}</Text>
-          </View>
-        ))}
+        {sortedPlayers.map(({ id, name, score }, i) => {
+          const rank = getRank(i, sortedPlayers);
+          return (
+            <View style={styles.player} key={id}>
+              <Text
+                style={[
+                  styles.rank,
+                  rank === '1er' && styles.rankFirst,
+                  rank === '2e' && styles.rankSecond,
+                  rank === '3e' && styles.rankThird,
+                ]}
+              >
+                {rank}
+              </Text>
+              <Text style={styles.playerName}>{name}</Text>
+              <Text style={styles.score}>{score}</Text>
+            </View>
+          );
+        })}
       </ScrollView>
       <BasicButton
         icon="cross"
@@ -66,6 +78,24 @@ const getStyles = () =>
       color: colors.white,
       opacity: 0.5,
       width: 60,
+    },
+    rankFirst: {
+      color: colors.first,
+      textShadowColor: colors.firstShadow,
+      textShadowRadius: 10,
+      opacity: 1,
+    },
+    rankSecond: {
+      color: colors.second,
+      textShadowColor: colors.secondShadow,
+      textShadowRadius: 10,
+      opacity: 1,
+    },
+    rankThird: {
+      color: colors.third,
+      textShadowColor: colors.thirdShadow,
+      textShadowRadius: 10,
+      opacity: 1,
     },
     playerName: {
       fontSize: 20,

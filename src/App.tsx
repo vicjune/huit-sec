@@ -6,11 +6,11 @@ import { HomeScreen } from './screens/HomeScreen';
 import { QuestionScreen } from './screens/QuestionScreen';
 import { colors } from './styles/colors';
 import { SwitchPlayerScreen } from './screens/SwitchPlayerScreen';
-import { Modal, ModalProvider } from './components/Modal';
+import { Modal, ModalProvider } from './contexts/Modal';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { Overlay, OverlayProvider } from './components/Overlay';
-import { SoundProvider } from './components/Sound';
-import { GlobalStateProvider } from './components/GlobalState';
+import { Overlay, OverlayProvider } from './contexts/Overlay';
+import { SoundProvider } from './contexts/Sound';
+import { GlobalStateProvider } from './contexts/GlobalState';
 import { VictoryScreen } from './screens/VictoryScreen';
 
 const Stack = createStackNavigator();

@@ -2,8 +2,8 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, Vibration } from 'react-native';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
-import { useOverlay } from './Overlay';
-import { useSound, Sound } from './Sound';
+import { useOverlay } from '../contexts/Overlay';
+import { useSound, Sound } from '../contexts/Sound';
 
 const DEFAULT_TIMER = 8000; // 8s
 const INTERVAL = 1000; // 1s

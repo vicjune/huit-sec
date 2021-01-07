@@ -4,8 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
 import { BasicButton } from './BasicButton';
 import Icon from 'react-native-vector-icons/Entypo';
-import { useModal } from './Modal';
-import { useGlobalState } from './GlobalState';
+import { useModal } from '../contexts/Modal';
+import { useGlobalState } from '../contexts/GlobalState';
 
 const MIN_SCORE_VICTORY = 1;
 const MAX_SCORE_VICTORY = 30;

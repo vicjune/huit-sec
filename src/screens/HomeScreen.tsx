@@ -2,15 +2,15 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
-import { useGlobalState } from '../components/GlobalState';
+import { useGlobalState } from '../contexts/GlobalState';
 import { Input } from '../components/Input';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Sound, useSound } from '../components/Sound';
+import { Sound, useSound } from '../contexts/Sound';
 import { colors } from '../styles/colors';
 import Icon from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useModal } from '../components/Modal';
+import { useModal } from '../contexts/Modal';
 import { SettingsModal } from '../components/SettingsModal';
 import { Screen } from '../App';
 
@@ -90,6 +90,14 @@ export const HomeScreen: FC = () => {
           ))}
         </View>
       </ScrollView>
+      {!players.length && (
+        <View style={styles.tooltip}>
+          <Text style={styles.tooltipText}>
+            Commence par ajouter des joueurs
+          </Text>
+          <Icon name="arrow-bold-down" size={60} color={colors.white} />
+        </View>
+      )}
       <View style={styles.inputWrapper}>
         <Input
           style={styles.input}
@@ -204,5 +212,17 @@ const getStyles = (input: boolean) =>
       position: 'absolute',
       top: 10,
       left: 10,
+    },
+    tooltip: {
+      alignItems: 'center',
+      marginLeft: 40,
+      marginRight: 40,
+      marginBottom: 20,
+    },
+    tooltipText: {
+      color: colors.white,
+      fontSize: 25,
+      textAlign: 'center',
+      marginBottom: 10,
     },
   });

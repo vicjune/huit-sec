@@ -6,11 +6,11 @@ import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
-import { useGlobalState } from '../components/GlobalState';
-import { useModal } from '../components/Modal';
+import { useGlobalState } from '../contexts/GlobalState';
+import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Sound, useSound } from '../components/Sound';
+import { Sound, useSound } from '../contexts/Sound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 
@@ -69,7 +69,7 @@ export const SwitchPlayerScreen: FC = () => {
 
   return (
     <ScreenWrapper style={styles.wrapper}>
-      <Icon name="forward" size={60} color={colors.white} style={styles.icon} />
+      <Icon name="forward" size={80} color={colors.white} style={styles.icon} />
       <Text style={styles.label}>Passe le téléphone à</Text>
       <Text style={styles.name}>{playerAsking?.name}</Text>
       <Animated.View
@@ -110,7 +110,7 @@ const getStyles = () =>
     icon: {
       marginTop: 'auto',
       marginBottom: 50,
-      opacity: 0.8,
+      opacity: 0.3,
     },
     label: {
       color: colors.white,

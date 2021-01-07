@@ -2,9 +2,10 @@ import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
-import { INVALID_POINTS, useGlobalState, VALID_POINTS } from './GlobalState';
-import { useOverlay } from './Overlay';
-import { Sound, useSound } from './Sound';
+import { useGlobalState } from '../contexts/GlobalState';
+import { useOverlay } from '../contexts/Overlay';
+import { Sound, useSound } from '../contexts/Sound';
+import { INVALID_POINTS, VALID_POINTS } from '../utils/scores';
 
 interface VerdictProps {
   onValid: () => void;
