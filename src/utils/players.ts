@@ -4,6 +4,7 @@ import { storage, STORAGE_PLAYERS_KEY } from './storage';
 import { v4 as genUuid } from 'uuid';
 import { pickRandomItem } from './pickRandomItem';
 import { Player } from '../types/Players';
+import { getRandomEvent, SpecialEventId } from './specialEvents';
 
 const getNewPlayer = (name: string) => ({
   id: genUuid(),
@@ -52,24 +53,45 @@ export const removeAllPlayers = (
   storage.remove(STORAGE_PLAYERS_KEY);
 };
 
+const getLeastAnswerPlayers = (players: Player[]) =>
+  players.reduce((prev, player) => {
+    if (!prev[0] || prev[0].nbrAnswered > player.nbrAnswered) {
+      return [player];
+    }
+    if (prev[0].nbrAnswered < player.nbrAnswered) return prev;
+    return [...prev, player];
+  }, [] as Player[]);
+
 export const newTurn = (
   globalState: GlobalState,
   setGlobalState: Dispatch<SetStateAction<GlobalState>>,
 ) => {
-  const newPlayerAnsweringPool = globalState.players
-    .filter(({ id }) => globalState.playerAnsweringId !== id)
-    .reduce((prev, player) => {
-      if (!prev[0] || prev[0].nbrAnswered > player.nbrAnswered) {
-        return [player];
-      }
-      if (prev[0].nbrAnswered < player.nbrAnswered) return prev;
-      return [...prev, player];
-    }, [] as Player[]);
+  const newEvent = getRandomEvent(globalState.players.length);
+
+  const newPlayerAnsweringPool = getLeastAnswerPlayers(
+    globalState.players.filter(
+      ({ id }) => globalState.playerAnsweringId !== id,
+    ),
+  );
   const newPlayerAnswering = pickRandomItem(newPlayerAnsweringPool);
+
+  let newSecondaryPlayerAnswering: Player | undefined;
+  if (newEvent?.id === SpecialEventId.DUEL) {
+    const newSecondaryPlayerAnsweringPool = getLeastAnswerPlayers(
+      globalState.players.filter(({ id }) => newPlayerAnswering?.id !== id),
+    );
+    newSecondaryPlayerAnswering = pickRandomItem(
+      newSecondaryPlayerAnsweringPool,
+    );
+  }
 
   const newPlayerAskingPool = globalState.players.filter(
     ({ id }) =>
-      ![globalState.playerAskingId, newPlayerAnswering?.id].includes(id),
+      ![
+        globalState.playerAskingId,
+        newPlayerAnswering?.id,
+        newSecondaryPlayerAnswering?.id,
+      ].includes(id),
   );
   const newPlayerAsking = pickRandomItem(newPlayerAskingPool);
 
@@ -77,5 +99,7 @@ export const newTurn = (
     ...prev,
     playerAskingId: newPlayerAsking?.id,
     playerAnsweringId: newPlayerAnswering?.id,
+    secondaryPlayerAnsweringId: newSecondaryPlayerAnswering?.id,
+    currentEvent: newEvent,
   }));
 };

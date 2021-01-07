@@ -22,12 +22,14 @@ import {
 } from '../utils/players';
 import { answer, resetScores, setScoreVictory } from '../utils/scores';
 import { loadQuestions, newQuestion } from '../utils/questions';
+import { SpecialEvent } from '../utils/specialEvents';
 
 const DEFAULT_SCORE_VICTORY = 10;
 
 interface GlobalStateContext {
   players: Player[];
   playerAnswering?: Player;
+  secondaryPlayerAnswering?: Player;
   playerAsking?: Player;
   addPlayer: (name: string) => void;
   removePlayer: (id: string) => void;
@@ -40,6 +42,7 @@ interface GlobalStateContext {
   scoreVictory: number;
   setScoreVictory: (scoreVictory: number) => void;
   currentQuestion?: Question;
+  currentEvent?: SpecialEvent;
 }
 
 const globalStateContext = createContext<GlobalStateContext>({
@@ -59,11 +62,13 @@ const globalStateContext = createContext<GlobalStateContext>({
 export interface GlobalState {
   players: Player[];
   playerAnsweringId?: string;
+  secondaryPlayerAnsweringId?: string;
   playerAskingId?: string;
   scoreVictory: number;
   questions: Question[];
   questionAlreadySeenIds: string[];
   currentQuestion?: Question;
+  currentEvent?: SpecialEvent;
 }
 
 const getNewPlayer = (name: string) => ({
@@ -83,6 +88,9 @@ export const GlobalStateProvider: FC = ({ children }) => {
 
   const playerAnswering = globalState.players.find(
     ({ id }) => globalState.playerAnsweringId === id,
+  );
+  const secondaryPlayerAnswering = globalState.players.find(
+    ({ id }) => globalState.secondaryPlayerAnsweringId === id,
   );
   const playerAsking = globalState.players.find(
     ({ id }) => globalState.playerAskingId === id,
@@ -117,9 +125,11 @@ export const GlobalStateProvider: FC = ({ children }) => {
       value={{
         players: globalState.players,
         playerAnswering,
+        secondaryPlayerAnswering,
         playerAsking,
         scoreVictory: globalState.scoreVictory,
         currentQuestion: globalState.currentQuestion,
+        currentEvent: globalState.currentEvent,
         addPlayer: (playerName) =>
           addPlayer(playerName, globalState, setGlobalState),
         removePlayer: (id) => removePlayer(id, globalState, setGlobalState),

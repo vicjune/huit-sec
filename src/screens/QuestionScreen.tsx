@@ -17,6 +17,7 @@ import { Verdict } from '../components/Verdict';
 import { colors } from '../styles/colors';
 import { leadingZeros } from '../utils/leadingZeros';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
+import { SpecialEventModal } from '../components/SpecialEventModal';
 
 const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
 
@@ -34,6 +35,7 @@ export const QuestionScreen: FC = () => {
     playerAnswering,
     currentQuestion,
     newQuestion,
+    currentEvent,
   } = useGlobalState();
   const { openModal } = useModal();
 
@@ -45,12 +47,16 @@ export const QuestionScreen: FC = () => {
   useEffect(() => {
     const unsubFocus = navigation.addListener('focus', () => {
       newQuestion();
-      displayOverlay({
-        text: `Question pour ${playerAnswering?.name}`,
-        icon: 'chatbox-ellipses',
-        IconElem: IonIcon,
-        duration: PLAYER_ANSWERING_DURATION,
-      });
+      if (currentEvent) {
+        openModal(<SpecialEventModal />);
+      } else {
+        displayOverlay({
+          text: `Question pour ${playerAnswering?.name}`,
+          icon: 'chatbox-ellipses',
+          IconElem: IonIcon,
+          duration: PLAYER_ANSWERING_DURATION,
+        });
+      }
     });
 
     const unsubBlur = navigation.addListener('blur', () => {
@@ -61,7 +67,15 @@ export const QuestionScreen: FC = () => {
       unsubFocus();
       unsubBlur();
     };
-  }, [navigation, newQuestion, resetScreen, displayOverlay, playerAnswering]);
+  }, [
+    navigation,
+    newQuestion,
+    resetScreen,
+    displayOverlay,
+    playerAnswering,
+    openModal,
+    currentEvent,
+  ]);
 
   const menuButtonPressed = () => {
     showActionSheetWithOptions(
