@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
+import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
@@ -49,6 +50,7 @@ export const QuestionScreen: FC = () => {
       newQuestion();
       if (currentEvent) {
         openModal(<SpecialEventModal />);
+        playSound(Sound.SURPRISE);
       } else {
         displayOverlay({
           text: `Question pour ${playerAnswering?.name}`,
@@ -75,6 +77,7 @@ export const QuestionScreen: FC = () => {
     playerAnswering,
     openModal,
     currentEvent,
+    playSound,
   ]);
 
   const menuButtonPressed = () => {
@@ -163,8 +166,8 @@ export const QuestionScreen: FC = () => {
         <BasicButton
           small
           style={styles.menuButton}
-          icon="bars"
-          IconElem={FAIcon}
+          icon="menu"
+          IconElem={EIcon}
           onPress={menuButtonPressed}
         />
       </ScreenWrapper>

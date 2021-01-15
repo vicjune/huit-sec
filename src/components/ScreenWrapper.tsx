@@ -5,14 +5,19 @@ import { colors } from '../styles/colors';
 
 interface ScreenWrapperProps {
   style?: Record<string, unknown>;
+  wrapperStyle?: Record<string, unknown>;
 }
 
-export const ScreenWrapper: FC<ScreenWrapperProps> = ({ children, style }) => {
+export const ScreenWrapper: FC<ScreenWrapperProps> = ({
+  children,
+  style,
+  wrapperStyle,
+}) => {
   return (
-    <View style={styles.wrapper}>
+    <View style={{ ...styles.wrapper, ...wrapperStyle }}>
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
-          style={{ ...style, ...styles.inside }}
+          style={{ ...styles.inside, ...style }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
           {children}

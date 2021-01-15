@@ -15,6 +15,7 @@ export enum Sound {
   WRONG,
   CORRECT,
   VICTORY,
+  SURPRISE,
 }
 
 interface SoundContext {
@@ -38,6 +39,7 @@ export const SoundProvider: FC = ({ children }) => {
       [Sound.WRONG]: new RnSound('bad_buzzer.mp3', RnSound.MAIN_BUNDLE),
       [Sound.CORRECT]: new RnSound('correct.mp3', RnSound.MAIN_BUNDLE),
       [Sound.VICTORY]: new RnSound('kids_cheering.mp3', RnSound.MAIN_BUNDLE),
+      [Sound.SURPRISE]: new RnSound('ooooh.mp3', RnSound.MAIN_BUNDLE),
     });
   }, []);
 

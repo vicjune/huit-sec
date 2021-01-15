@@ -6,7 +6,6 @@ import React, {
   useContext,
 } from 'react';
 import { Modal as RnModal } from 'react-native';
-import { ScreenWrapper } from '../components/ScreenWrapper';
 
 interface ModalContext {
   openModal: (content: ReactNode) => void;
@@ -52,8 +51,9 @@ export const Modal: FC = () => {
       visible={!!modalContent}
       animationType="slide"
       onRequestClose={closeModal}
+      presentationStyle="pageSheet"
     >
-      <ScreenWrapper>{modalContent}</ScreenWrapper>
+      {modalContent}
     </RnModal>
   );
 };

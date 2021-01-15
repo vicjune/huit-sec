@@ -4,7 +4,7 @@ import { storage, STORAGE_PLAYERS_KEY } from './storage';
 import { v4 as genUuid } from 'uuid';
 import { pickRandomItem } from './pickRandomItem';
 import { Player } from '../types/Players';
-import { getRandomEvent, SpecialEventId } from './specialEvents';
+import { getRandomEvent, SpecialEvent, SpecialEventId } from './specialEvents';
 
 const getNewPlayer = (name: string) => ({
   id: genUuid(),
@@ -66,14 +66,20 @@ export const newTurn = (
   globalState: GlobalState,
   setGlobalState: Dispatch<SetStateAction<GlobalState>>,
 ) => {
-  const newEvent = getRandomEvent(globalState.players.length);
+  let newEvent: SpecialEvent | undefined;
+  if (globalState.currentQuestion) {
+    newEvent = getRandomEvent(globalState.players.length);
+  }
 
-  const newPlayerAnsweringPool = getLeastAnswerPlayers(
-    globalState.players.filter(
-      ({ id }) => globalState.playerAnsweringId !== id,
-    ),
-  );
-  const newPlayerAnswering = pickRandomItem(newPlayerAnsweringPool);
+  let newPlayerAnswering: Player | undefined;
+  if (newEvent?.id !== SpecialEventId.EVERYONE) {
+    const newPlayerAnsweringPool = getLeastAnswerPlayers(
+      globalState.players.filter(
+        ({ id }) => globalState.playerAnsweringId !== id,
+      ),
+    );
+    newPlayerAnswering = pickRandomItem(newPlayerAnsweringPool);
+  }
 
   let newSecondaryPlayerAnswering: Player | undefined;
   if (newEvent?.id === SpecialEventId.DUEL) {

@@ -10,6 +10,7 @@ import {
   storage,
   STORAGE_PLAYERS_KEY,
   STORAGE_QUESTIONS_SEEN_KEY,
+  STORAGE_TIMER_KEY,
   STORAGE_VICTORY_KEY,
 } from '../utils/storage';
 import { v4 as genUuid } from 'uuid';
@@ -20,11 +21,13 @@ import {
   removePlayer,
   newTurn,
 } from '../utils/players';
-import { answer, resetScores, setScoreVictory } from '../utils/scores';
+import { answer, resetGame, setScoreVictory } from '../utils/scores';
 import { loadQuestions, newQuestion } from '../utils/questions';
 import { SpecialEvent } from '../utils/specialEvents';
+import { setTimerValue } from '../utils/timer';
 
 const DEFAULT_SCORE_VICTORY = 10;
+const DEFAULT_TIMER_VALUE = 8000;
 
 interface GlobalStateContext {
   players: Player[];
@@ -34,13 +37,15 @@ interface GlobalStateContext {
   addPlayer: (name: string) => void;
   removePlayer: (id: string) => void;
   removeAllPlayers: () => void;
-  resetScores: () => void;
+  resetGame: () => void;
   newTurn: () => void;
   newQuestion: () => void;
   goodAnswer: () => boolean;
   badAnswer: () => boolean;
   scoreVictory: number;
   setScoreVictory: (scoreVictory: number) => void;
+  timerValue: number;
+  setTimerValue: (timerValue: number) => void;
   currentQuestion?: Question;
   currentEvent?: SpecialEvent;
 }
@@ -48,14 +53,16 @@ interface GlobalStateContext {
 const globalStateContext = createContext<GlobalStateContext>({
   players: [],
   scoreVictory: 0,
+  timerValue: 0,
   addPlayer: () => {},
   removePlayer: () => {},
   removeAllPlayers: () => {},
-  resetScores: () => {},
+  resetGame: () => {},
   newTurn: () => {},
   goodAnswer: () => false,
   badAnswer: () => false,
   setScoreVictory: () => {},
+  setTimerValue: () => {},
   newQuestion: () => {},
 });
 
@@ -65,6 +72,7 @@ export interface GlobalState {
   secondaryPlayerAnsweringId?: string;
   playerAskingId?: string;
   scoreVictory: number;
+  timerValue: number;
   questions: Question[];
   questionAlreadySeenIds: string[];
   currentQuestion?: Question;
@@ -84,6 +92,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
     questions: [],
     questionAlreadySeenIds: [],
     scoreVictory: DEFAULT_SCORE_VICTORY,
+    timerValue: DEFAULT_TIMER_VALUE,
   });
 
   const playerAnswering = globalState.players.find(
@@ -110,6 +119,11 @@ export const GlobalStateProvider: FC = ({ children }) => {
       setGlobalState((prev) => ({ ...prev, scoreVictory }));
     });
 
+    storage.get<number>(STORAGE_TIMER_KEY).then((timerValue) => {
+      if (!timerValue) return;
+      setGlobalState((prev) => ({ ...prev, timerValue }));
+    });
+
     storage
       .get<string[]>(STORAGE_QUESTIONS_SEEN_KEY)
       .then((questionAlreadySeenIds) => {
@@ -128,6 +142,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
         secondaryPlayerAnswering,
         playerAsking,
         scoreVictory: globalState.scoreVictory,
+        timerValue: globalState.timerValue,
         currentQuestion: globalState.currentQuestion,
         currentEvent: globalState.currentEvent,
         addPlayer: (playerName) =>
@@ -135,11 +150,13 @@ export const GlobalStateProvider: FC = ({ children }) => {
         removePlayer: (id) => removePlayer(id, globalState, setGlobalState),
         removeAllPlayers: () => removeAllPlayers(setGlobalState),
         newTurn: () => newTurn(globalState, setGlobalState),
-        resetScores: () => resetScores(setGlobalState),
+        resetGame: () => resetGame(setGlobalState),
         goodAnswer: () => answer(true, globalState, setGlobalState),
         badAnswer: () => answer(false, globalState, setGlobalState),
         setScoreVictory: (scoreVictory: number) =>
           setScoreVictory(scoreVictory, setGlobalState),
+        setTimerValue: (timerValue: number) =>
+          setTimerValue(timerValue, setGlobalState),
         newQuestion: () => newQuestion(globalState, setGlobalState),
       }}
     >

@@ -26,7 +26,7 @@ export const HomeScreen: FC = () => {
     addPlayer,
     removePlayer,
     removeAllPlayers,
-    resetScores,
+    resetGame,
   } = useGlobalState();
   const styles = getStyles(!!newPlayerInput);
 
@@ -48,7 +48,7 @@ export const HomeScreen: FC = () => {
           onPress={() => {
             Keyboard.dismiss();
             playSound(Sound.CLICK);
-            resetScores();
+            resetGame();
             navigation.navigate(Screen.SWITCH_PLAYER);
           }}
         />

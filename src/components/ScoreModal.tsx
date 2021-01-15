@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
 import { useModal } from '../contexts/Modal';
+import { ScreenWrapper } from './ScreenWrapper';
 
 export const ScoreModal: FC = () => {
   const styles = getStyles();
@@ -16,7 +17,7 @@ export const ScoreModal: FC = () => {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
   return (
-    <>
+    <ScreenWrapper>
       <Text style={styles.title}>Scores</Text>
       <ScrollView alwaysBounceVertical={false} style={styles.players}>
         {sortedPlayers.map(({ id, name, score }, i) => {
@@ -46,7 +47,7 @@ export const ScoreModal: FC = () => {
         onPress={closeModal}
         style={styles.closeButton}
       />
-    </>
+    </ScreenWrapper>
   );
 };
 

@@ -27,12 +27,14 @@ export const answer = (
   return newScore >= globalState.scoreVictory;
 };
 
-export const resetScores = (
+export const resetGame = (
   setGlobalState: Dispatch<SetStateAction<GlobalState>>,
 ) => {
   setGlobalState((prev) => ({
     ...prev,
     players: prev.players.map((player) => ({ ...player, score: 0 })),
+    currentQuestion: undefined,
+    currentEvent: undefined,
   }));
 };
 

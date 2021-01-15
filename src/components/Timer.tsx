@@ -4,8 +4,8 @@ import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
 import { useSound, Sound } from '../contexts/Sound';
+import { useGlobalState } from '../contexts/GlobalState';
 
-const DEFAULT_TIMER = 8000; // 8s
 const INTERVAL = 1000; // 1s
 
 interface TimerProps {
@@ -20,7 +20,8 @@ export const Timer: FC<TimerProps> = ({
   setTimerRunning,
 }) => {
   const styles = getStyles();
-  const [timer, setTimer] = useState<number>(DEFAULT_TIMER);
+  const { timerValue } = useGlobalState();
+  const [timer, setTimer] = useState<number>(timerValue);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
@@ -28,9 +29,9 @@ export const Timer: FC<TimerProps> = ({
   useEffect(() => {
     if (!timerRunning) {
       clearInterval(intervalRef);
-      setTimer(DEFAULT_TIMER);
+      setTimer(timerValue);
     }
-  }, [setIntervalRef, timerRunning, setTimer, intervalRef]);
+  }, [setIntervalRef, timerRunning, setTimer, intervalRef, timerValue]);
 
   useEffect(() => {
     if (timer <= 0) {
@@ -81,7 +82,7 @@ export const Timer: FC<TimerProps> = ({
           />
         )}
       </Pressable>
-      <Text style={styles.timerButtonText}>{DEFAULT_TIMER / 1000}s</Text>
+      <Text style={styles.timerButtonText}>{timerValue / 1000}s</Text>
     </>
   );
 };

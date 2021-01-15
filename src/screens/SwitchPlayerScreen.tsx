@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useEffect, useRef } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Entypo';
 import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
 import { useGlobalState } from '../contexts/GlobalState';
@@ -69,7 +69,12 @@ export const SwitchPlayerScreen: FC = () => {
 
   return (
     <ScreenWrapper style={styles.wrapper}>
-      <Icon name="forward" size={80} color={colors.white} style={styles.icon} />
+      <Icon
+        name="forward"
+        size={100}
+        color={colors.white}
+        style={styles.icon}
+      />
       <Text style={styles.label}>Passe le téléphone à</Text>
       <Text style={styles.name}>{playerAsking?.name}</Text>
       <Animated.View
@@ -91,7 +96,7 @@ export const SwitchPlayerScreen: FC = () => {
       <BasicButton
         small
         style={styles.menuButton}
-        icon="bars"
+        icon="menu"
         IconElem={Icon}
         onPress={menuButtonPressed}
       />
