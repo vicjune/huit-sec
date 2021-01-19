@@ -3,10 +3,11 @@ import { pickRandomItem } from './pickRandomItem';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { default as MIcon } from 'react-native-vector-icons/MaterialIcons';
+import { default as MCIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export enum SpecialEventId {
   INNOCENT = 'INNOCENT',
-  SEXUAL = 'SEXUAL',
+  DIRTY = 'DIRTY',
   EVERYONE = 'EVERYONE',
   FLASHBACK = 'FLASHBACK',
   DUEL = 'DUEL',
@@ -20,6 +21,7 @@ export interface SpecialEvent {
   iconType: ElementType;
   icon: string;
   color: string;
+  backgroundColor: string;
   minPlayers?: number;
 }
 
@@ -31,16 +33,18 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     probability: 4,
     iconType: FAIcon,
     icon: 'baby-carriage',
-    color: 'hsl(217, 100%, 71%)',
+    color: 'hsl(217, 100%, 78%)',
+    backgroundColor: 'hsl(217, 100%, 71%)',
   },
-  [SpecialEventId.SEXUAL]: {
-    id: SpecialEventId.SEXUAL,
+  [SpecialEventId.DIRTY]: {
+    id: SpecialEventId.DIRTY,
     title: 'Esprit mal tourné',
     description: 'Obligation de répondre à la question par des trucs salaces',
     probability: 4,
     iconType: EntIcon,
     icon: 'mask',
-    color: 'hsl(292, 100%, 18%)',
+    color: 'hsl(292, 63%, 59%)',
+    backgroundColor: 'hsl(292, 100%, 18%)',
   },
   [SpecialEventId.EVERYONE]: {
     id: SpecialEventId.EVERYONE,
@@ -50,7 +54,8 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     probability: 2,
     iconType: MIcon,
     icon: 'local-fire-department',
-    color: 'hsl(18, 100%, 50%)',
+    color: 'hsl(18, 100%, 61%)',
+    backgroundColor: 'hsl(18, 100%, 50%)',
     minPlayers: 4,
   },
   [SpecialEventId.FLASHBACK]: {
@@ -61,7 +66,8 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     probability: 3,
     iconType: EntIcon,
     icon: 'back-in-time',
-    color: 'hsl(53, 100%, 41%)',
+    color: 'hsl(53, 100%, 50%)',
+    backgroundColor: 'hsl(53, 100%, 41%)',
   },
   [SpecialEventId.DUEL]: {
     id: SpecialEventId.DUEL,
@@ -69,9 +75,10 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     description:
       'Ces 2 joueurs répondent à la question en même temps, tu choisis le gagnant',
     probability: 4,
-    iconType: EntIcon,
-    icon: 'chat',
-    color: 'hsl(237, 100%, 34%)',
+    iconType: MCIcon,
+    icon: 'lightning-bolt',
+    color: 'hsl(115, 47%, 51%)',
+    backgroundColor: 'hsl(115, 71%, 22%)',
     minPlayers: 3,
   },
 };

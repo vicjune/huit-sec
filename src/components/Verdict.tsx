@@ -6,81 +6,149 @@ import { useGlobalState } from '../contexts/GlobalState';
 import { useOverlay } from '../contexts/Overlay';
 import { Sound, useSound } from '../contexts/Sound';
 import { INVALID_POINTS, VALID_POINTS } from '../utils/scores';
+import { SpecialEventId } from '../utils/specialEvents';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Player } from '../types/Players';
 
 interface VerdictProps {
-  onValid: () => void;
-  onInvalid: () => void;
+  onAnswer: (winnerId?: string) => void;
 }
 
-export const Verdict: FC<VerdictProps> = ({ onValid, onInvalid }) => {
+export const Verdict: FC<VerdictProps> = ({ onAnswer }) => {
   const styles = getStyles();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const { playerAnswering } = useGlobalState();
+  const {
+    playerAnswering,
+    currentEvent,
+    players,
+    playerAsking,
+    secondaryPlayerAnswering,
+  } = useGlobalState();
+  const basicVerdict =
+    !currentEvent ||
+    ![SpecialEventId.DUEL, SpecialEventId.EVERYONE].includes(currentEvent.id);
+
+  if (basicVerdict) {
+    return (
+      <>
+        <Text style={styles.verdictText}>
+          Tu valides la réponse de {playerAnswering?.name} ?
+        </Text>
+        <View style={styles.verdict}>
+          <Pressable
+            onPress={async () => {
+              playSound(Sound.WRONG);
+              await displayOverlay({
+                text: "C'est refusé!",
+                bottomText: INVALID_POINTS.toString(),
+                icon: 'times',
+                IconElem: FAIcon,
+                style: styles.invalidScreen,
+              });
+              onAnswer();
+            }}
+            style={({ pressed }) => [
+              styles.verdictButton,
+              styles.verdictButtonInvalid,
+              pressed && styles.verdictButtonInvalidPressed,
+            ]}
+          >
+            {({ pressed }) => (
+              <>
+                <FAIcon
+                  name="times"
+                  size={70}
+                  color={pressed ? colors.background : colors.invalid}
+                />
+              </>
+            )}
+          </Pressable>
+          <Pressable
+            onPress={async () => {
+              playSound(Sound.CORRECT);
+              await displayOverlay({
+                text: "C'est validé!",
+                bottomText: `+${VALID_POINTS}`,
+                icon: 'check',
+                IconElem: FAIcon,
+                style: styles.validScreen,
+              });
+              onAnswer(playerAnswering?.id);
+            }}
+            style={({ pressed }) => [
+              styles.verdictButton,
+              styles.verdictButtonValid,
+              pressed && styles.verdictButtonValidPressed,
+            ]}
+          >
+            {({ pressed }) => (
+              <>
+                <FAIcon
+                  name="check"
+                  size={70}
+                  color={pressed ? colors.background : colors.valid}
+                />
+              </>
+            )}
+          </Pressable>
+        </View>
+      </>
+    );
+  }
+
+  let playerList: Player[] = [];
+  if (currentEvent?.id === SpecialEventId.EVERYONE) {
+    playerList = players.filter(({ id }) => id !== playerAsking?.id);
+  }
+
+  if (
+    currentEvent?.id === SpecialEventId.DUEL &&
+    playerAnswering &&
+    secondaryPlayerAnswering
+  ) {
+    playerList = [playerAnswering, secondaryPlayerAnswering];
+  }
 
   return (
     <>
-      <Text style={styles.verdictText}>
-        Tu valides la réponse de {playerAnswering?.name} ?
-      </Text>
-      <View style={styles.verdict}>
-        <Pressable
-          onPress={async () => {
-            playSound(Sound.WRONG);
-            await displayOverlay({
-              text: "C'est refusé!",
-              bottomText: INVALID_POINTS.toString(),
-              icon: 'times',
-              IconElem: FAIcon,
-              style: styles.invalidScreen,
-            });
-            onInvalid();
-          }}
-          style={({ pressed }) => [
-            styles.verdictButton,
-            styles.verdictButtonInvalid,
-            pressed && styles.verdictButtonInvalidPressed,
-          ]}
-        >
-          {({ pressed }) => (
-            <>
-              <FAIcon
-                name="times"
-                size={70}
-                color={pressed ? colors.background : colors.invalid}
-              />
-            </>
-          )}
-        </Pressable>
-        <Pressable
-          onPress={async () => {
-            playSound(Sound.CORRECT);
-            await displayOverlay({
-              text: "C'est validé!",
-              bottomText: `+${VALID_POINTS}`,
-              icon: 'check',
-              IconElem: FAIcon,
-              style: styles.validScreen,
-            });
-            onValid();
-          }}
-          style={({ pressed }) => [
-            styles.verdictButton,
-            styles.verdictButtonValid,
-            pressed && styles.verdictButtonValidPressed,
-          ]}
-        >
-          {({ pressed }) => (
-            <>
-              <FAIcon
-                name="check"
-                size={70}
-                color={pressed ? colors.background : colors.valid}
-              />
-            </>
-          )}
-        </Pressable>
-      </View>
+      <Text style={styles.verdictText}>Qui a le mieux répondu ?</Text>
+      <ScrollView
+        contentContainerStyle={styles.playerList}
+        alwaysBounceVertical={false}
+      >
+        {playerList.map(({ id, name }) => (
+          <Pressable
+            key={id}
+            onPress={async () => {
+              playSound(Sound.CORRECT);
+              await displayOverlay({
+                text: `Bien joué ${name}!`,
+                bottomText: `+${VALID_POINTS}`,
+                icon: 'check',
+                IconElem: FAIcon,
+                style: styles.validScreen,
+              });
+              onAnswer(id);
+            }}
+            style={({ pressed }) => [
+              styles.playerButton,
+              pressed && styles.playerButtonPressed,
+            ]}
+          >
+            {({ pressed }) => (
+              <Text
+                style={[
+                  styles.playerButtonText,
+                  pressed && styles.playerButtonTextPressed,
+                ]}
+              >
+                {name}
+              </Text>
+            )}
+          </Pressable>
+        ))}
+      </ScrollView>
     </>
   );
 };
@@ -124,5 +192,31 @@ const getStyles = () =>
     },
     invalidScreen: {
       backgroundColor: colors.overlayInvalid,
+    },
+    playerList: {
+      justifyContent: 'center',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    playerButton: {
+      margin: 8,
+      paddingTop: 10,
+      paddingBottom: 10,
+      paddingLeft: 20,
+      paddingRight: 20,
+      borderWidth: 1,
+      borderColor: colors.white,
+      borderRadius: 10,
+    },
+    playerButtonPressed: {
+      backgroundColor: colors.white,
+    },
+    playerButtonText: {
+      color: colors.white,
+      fontSize: 30,
+      maxWidth: 200,
+    },
+    playerButtonTextPressed: {
+      color: colors.background,
     },
   });

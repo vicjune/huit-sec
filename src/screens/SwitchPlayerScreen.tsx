@@ -1,4 +1,3 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useEffect, useRef } from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -13,6 +12,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../contexts/Sound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
+import { useActions } from '../utils/useActions';
 
 const BUTTON_TIMEOUT = 3000; // 3s
 
@@ -23,7 +23,7 @@ export const SwitchPlayerScreen: FC = () => {
   const styles = getStyles();
   const { playSound } = useSound();
   const { newTurn, playerAsking } = useGlobalState();
-  const { showActionSheetWithOptions } = useActionSheet();
+  const openActions = useActions();
   const { openModal } = useModal();
 
   useEffect(() => {
@@ -49,22 +49,25 @@ export const SwitchPlayerScreen: FC = () => {
   }, [navigation, fadeAnim, newTurn]);
 
   const menuButtonPressed = () => {
-    showActionSheetWithOptions(
+    openActions([
       {
-        options: ['Quitter', 'Voir les scores', 'Annuler'],
-        cancelButtonIndex: 2,
-        destructiveButtonIndex: 0,
+        label: 'Quitter',
+        red: true,
+        callback: () => {
+          navigate(Screen.HOME);
+        },
       },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            navigate(Screen.HOME);
-            break;
-          case 1:
-            openModal(<ScoreModal />);
-        }
+      {
+        label: 'Voir les scores',
+        callback: () => {
+          openModal(<ScoreModal />);
+        },
       },
-    );
+      {
+        label: 'Annuler',
+        cancel: true,
+      },
+    ]);
   };
 
   return (

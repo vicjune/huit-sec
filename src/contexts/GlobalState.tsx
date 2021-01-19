@@ -40,8 +40,7 @@ interface GlobalStateContext {
   resetGame: () => void;
   newTurn: () => void;
   newQuestion: () => void;
-  goodAnswer: () => boolean;
-  badAnswer: () => boolean;
+  answer: (winnerId: string | null) => boolean;
   scoreVictory: number;
   setScoreVictory: (scoreVictory: number) => void;
   timerValue: number;
@@ -59,8 +58,7 @@ const globalStateContext = createContext<GlobalStateContext>({
   removeAllPlayers: () => {},
   resetGame: () => {},
   newTurn: () => {},
-  goodAnswer: () => false,
-  badAnswer: () => false,
+  answer: () => false,
   setScoreVictory: () => {},
   setTimerValue: () => {},
   newQuestion: () => {},
@@ -151,8 +149,7 @@ export const GlobalStateProvider: FC = ({ children }) => {
         removeAllPlayers: () => removeAllPlayers(setGlobalState),
         newTurn: () => newTurn(globalState, setGlobalState),
         resetGame: () => resetGame(setGlobalState),
-        goodAnswer: () => answer(true, globalState, setGlobalState),
-        badAnswer: () => answer(false, globalState, setGlobalState),
+        answer: (winnerId) => answer(winnerId, globalState, setGlobalState),
         setScoreVictory: (scoreVictory: number) =>
           setScoreVictory(scoreVictory, setGlobalState),
         setTimerValue: (timerValue: number) =>

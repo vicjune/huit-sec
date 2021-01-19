@@ -99,6 +99,7 @@ const getStyles = () =>
       alignItems: 'center',
       justifyContent: 'center',
       opacity: 0.8,
+      marginTop: 20,
     },
     timerButtonPressed: {
       backgroundColor: colors.white,

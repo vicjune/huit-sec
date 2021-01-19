@@ -65,7 +65,7 @@ export const SpecialEventModal: FC = () => {
 const getStyles = (currentEvent?: SpecialEvent) =>
   StyleSheet.create({
     screenWrapperWrapper: {
-      backgroundColor: currentEvent?.color,
+      backgroundColor: currentEvent?.backgroundColor,
     },
     screenWrapper: {
       justifyContent: 'space-between',
@@ -115,6 +115,6 @@ const getStyles = (currentEvent?: SpecialEvent) =>
     },
     closeButton: {
       marginBottom: 20,
-      backgroundColor: currentEvent?.color,
+      backgroundColor: currentEvent?.backgroundColor,
     },
   });

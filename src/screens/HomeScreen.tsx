@@ -68,27 +68,28 @@ export const HomeScreen: FC = () => {
           </Pressable>
         </View>
       )}
-      <ScrollView alwaysBounceVertical={false}>
-        <View style={styles.players}>
-          {players.map(({ id, name }) => (
-            <View style={styles.player} key={id}>
-              <Text style={styles.playerName}>{name}</Text>
-              <Pressable
-                style={styles.playerButton}
-                onPress={() => {
-                  removePlayer(id);
-                }}
-              >
-                <Icon
-                  name="circle-with-cross"
-                  size={30}
-                  color={colors.white}
-                  style={styles.playerIcon}
-                />
-              </Pressable>
-            </View>
-          ))}
-        </View>
+      <ScrollView
+        alwaysBounceVertical={false}
+        contentContainerStyle={styles.players}
+      >
+        {players.map(({ id, name }) => (
+          <View style={styles.player} key={id}>
+            <Text style={styles.playerName}>{name}</Text>
+            <Pressable
+              style={styles.playerButton}
+              onPress={() => {
+                removePlayer(id);
+              }}
+            >
+              <Icon
+                name="circle-with-cross"
+                size={30}
+                color={colors.white}
+                style={styles.playerIcon}
+              />
+            </Pressable>
+          </View>
+        ))}
       </ScrollView>
       {!players.length && (
         <View style={styles.tooltip}>
