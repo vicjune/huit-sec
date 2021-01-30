@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { GlobalState } from '../contexts/GlobalState';
 import { Player } from '../types/Players';
 import { SpecialEventId } from './specialEvents';
+import { getNewPlayer } from './players';
 import { storage, STORAGE_VICTORY_KEY } from './storage';
 
 export const VALID_POINTS = 3;
@@ -50,9 +51,11 @@ const getUpdatedPlayer = (
       return {
         ...player,
         nbrAnswered: player.nbrAnswered + 1,
-        score:
+        score: Math.max(
           player.score +
-          (player.id === winnerId ? VALID_POINTS : INVALID_POINTS),
+            (player.id === winnerId ? VALID_POINTS : INVALID_POINTS),
+          0,
+        ),
       };
   }
 };
@@ -75,7 +78,7 @@ export const resetGame = (
 ) => {
   setGlobalState((prev) => ({
     ...prev,
-    players: prev.players.map((player) => ({ ...player, score: 0 })),
+    players: prev.players.map(({ name }) => getNewPlayer(name)),
     currentQuestion: undefined,
     currentEvent: undefined,
   }));

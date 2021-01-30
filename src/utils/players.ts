@@ -6,7 +6,7 @@ import { pickRandomItem } from './pickRandomItem';
 import { Player } from '../types/Players';
 import { getRandomEvent, SpecialEvent, SpecialEventId } from './specialEvents';
 
-const getNewPlayer = (name: string) => ({
+export const getNewPlayer = (name: string) => ({
   id: genUuid(),
   name,
   score: 0,
