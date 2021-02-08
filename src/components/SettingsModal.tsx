@@ -89,7 +89,7 @@ export const SettingsModal: FC = () => {
             >
               <Icon name="squared-minus" size={35} color={colors.white} />
             </Pressable>
-            <Text style={styles.settingValue}>{timerValue / 1000}</Text>
+            <Text style={styles.settingValue}>{timerValue / 1000}s</Text>
             <Pressable
               disabled={timerValue >= MAX_TIMER}
               style={[
@@ -156,7 +156,7 @@ const getStyles = () =>
     settingValue: {
       color: colors.white,
       fontSize: 30,
-      width: 40,
+      width: 50,
       textAlign: 'center',
     },
     closeButton: {
