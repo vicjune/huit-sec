@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { Input } from '../components/Input';
@@ -14,6 +14,9 @@ import { SettingsModal } from '../components/SettingsModal';
 import { Screen } from '../App';
 import { useGlobalPlayers } from '../utils/globalState/players';
 import { useGlobalGame } from '../utils/globalState/game';
+import { useGlobalQuestions } from '../utils/globalState/questions';
+import { useGlobalTimer } from '../utils/globalState/timer';
+import { useGlobalScore } from '../utils/globalState/score';
 
 const PLAYERS_MIN = 2;
 
@@ -28,8 +31,19 @@ export const HomeScreen: FC = () => {
     removePlayer,
     removeAllPlayers,
   } = useGlobalPlayers();
-  const { resetGame } = useGlobalGame();
   const styles = getStyles(!!newPlayerInput);
+  const { resetGame } = useGlobalGame();
+  const { initPlayers } = useGlobalPlayers();
+  const { initQuestions } = useGlobalQuestions();
+  const { initTimer } = useGlobalTimer();
+  const { initScore } = useGlobalScore();
+
+  useEffect(() => {
+    initPlayers();
+    initQuestions();
+    initTimer();
+    initScore();
+  }, []);
 
   const newPlayer = () => {
     const cleanedName = newPlayerInput.trim();

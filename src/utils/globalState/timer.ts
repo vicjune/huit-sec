@@ -1,9 +1,11 @@
 import { atom, useRecoilState } from 'recoil';
 import { storage, STORAGE_TIMER_KEY } from '../storage';
 
+const DEFAULT_TIMER_VALUE = 8000; // 8s
+
 const timerValueAtom = atom<number>({
   key: 'timerValue',
-  default: 0,
+  default: DEFAULT_TIMER_VALUE,
 });
 
 export const useGlobalTimer = () => {

@@ -3,10 +3,11 @@ import { storage, STORAGE_VICTORY_KEY } from '../storage';
 
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
+const DEFAULT_SCORE_VICTORY = 10;
 
 export const scoreVictoryAtom = atom<number>({
   key: 'scoreVictory',
-  default: 0,
+  default: DEFAULT_SCORE_VICTORY,
 });
 
 export const useGlobalScore = () => {
