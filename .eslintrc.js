@@ -106,6 +106,9 @@ module.exports = {
     'react/jsx-no-undef': 'off', // Handled by Typescript
     'react/prop-types': 'off', // Handled by Typescript
     'react/no-unescaped-entities': 'off', // Allow to write special characters in templates
+
+    // Overrides @react-native-community
+    'react-hooks/exhaustive-deps': 'off',
   },
   overrides: [
     {

@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { FC, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
-import { useGlobalState } from '../contexts/GlobalState';
 import { Input } from '../components/Input';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../contexts/Sound';
@@ -13,6 +12,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useModal } from '../contexts/Modal';
 import { SettingsModal } from '../components/SettingsModal';
 import { Screen } from '../App';
+import { useGlobalPlayers } from '../utils/globalState/players';
+import { useGlobalGame } from '../utils/globalState/game';
 
 const PLAYERS_MIN = 2;
 
@@ -26,8 +27,8 @@ export const HomeScreen: FC = () => {
     addPlayer,
     removePlayer,
     removeAllPlayers,
-    resetGame,
-  } = useGlobalState();
+  } = useGlobalPlayers();
+  const { resetGame } = useGlobalGame();
   const styles = getStyles(!!newPlayerInput);
 
   const newPlayer = () => {

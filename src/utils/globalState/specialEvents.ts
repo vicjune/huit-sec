@@ -1,5 +1,6 @@
+import { atom, useRecoilState } from 'recoil';
 import { ElementType } from 'react';
-import { pickRandomItem } from './pickRandomItem';
+import { pickRandomItem } from '../pickRandomItem';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { default as MIcon } from 'react-native-vector-icons/MaterialIcons';
@@ -24,6 +25,11 @@ export interface SpecialEvent {
   backgroundColor: string;
   minPlayers?: number;
 }
+
+export const currentEventAtom = atom<SpecialEvent | undefined>({
+  key: 'currentEvent',
+  default: undefined,
+});
 
 const specialEvents: Record<SpecialEventId, SpecialEvent> = {
   [SpecialEventId.INNOCENT]: {
@@ -103,4 +109,10 @@ export const getRandomEvent = (playerNumber: number) => {
   const pickedEvent = pickRandomItem(eventsChances);
   if (!pickedEvent) return undefined;
   return specialEvents[pickedEvent];
+};
+
+export const useGlobalSpecialEvent = () => {
+  const [currentEvent] = useRecoilState(currentEventAtom);
+
+  return { currentEvent };
 };

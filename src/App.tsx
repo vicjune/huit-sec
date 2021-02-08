@@ -10,8 +10,12 @@ import { Modal, ModalProvider } from './contexts/Modal';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Overlay, OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
-import { GlobalStateProvider } from './contexts/GlobalState';
 import { VictoryScreen } from './screens/VictoryScreen';
+import { useGlobalPlayers } from './utils/globalState/players';
+import { useGlobalQuestions } from './utils/globalState/questions';
+import { useGlobalTimer } from './utils/globalState/timer';
+import { useGlobalScore } from './utils/globalState/score';
+import { RecoilRoot } from 'recoil';
 
 const Stack = createStackNavigator();
 
@@ -23,12 +27,22 @@ export enum Screen {
 }
 
 export const App: FC = () => {
+  const { initPlayers } = useGlobalPlayers();
+  const { initQuestions } = useGlobalQuestions();
+  const { initTimer } = useGlobalTimer();
+  const { initScore } = useGlobalScore();
+
+  initPlayers();
+  initQuestions();
+  initTimer();
+  initScore();
+
   return (
-    <ActionSheetProvider>
-      <SoundProvider>
-        <ModalProvider>
-          <OverlayProvider>
-            <GlobalStateProvider>
+    <RecoilRoot>
+      <ActionSheetProvider>
+        <SoundProvider>
+          <ModalProvider>
+            <OverlayProvider>
               <NavigationContainer>
                 <StatusBar
                   barStyle="light-content"
@@ -59,10 +73,10 @@ export const App: FC = () => {
                 <Modal />
                 <Overlay />
               </NavigationContainer>
-            </GlobalStateProvider>
-          </OverlayProvider>
-        </ModalProvider>
-      </SoundProvider>
-    </ActionSheetProvider>
+            </OverlayProvider>
+          </ModalProvider>
+        </SoundProvider>
+      </ActionSheetProvider>
+    </RecoilRoot>
   );
 };

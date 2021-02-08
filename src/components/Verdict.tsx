@@ -2,13 +2,15 @@ import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
-import { useGlobalState } from '../contexts/GlobalState';
 import { useOverlay } from '../contexts/Overlay';
 import { Sound, useSound } from '../contexts/Sound';
-import { INVALID_POINTS, VALID_POINTS } from '../utils/scores';
-import { SpecialEventId } from '../utils/specialEvents';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Player } from '../types/Players';
+import { useGlobalPlayers, Player } from '../utils/globalState/players';
+import {
+  SpecialEventId,
+  useGlobalSpecialEvent,
+} from '../utils/globalState/specialEvents';
+import { INVALID_POINTS, VALID_POINTS } from '../utils/globalState/score';
 
 interface VerdictProps {
   onAnswer: (winnerId?: string) => void;
@@ -20,11 +22,11 @@ export const Verdict: FC<VerdictProps> = ({ onAnswer }) => {
   const { playSound } = useSound();
   const {
     playerAnswering,
-    currentEvent,
     players,
     playerAsking,
     secondaryPlayerAnswering,
-  } = useGlobalState();
+  } = useGlobalPlayers();
+  const { currentEvent } = useGlobalSpecialEvent();
   const basicVerdict =
     !currentEvent ||
     ![SpecialEventId.DUEL, SpecialEventId.EVERYONE].includes(currentEvent.id);

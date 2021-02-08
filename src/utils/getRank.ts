@@ -1,4 +1,4 @@
-import { Player } from '../types/Players';
+import { Player } from './globalState/players';
 
 export const getRank = (index: number, sortedPlayers: Player[]) => {
   if (sortedPlayers.every(({ score }) => !score)) return '-';

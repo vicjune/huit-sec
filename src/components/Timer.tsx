@@ -4,7 +4,7 @@ import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
 import { useSound, Sound } from '../contexts/Sound';
-import { useGlobalState } from '../contexts/GlobalState';
+import { useGlobalTimer } from '../utils/globalState/timer';
 
 const INTERVAL = 1000; // 1s
 
@@ -20,7 +20,7 @@ export const Timer: FC<TimerProps> = ({
   setTimerRunning,
 }) => {
   const styles = getStyles();
-  const { timerValue } = useGlobalState();
+  const { timerValue } = useGlobalTimer();
   const [timer, setTimer] = useState<number>(timerValue);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const { displayOverlay } = useOverlay();

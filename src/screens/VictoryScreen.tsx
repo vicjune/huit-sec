@@ -9,9 +9,9 @@ import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { Screen } from '../App';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
-import { useGlobalState } from '../contexts/GlobalState';
 import { colors } from '../styles/colors';
 import { useNavigation } from '@react-navigation/native';
+import { useGlobalPlayers } from '../utils/globalState/players';
 
 export const VictoryScreen: FC = () => {
   const styles = getStyles();
@@ -19,7 +19,7 @@ export const VictoryScreen: FC = () => {
   const navigate = usePreventNavigation();
   const { playSound } = useSound();
   const { openModal } = useModal();
-  const { players } = useGlobalState();
+  const { players } = useGlobalPlayers();
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
   const [winner] = sortedPlayers;

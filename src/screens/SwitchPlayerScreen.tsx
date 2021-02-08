@@ -5,7 +5,6 @@ import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
-import { useGlobalState } from '../contexts/GlobalState';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -13,6 +12,8 @@ import { Sound, useSound } from '../contexts/Sound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { useActions } from '../utils/useActions';
+import { useGlobalPlayers } from '../utils/globalState/players';
+import { useGlobalGame } from '../utils/globalState/game';
 
 const BUTTON_TIMEOUT = 3000; // 3s
 
@@ -22,7 +23,8 @@ export const SwitchPlayerScreen: FC = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
   const { playSound } = useSound();
-  const { newTurn, playerAsking } = useGlobalState();
+  const { playerAsking } = useGlobalPlayers();
+  const { newTurn } = useGlobalGame();
   const openActions = useActions();
   const { openModal } = useModal();
 
