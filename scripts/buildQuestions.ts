@@ -1,4 +1,4 @@
-import { BundleId, Question } from '../src/types/Question';
+import { BundleId, Question } from '../src/utils/globalState/questions';
 
 // @ts-ignore
 const fs = require('fs');

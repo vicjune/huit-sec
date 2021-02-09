@@ -6,7 +6,6 @@ import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
-import { useGlobalState } from '../contexts/GlobalState';
 import { useModal } from '../contexts/Modal';
 import { useOverlay } from '../contexts/Overlay';
 import { ScoreModal } from '../components/ScoreModal';
@@ -18,10 +17,17 @@ import { colors } from '../styles/colors';
 import { leadingZeros } from '../utils/leadingZeros';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { SpecialEventModal } from '../components/SpecialEventModal';
-import { SpecialEvent, SpecialEventId } from '../utils/specialEvents';
 import { useActions } from '../utils/useActions';
+import { useGlobalPlayers } from '../utils/globalState/players';
+import { useGlobalGame } from '../utils/globalState/game';
+import { useGlobalQuestions } from '../utils/globalState/questions';
+import {
+  SpecialEvent,
+  SpecialEventId,
+  useGlobalSpecialEvent,
+} from '../utils/globalState/specialEvents';
 
-const PLAYER_ANSWERING_DURATION = 2500; // 2.5s
+const PLAYER_ANSWERING_OVERLAY_DURATION = 2500; // 2.5s
 
 export const QuestionScreen: FC = () => {
   const navigation = useNavigation();
@@ -31,14 +37,10 @@ export const QuestionScreen: FC = () => {
   const openActions = useActions();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const {
-    answer,
-    playerAnswering,
-    currentQuestion,
-    newQuestion,
-    currentEvent,
-    secondaryPlayerAnswering,
-  } = useGlobalState();
+  const { playerAnswering, secondaryPlayerAnswering } = useGlobalPlayers();
+  const { answer } = useGlobalGame();
+  const { currentQuestion, newQuestion } = useGlobalQuestions();
+  const { currentEvent } = useGlobalSpecialEvent();
   const { openModal } = useModal();
   const styles = getStyles(currentEvent);
   const flashback = currentEvent?.id === SpecialEventId.FLASHBACK;
@@ -61,7 +63,7 @@ export const QuestionScreen: FC = () => {
           text: `Question pour ${playerAnswering?.name}`,
           icon: 'chatbox-ellipses',
           IconElem: IonIcon,
-          duration: PLAYER_ANSWERING_DURATION,
+          duration: PLAYER_ANSWERING_OVERLAY_DURATION,
         });
       }
     });

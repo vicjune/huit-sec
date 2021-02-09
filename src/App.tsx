@@ -10,8 +10,8 @@ import { Modal, ModalProvider } from './contexts/Modal';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Overlay, OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
-import { GlobalStateProvider } from './contexts/GlobalState';
 import { VictoryScreen } from './screens/VictoryScreen';
+import { GlobalStateProvider } from './contexts/GlobalState';
 
 const Stack = createStackNavigator();
 
@@ -24,11 +24,11 @@ export enum Screen {
 
 export const App: FC = () => {
   return (
-    <ActionSheetProvider>
-      <SoundProvider>
-        <ModalProvider>
-          <OverlayProvider>
-            <GlobalStateProvider>
+    <GlobalStateProvider>
+      <ActionSheetProvider>
+        <SoundProvider>
+          <ModalProvider>
+            <OverlayProvider>
               <NavigationContainer>
                 <StatusBar
                   barStyle="light-content"
@@ -59,10 +59,10 @@ export const App: FC = () => {
                 <Modal />
                 <Overlay />
               </NavigationContainer>
-            </GlobalStateProvider>
-          </OverlayProvider>
-        </ModalProvider>
-      </SoundProvider>
-    </ActionSheetProvider>
+            </OverlayProvider>
+          </ModalProvider>
+        </SoundProvider>
+      </ActionSheetProvider>
+    </GlobalStateProvider>
   );
 };

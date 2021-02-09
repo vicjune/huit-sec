@@ -2,16 +2,16 @@ import React, { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
-import { useGlobalState } from '../contexts/GlobalState';
 import Icon from 'react-native-vector-icons/Entypo';
 import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
 import { useModal } from '../contexts/Modal';
 import { ScreenWrapper } from './ScreenWrapper';
+import { useGlobalPlayers } from '../utils/globalState/players';
 
 export const ScoreModal: FC = () => {
   const styles = getStyles();
-  const { players } = useGlobalState();
+  const { players } = useGlobalPlayers();
   const { closeModal } = useModal();
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
