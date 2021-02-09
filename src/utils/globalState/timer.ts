@@ -1,7 +1,7 @@
 import { useGlobalState } from '../../contexts/GlobalState';
 import { storage, STORAGE_TIMER_KEY } from '../storage';
 
-export const DEFAULT_TIMER_VALUE = 8000; // 8s
+const DEFAULT_TIMER_VALUE = 8000; // 8s
 
 export const useGlobalTimer = () => {
   const { globalState, setGlobalState } = useGlobalState();
