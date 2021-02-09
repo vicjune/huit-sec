@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -6,16 +6,15 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
 import { Sound, useSound } from '../contexts/Sound';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
-import { Screen } from '../App';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
 import { colors } from '../styles/colors';
-import { useNavigation } from '@react-navigation/native';
 import { useGlobalPlayers } from '../utils/globalState/players';
+import { useOnScreenFocus } from '../utils/useOnScreenFocus';
+import { Screen } from '../types/Screen';
 
 export const VictoryScreen: FC = () => {
   const styles = getStyles();
-  const navigation = useNavigation();
   const navigate = usePreventNavigation();
   const { playSound } = useSound();
   const { openModal } = useModal();
@@ -24,15 +23,9 @@ export const VictoryScreen: FC = () => {
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
   const [winner] = sortedPlayers;
 
-  useEffect(() => {
-    const unsubFocus = navigation.addListener('focus', () => {
-      playSound(Sound.VICTORY);
-    });
-
-    return () => {
-      unsubFocus();
-    };
-  }, [navigation, playSound]);
+  useOnScreenFocus(() => {
+    playSound(Sound.VICTORY);
+  });
 
   return (
     <ScreenWrapper>

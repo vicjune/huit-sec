@@ -11,12 +11,12 @@ import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useModal } from '../contexts/Modal';
 import { SettingsModal } from '../components/SettingsModal';
-import { Screen } from '../App';
 import { useGlobalPlayers } from '../utils/globalState/players';
 import { useGlobalGame } from '../utils/globalState/game';
 import { useGlobalQuestions } from '../utils/globalState/questions';
 import { useGlobalTimer } from '../utils/globalState/timer';
 import { useGlobalScore } from '../utils/globalState/score';
+import { Screen } from '../types/Screen';
 
 const PLAYERS_MIN = 2;
 

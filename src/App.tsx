@@ -12,15 +12,9 @@ import { Overlay, OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
 import { VictoryScreen } from './screens/VictoryScreen';
 import { GlobalStateProvider } from './contexts/GlobalState';
+import { Screen } from './types/Screen';
 
 const Stack = createStackNavigator();
-
-export enum Screen {
-  HOME = 'HOME',
-  QUESTION = 'QUESTION',
-  SWITCH_PLAYER = 'SWITCH_PLAYER',
-  VICTORY = 'VICTORY',
-}
 
 export const App: FC = () => {
   return (

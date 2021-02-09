@@ -1,9 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
@@ -14,11 +12,12 @@ import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { useActions } from '../utils/useActions';
 import { useGlobalPlayers } from '../utils/globalState/players';
 import { useGlobalGame } from '../utils/globalState/game';
+import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
+import { Screen } from '../types/Screen';
 
 const BUTTON_TIMEOUT = 3000; // 3s
 
 export const SwitchPlayerScreen: FC = () => {
-  const navigation = useNavigation();
   const navigate = usePreventNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
@@ -28,27 +27,20 @@ export const SwitchPlayerScreen: FC = () => {
   const openActions = useActions();
   const { openModal } = useModal();
 
-  useEffect(() => {
-    const unsubFocus = navigation.addListener('focus', () => {
-      newTurn();
-      setTimeout(() => {
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 500,
-          easing: Easing.ease,
-        }).start();
-      }, BUTTON_TIMEOUT);
-    });
+  useOnScreenFocus(() => {
+    newTurn();
+    setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.ease,
+      }).start();
+    }, BUTTON_TIMEOUT);
+  });
 
-    const unsubBlur = navigation.addListener('blur', () => {
-      fadeAnim.setValue(0);
-    });
-
-    return () => {
-      unsubFocus();
-      unsubBlur();
-    };
-  }, [navigation, fadeAnim, newTurn]);
+  useOnScreenBlur(() => {
+    fadeAnim.setValue(0);
+  });
 
   const menuButtonPressed = () => {
     openActions([

@@ -1,10 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
-import { Screen } from '../App';
 import { BasicButton } from '../components/BasicButton';
 import { useModal } from '../contexts/Modal';
 import { useOverlay } from '../contexts/Overlay';
@@ -26,11 +24,12 @@ import {
   SpecialEventId,
   useGlobalSpecialEvent,
 } from '../utils/globalState/specialEvents';
+import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
+import { Screen } from '../types/Screen';
 
 const PLAYER_ANSWERING_OVERLAY_DURATION = 2500; // 2.5s
 
 export const QuestionScreen: FC = () => {
-  const navigation = useNavigation();
   const navigate = usePreventNavigation();
   const [timerRunning, setTimerRunning] = useState(false);
   const [verdict, setVerdict] = useState(false);
@@ -45,48 +44,31 @@ export const QuestionScreen: FC = () => {
   const styles = getStyles(currentEvent);
   const flashback = currentEvent?.id === SpecialEventId.FLASHBACK;
 
-  const resetScreen = useCallback(() => {
+  const resetScreen = () => {
     setTimerRunning(false);
     setVerdict(false);
-  }, [setVerdict, setTimerRunning]);
+  };
 
-  useEffect(() => {
-    const unsubFocus = navigation.addListener('focus', () => {
-      if (!flashback) {
-        newQuestion();
-      }
-      if (currentEvent) {
-        openModal(<SpecialEventModal />);
-        playSound(Sound.SURPRISE);
-      } else {
-        displayOverlay({
-          text: `Question pour ${playerAnswering?.name}`,
-          icon: 'chatbox-ellipses',
-          IconElem: IonIcon,
-          duration: PLAYER_ANSWERING_OVERLAY_DURATION,
-        });
-      }
-    });
+  useOnScreenFocus(() => {
+    if (!flashback) {
+      newQuestion();
+    }
+    if (currentEvent) {
+      openModal(<SpecialEventModal />);
+      playSound(Sound.SURPRISE);
+    } else {
+      displayOverlay({
+        text: `Question pour ${playerAnswering?.name}`,
+        icon: 'chatbox-ellipses',
+        IconElem: IonIcon,
+        duration: PLAYER_ANSWERING_OVERLAY_DURATION,
+      });
+    }
+  });
 
-    const unsubBlur = navigation.addListener('blur', () => {
-      resetScreen();
-    });
-
-    return () => {
-      unsubFocus();
-      unsubBlur();
-    };
-  }, [
-    navigation,
-    newQuestion,
-    resetScreen,
-    displayOverlay,
-    playerAnswering,
-    openModal,
-    currentEvent,
-    playSound,
-    flashback,
-  ]);
+  useOnScreenBlur(() => {
+    resetScreen();
+  });
 
   const menuButtonPressed = () => {
     openActions([
