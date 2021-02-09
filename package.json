@@ -52,7 +52,6 @@
     "react-native-sound": "^0.11.0",
     "react-native-vector-icons": "^7.1.0",
     "react-test-renderer": "16.13.1",
-    "recoil": "^0.1.2",
     "ts-unused-exports": "^7.0.1",
     "typescript": "^4.0.3",
     "uuid": "^8.3.1"

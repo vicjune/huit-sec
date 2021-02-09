@@ -1,27 +1,28 @@
-import { atom, useRecoilState } from 'recoil';
+import { useGlobalState } from '../../contexts/GlobalState';
 import { storage, STORAGE_VICTORY_KEY } from '../storage';
 
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
-const DEFAULT_SCORE_VICTORY = 10;
-
-export const scoreVictoryAtom = atom<number>({
-  key: 'scoreVictory',
-  default: DEFAULT_SCORE_VICTORY,
-});
+export const DEFAULT_SCORE_VICTORY = 10;
 
 export const useGlobalScore = () => {
-  const [scoreVictory, setScoreVictory] = useRecoilState(scoreVictoryAtom);
+  const { globalState, setGlobalState } = useGlobalState();
+  const { scoreVictory } = globalState;
 
   const initScore = () => {
     storage.get<number>(STORAGE_VICTORY_KEY).then((scoreVic) => {
-      if (!scoreVic) return;
-      setScoreVictory(scoreVic);
+      setGlobalState((prev) => ({
+        ...prev,
+        scoreVictory: scoreVic || DEFAULT_SCORE_VICTORY,
+      }));
     });
   };
 
   const setScoreVic = (value: number) => {
-    setScoreVictory(value);
+    setGlobalState((prev) => ({
+      ...prev,
+      scoreVictory: value,
+    }));
     storage.set(STORAGE_VICTORY_KEY, value);
   };
 

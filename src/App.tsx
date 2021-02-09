@@ -11,7 +11,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { Overlay, OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
 import { VictoryScreen } from './screens/VictoryScreen';
-import { RecoilRoot } from 'recoil';
+import { GlobalStateProvider } from './contexts/GlobalState';
 
 const Stack = createStackNavigator();
 
@@ -24,7 +24,7 @@ export enum Screen {
 
 export const App: FC = () => {
   return (
-    <RecoilRoot>
+    <GlobalStateProvider>
       <ActionSheetProvider>
         <SoundProvider>
           <ModalProvider>
@@ -63,6 +63,6 @@ export const App: FC = () => {
           </ModalProvider>
         </SoundProvider>
       </ActionSheetProvider>
-    </RecoilRoot>
+    </GlobalStateProvider>
   );
 };

@@ -108,7 +108,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off', // Allow to write special characters in templates
 
     // Overrides @react-native-community
-    'react-hooks/exhaustive-deps': 'off',
+    'react-hooks/exhaustive-deps': 'warn',
   },
   overrides: [
     {

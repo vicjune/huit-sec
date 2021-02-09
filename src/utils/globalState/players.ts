@@ -1,5 +1,5 @@
-import { atom, useRecoilState } from 'recoil';
 import { v4 as genUuid } from 'uuid';
+import { useGlobalState } from '../../contexts/GlobalState';
 import { storage, STORAGE_PLAYERS_KEY } from '../storage';
 
 export interface Player {
@@ -9,20 +9,6 @@ export interface Player {
   nbrAnswered: number;
 }
 
-export const playersAtom = atom<Player[]>({ key: 'players', default: [] });
-export const playerAnsweringIdAtom = atom<string | undefined>({
-  key: 'playerAnsweringId',
-  default: undefined,
-});
-export const secondaryPlayerAnsweringIdAtom = atom<string | undefined>({
-  key: 'secondaryPlayerAnsweringId',
-  default: undefined,
-});
-export const playerAskingIdAtom = atom<string | undefined>({
-  key: 'playerAskingId',
-  default: undefined,
-});
-
 export const getNewPlayer = (name: string) => ({
   id: genUuid(),
   name,
@@ -31,12 +17,13 @@ export const getNewPlayer = (name: string) => ({
 });
 
 export const useGlobalPlayers = () => {
-  const [players, setPlayers] = useRecoilState(playersAtom);
-  const [playerAnsweringId] = useRecoilState(playerAnsweringIdAtom);
-  const [secondaryPlayerAnsweringId] = useRecoilState(
-    secondaryPlayerAnsweringIdAtom,
-  );
-  const [playerAskingId] = useRecoilState(playerAskingIdAtom);
+  const { globalState, setGlobalState } = useGlobalState();
+  const {
+    players,
+    playerAnsweringId,
+    secondaryPlayerAnsweringId,
+    playerAskingId,
+  } = globalState;
 
   const playerAnswering = players.find(({ id }) => playerAnsweringId === id);
   const secondaryPlayerAnswering = players.find(
@@ -47,7 +34,10 @@ export const useGlobalPlayers = () => {
   const initPlayers = () => {
     storage.get<string[]>(STORAGE_PLAYERS_KEY).then((playerNames) => {
       if (!playerNames) return;
-      setPlayers(playerNames.map(getNewPlayer));
+      setGlobalState((prev) => ({
+        ...prev,
+        players: playerNames.map(getNewPlayer),
+      }));
     });
   };
 
@@ -56,7 +46,10 @@ export const useGlobalPlayers = () => {
       ...players.map(({ name }) => name),
       playerName,
     ]);
-    setPlayers((prev) => [...prev, getNewPlayer(playerName)]);
+    setGlobalState((prev) => ({
+      ...prev,
+      players: [...prev.players, getNewPlayer(playerName)],
+    }));
   };
 
   const removePlayer = (toRemoveId: string) => {
@@ -65,12 +58,18 @@ export const useGlobalPlayers = () => {
       STORAGE_PLAYERS_KEY,
       newPlayers.map(({ name }) => name),
     );
-    setPlayers(newPlayers);
+    setGlobalState((prev) => ({
+      ...prev,
+      players: newPlayers,
+    }));
   };
 
   const removeAllPlayers = () => {
-    setPlayers([]);
     storage.remove(STORAGE_PLAYERS_KEY);
+    setGlobalState((prev) => ({
+      ...prev,
+      players: [],
+    }));
   };
 
   return {

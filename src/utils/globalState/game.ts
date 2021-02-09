@@ -1,21 +1,8 @@
-import { useRecoilState } from 'recoil';
-import {
-  Player,
-  playersAtom,
-  getNewPlayer,
-  playerAnsweringIdAtom,
-  secondaryPlayerAnsweringIdAtom,
-  playerAskingIdAtom,
-} from './players';
-import { INVALID_POINTS, scoreVictoryAtom, VALID_POINTS } from './score';
-import {
-  SpecialEventId,
-  currentEventAtom,
-  SpecialEvent,
-  getRandomEvent,
-} from './specialEvents';
-import { currentQuestionAtom } from './questions';
+import { Player, getNewPlayer } from './players';
+import { INVALID_POINTS, VALID_POINTS } from './score';
+import { SpecialEventId, SpecialEvent, getRandomEvent } from './specialEvents';
 import { pickRandomItem } from '../pickRandomItem';
+import { useGlobalState } from '../../contexts/GlobalState';
 
 const getLeastAnswerPlayers = (players: Player[]) =>
   players.reduce((prev, player) => {
@@ -27,22 +14,16 @@ const getLeastAnswerPlayers = (players: Player[]) =>
   }, [] as Player[]);
 
 export const useGlobalGame = () => {
-  const [players, setPlayers] = useRecoilState(playersAtom);
-  const [playerAnsweringId, setPlayerAnsweringId] = useRecoilState(
-    playerAnsweringIdAtom,
-  );
-  const [
+  const { globalState, setGlobalState } = useGlobalState();
+  const {
+    players,
+    playerAnsweringId,
     secondaryPlayerAnsweringId,
-    setSecondaryPlayerAnsweringId,
-  ] = useRecoilState(secondaryPlayerAnsweringIdAtom);
-  const [playerAskingId, setPlayerAskingId] = useRecoilState(
-    playerAskingIdAtom,
-  );
-  const [scoreVictory] = useRecoilState(scoreVictoryAtom);
-  const [currentEvent, setCurrentEvent] = useRecoilState(currentEventAtom);
-  const [currentQuestion, setCurrentQuestion] = useRecoilState(
-    currentQuestionAtom,
-  );
+    playerAskingId,
+    scoreVictory,
+    currentEvent,
+    currentQuestion,
+  } = globalState;
 
   const getUpdatedPlayer = (player: Player, winnerId: string | null) => {
     switch (currentEvent?.id) {
@@ -94,7 +75,7 @@ export const useGlobalGame = () => {
       getUpdatedPlayer(player, winnerId),
     );
 
-    setPlayers(newPlayers);
+    setGlobalState((prev) => ({ ...prev, players: newPlayers }));
     return !!newPlayers.find(({ score }) => score >= scoreVictory);
   };
 
@@ -132,16 +113,22 @@ export const useGlobalGame = () => {
     );
     const newPlayerAsking = pickRandomItem(newPlayerAskingPool);
 
-    setPlayerAskingId(newPlayerAsking?.id);
-    setPlayerAnsweringId(newPlayerAnswering?.id);
-    setSecondaryPlayerAnsweringId(newSecondaryPlayerAnswering?.id);
-    setCurrentEvent(newEvent);
+    setGlobalState((prev) => ({
+      ...prev,
+      playerAskingId: newPlayerAsking?.id,
+      playerAnsweringId: newPlayerAnswering?.id,
+      secondaryPlayerAnsweringId: newSecondaryPlayerAnswering?.id,
+      currentEvent: newEvent,
+    }));
   };
 
   const resetGame = () => {
-    setPlayers((prev) => prev.map(({ name }) => getNewPlayer(name)));
-    setCurrentQuestion(undefined);
-    setCurrentEvent(undefined);
+    setGlobalState((prev) => ({
+      ...prev,
+      players: prev.players.map(({ name }) => getNewPlayer(name)),
+      currentQuestion: undefined,
+      currentEvent: undefined,
+    }));
   };
 
   return { resetGame, answer, newTurn };

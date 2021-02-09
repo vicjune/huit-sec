@@ -1,25 +1,27 @@
-import { atom, useRecoilState } from 'recoil';
+import { useGlobalState } from '../../contexts/GlobalState';
 import { storage, STORAGE_TIMER_KEY } from '../storage';
 
-const DEFAULT_TIMER_VALUE = 8000; // 8s
-
-const timerValueAtom = atom<number>({
-  key: 'timerValue',
-  default: DEFAULT_TIMER_VALUE,
-});
+export const DEFAULT_TIMER_VALUE = 8000; // 8s
 
 export const useGlobalTimer = () => {
-  const [timerValue, setTimerValue] = useRecoilState(timerValueAtom);
+  const { globalState, setGlobalState } = useGlobalState();
+  const { timerValue } = globalState;
 
   const initTimer = () => {
     storage.get<number>(STORAGE_TIMER_KEY).then((timer) => {
       if (!timer) return;
-      setTimerValue(timer);
+      setGlobalState((prev) => ({
+        ...prev,
+        timerValue: timer || DEFAULT_TIMER_VALUE,
+      }));
     });
   };
 
   const setTimer = (value: number) => {
-    setTimerValue(value);
+    setGlobalState((prev) => ({
+      ...prev,
+      timerValue: value,
+    }));
     storage.set(STORAGE_TIMER_KEY, value);
   };
 

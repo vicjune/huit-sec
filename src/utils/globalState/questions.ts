@@ -1,7 +1,7 @@
-import { atom, useRecoilState } from 'recoil';
 import { pickRandomItem } from '../pickRandomItem';
 import { storage, STORAGE_QUESTIONS_SEEN_KEY } from '../storage';
 import { default as questionsJSON } from '../../json/questions.json';
+import { useGlobalState } from '../../contexts/GlobalState';
 
 export enum BundleId {
   BASE = 'BASE',
@@ -17,32 +17,17 @@ export interface Question {
   bundle: BundleId;
 }
 
-const questionsAtom = atom<Question[]>({
-  key: 'questions',
-  default: [],
-});
-const questionAlreadySeenIdsAtom = atom<string[]>({
-  key: 'questionAlreadySeenIds',
-  default: [],
-});
-export const currentQuestionAtom = atom<Question | undefined>({
-  key: 'currentQuestion',
-  default: undefined,
-});
-
 export const useGlobalQuestions = () => {
-  const [questions, setQuestions] = useRecoilState(questionsAtom);
-  const [questionAlreadySeenIds, setQuestionAlreadySeenIds] = useRecoilState(
-    questionAlreadySeenIdsAtom,
-  );
-  const [currentQuestion, setCurrentQuestion] = useRecoilState(
-    currentQuestionAtom,
-  );
+  const { globalState, setGlobalState } = useGlobalState();
+  const { questions, questionAlreadySeenIds, currentQuestion } = globalState;
 
   const initQuestions = () => {
     storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
       if (!questionIds) return;
-      setQuestionAlreadySeenIds(questionIds);
+      setGlobalState((prev) => ({
+        ...prev,
+        questionAlreadySeenIds: questionIds,
+      }));
     });
 
     loadQuestions();
@@ -50,7 +35,10 @@ export const useGlobalQuestions = () => {
 
   const loadQuestions = () => {
     // TODO: Bundles
-    setQuestions(questionsJSON as Question[]);
+    setGlobalState((prev) => ({
+      ...prev,
+      questions: questionsJSON as Question[],
+    }));
   };
 
   const newQuestion = () => {
@@ -68,8 +56,11 @@ export const useGlobalQuestions = () => {
       newCurrentQuestion.id,
     ];
 
-    setCurrentQuestion(newCurrentQuestion);
-    setQuestionAlreadySeenIds(newQuestionAlreadySeenIds);
+    setGlobalState((prev) => ({
+      ...prev,
+      currentQuestion: newCurrentQuestion,
+      questionAlreadySeenIds: newQuestionAlreadySeenIds,
+    }));
 
     storage.set(STORAGE_QUESTIONS_SEEN_KEY, newQuestionAlreadySeenIds);
   };
