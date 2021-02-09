@@ -43,6 +43,7 @@ export const HomeScreen: FC = () => {
     initQuestions();
     initTimer();
     initScore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const newPlayer = () => {
