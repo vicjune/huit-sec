@@ -2,6 +2,7 @@ import { pickRandomItem } from '../pickRandomItem';
 import { storage, STORAGE_QUESTIONS_SEEN_KEY } from '../storage';
 import { default as questionsJSON } from '../../json/questions.json';
 import { useGlobalState } from '../../contexts/GlobalState';
+import { useMemo } from 'react';
 
 export enum BundleId {
   BASE = 'BASE',
@@ -19,7 +20,7 @@ export interface Question {
 
 export const useGlobalQuestions = () => {
   const { globalState, setGlobalState } = useGlobalState();
-  const { questions, questionAlreadySeenIds, currentQuestion } = globalState;
+  const { questionAlreadySeenIds, currentQuestion } = globalState;
 
   const initQuestions = () => {
     storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
@@ -29,17 +30,12 @@ export const useGlobalQuestions = () => {
         questionAlreadySeenIds: questionIds,
       }));
     });
-
-    loadQuestions();
   };
 
-  const loadQuestions = () => {
-    // TODO: Bundles
-    setGlobalState((prev) => ({
-      ...prev,
-      questions: questionsJSON as Question[],
-    }));
-  };
+  const questions = useMemo(() => {
+    // TODO Bundles
+    return questionsJSON as Question[];
+  }, []);
 
   const newQuestion = () => {
     const questionsNotSeen = questions.filter(
@@ -65,5 +61,5 @@ export const useGlobalQuestions = () => {
     storage.set(STORAGE_QUESTIONS_SEEN_KEY, newQuestionAlreadySeenIds);
   };
 
-  return { currentQuestion, newQuestion, loadQuestions, initQuestions };
+  return { currentQuestion, newQuestion, initQuestions };
 };

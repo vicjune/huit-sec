@@ -17,15 +17,13 @@ interface GlobalState {
   playerAskingId?: string;
   scoreVictory: number;
   timerValue: number;
-  questions: Question[];
   questionAlreadySeenIds: string[];
   currentQuestion?: Question;
   currentEvent?: SpecialEvent;
 }
 
-const defaultGlobalState = {
+const defaultGlobalState: GlobalState = {
   players: [],
-  questions: [],
   questionAlreadySeenIds: [],
   scoreVictory: 0,
   timerValue: 0,
