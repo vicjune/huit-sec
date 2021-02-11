@@ -9,7 +9,6 @@ export const useGlobalTimer = () => {
 
   const initTimer = () => {
     storage.get<number>(STORAGE_TIMER_KEY).then((timer) => {
-      if (!timer) return;
       setGlobalState((prev) => ({
         ...prev,
         timerValue: timer || DEFAULT_TIMER_VALUE,
