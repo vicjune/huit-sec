@@ -26,6 +26,7 @@
 		44FD29F5258E63E100604050 /* timesup_buzzer.wav in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29F3258E63E100604050 /* timesup_buzzer.wav */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		AA2099727F7E680194E778C1 /* libPods-HuitSec-HuitSecTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DAA48C1067BEC8B372C936F /* libPods-HuitSec-HuitSecTests.a */; };
+		C744F4BF269763B8005D760A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C744F4BE269763B8005D760A /* StoreKit.framework */; };
 		CFBC35828C645067BDEF0D4A /* libPods-HuitSec-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DCB6F40443B666A53B6F8C2 /* libPods-HuitSec-tvOSTests.a */; };
 		D8C3749F87BF1A32A3B28B7A /* libPods-HuitSec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A1A2F1CA76376EB75E69B75 /* libPods-HuitSec.a */; };
 /* End PBXBuildFile section */
@@ -91,6 +92,7 @@
 		C20141B14D994AAFA7509145 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		C280B5F7BF7D4DF48C9B3148 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		C4C702780E92139496081552 /* libPods-HuitSec-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HuitSec-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C744F4BE269763B8005D760A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D69CA95C58ACE5498A60FA80 /* Pods-HuitSec.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec.debug.xcconfig"; path = "Target Support Files/Pods-HuitSec/Pods-HuitSec.debug.xcconfig"; sourceTree = "<group>"; };
 		DAF72AC79542776BE376A74B /* Pods-HuitSec.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec.release.xcconfig"; path = "Target Support Files/Pods-HuitSec/Pods-HuitSec.release.xcconfig"; sourceTree = "<group>"; };
 		E1686B47B932D2E96C289E7B /* Pods-HuitSec-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-HuitSec-tvOSTests/Pods-HuitSec-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8C3749F87BF1A32A3B28B7A /* libPods-HuitSec.a in Frameworks */,
+				C744F4BF269763B8005D760A /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +197,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C744F4BE269763B8005D760A /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				9A1A2F1CA76376EB75E69B75 /* libPods-HuitSec.a */,

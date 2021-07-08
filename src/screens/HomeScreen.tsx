@@ -17,6 +17,7 @@ import { useGlobalQuestions } from '../utils/globalState/questions';
 import { useGlobalTimer } from '../utils/globalState/timer';
 import { useGlobalScore } from '../utils/globalState/score';
 import { Screen } from '../types/Screen';
+import { pluralize } from '../utils/pluralize';
 
 const PLAYERS_MIN = 2;
 
@@ -72,44 +73,47 @@ export const HomeScreen: FC = () => {
           <Text style={styles.logoButton}>LOGO</Text>
         )}
         {!!players.length && players.length < PLAYERS_MIN && (
-          <Text style={styles.tooltipText}>{PLAYERS_MIN} joueurs requis</Text>
+          <Text style={styles.playersMin}>{PLAYERS_MIN} joueurs requis</Text>
         )}
       </View>
 
-      {!!players.length && (
-        <View style={styles.playersNumberClear}>
-          <Text style={styles.playersNumber}>
-            {players.length} joueur{players.length > 1 ? 's' : ''}
-          </Text>
-          <Pressable style={styles.clearButton} onPress={removeAllPlayers}>
-            <Icon name="cross" size={30} color={colors.white} />
-            <Text style={styles.clearButtonText}>Tout retirer</Text>
-          </Pressable>
-        </View>
-      )}
-      <ScrollView
-        alwaysBounceVertical={false}
-        contentContainerStyle={styles.players}
-      >
-        {players.map(({ id, name }) => (
-          <View style={styles.player} key={id}>
-            <Text style={styles.playerName}>{name}</Text>
-            <Pressable
-              style={styles.playerButton}
-              onPress={() => {
-                removePlayer(id);
-              }}
-            >
-              <Icon
-                name="circle-with-cross"
-                size={30}
-                color={colors.white}
-                style={styles.playerIcon}
-              />
+      <View style={styles.playersWrapper}>
+        {!!players.length && (
+          <View style={styles.playersNumberClear}>
+            <Text style={styles.playersNumber}>
+              {players.length} {pluralize('joueur', players.length)}
+            </Text>
+            <Pressable style={styles.clearButton} onPress={removeAllPlayers}>
+              <Icon name="cross" size={30} color={colors.white} />
+              <Text style={styles.clearButtonText}>Tout retirer</Text>
             </Pressable>
           </View>
-        ))}
-      </ScrollView>
+        )}
+        <ScrollView
+          alwaysBounceVertical={false}
+          contentContainerStyle={styles.players}
+        >
+          {players.map(({ id, name }) => (
+            <View style={styles.player} key={id}>
+              <Text style={styles.playerName}>{name}</Text>
+              <Pressable
+                style={styles.playerButton}
+                onPress={() => {
+                  removePlayer(id);
+                }}
+              >
+                <Icon
+                  name="circle-with-cross"
+                  size={30}
+                  color={colors.white}
+                  style={styles.playerIcon}
+                />
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+
       {!players.length && (
         <View style={styles.tooltip}>
           <Text style={styles.tooltipText}>
@@ -118,6 +122,7 @@ export const HomeScreen: FC = () => {
           <Icon name="arrow-bold-down" size={60} color={colors.yellow} />
         </View>
       )}
+
       <View style={styles.inputWrapper}>
         <Input
           style={styles.input}
@@ -151,21 +156,19 @@ const getStyles = (input: boolean) =>
   StyleSheet.create({
     topView: {
       alignItems: 'center',
-      flexBasis: 250,
-      flexShrink: 1,
-      justifyContent: 'flex-end',
-      marginBottom: 20,
+      flex: 1,
+      paddingTop: 50,
+      paddingBottom: 20,
     },
     logoButton: {
       marginTop: 'auto',
       marginBottom: 'auto',
     },
     playersMin: {
+      marginTop: 'auto',
+      color: colors.yellow,
+      fontSize: 25,
       textAlign: 'center',
-      color: colors.white,
-      fontSize: 14,
-      opacity: 0.3,
-      marginTop: 10,
     },
     playersNumberClear: {
       flexDirection: 'row',
@@ -189,6 +192,9 @@ const getStyles = (input: boolean) =>
     clearButtonText: {
       fontSize: 18,
       color: colors.white,
+    },
+    playersWrapper: {
+      flex: 1,
     },
     players: {
       paddingLeft: 10,

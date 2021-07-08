@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Sound, useSound } from '../contexts/Sound';
 import { Screen } from '../types/Screen';
 import { colors } from '../styles/colors';
+import { pluralize } from '../utils/pluralize';
 
 export const BundlesScreen: FC = () => {
   const { bundlesWithInfos } = useGlobalQuestions();
@@ -46,9 +47,15 @@ export const BundlesScreen: FC = () => {
                     )}
                     <Text style={styles.questionsNbr}>
                       {bundle.locked
-                        ? `${bundle.questionsNbr} questions`
+                        ? `${bundle.questionsNbr} ${pluralize(
+                            'question',
+                            bundle.questionsNbr,
+                          )}`
                         : bundle.questionsNotSeenNbr
-                        ? `${bundle.questionsNotSeenNbr} jamais vues / ${bundle.questionsNbr}`
+                        ? `${bundle.questionsNotSeenNbr} pas ${pluralize(
+                            'vue',
+                            bundle.questionsNotSeenNbr,
+                          )} / ${bundle.questionsNbr}`
                         : `T'as vu les ${bundle.questionsNbr}`}
                     </Text>
                   </View>
@@ -112,8 +119,11 @@ export const BundlesScreen: FC = () => {
         )}
         <Text style={styles.totalNotSeenText}>
           {totalQuestionsNotSeen
-            ? `Encore ${totalQuestionsNotSeen} questions jamais vues !`
-            : 'Toutes les questions ont déjà été vues'}
+            ? `Encore ${totalQuestionsNotSeen} ${pluralize(
+                'question',
+                totalQuestionsNotSeen,
+              )} jamais ${pluralize('vue', totalQuestionsNotSeen)} !`
+            : 'Toutes les questions sélectionnées ont déjà été vues'}
         </Text>
       </View>
       <BasicButton
@@ -190,6 +200,7 @@ const getStyles = (totalQuestionsNotSeen: number) =>
     },
     questionNbrIcon: {
       marginRight: 5,
+      opacity: 0.7,
     },
     questionsNbr: {
       color: colors.white,
