@@ -6,6 +6,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
+import { BundleId } from '../types/BundleId';
 import { Player } from '../utils/globalState/players';
 import { Question } from '../utils/globalState/questions';
 import { SpecialEvent } from '../utils/globalState/specialEvents';
@@ -18,15 +19,19 @@ interface GlobalState {
   scoreVictory: number;
   timerValue: number;
   questionAlreadySeenIds: string[];
+  permanentQuestionAlreadySeenIds: string[];
   currentQuestion?: Question;
   currentEvent?: SpecialEvent;
+  unlockedBundleIds: BundleId[];
 }
 
 const defaultGlobalState: GlobalState = {
   players: [],
   questionAlreadySeenIds: [],
+  permanentQuestionAlreadySeenIds: [],
   scoreVictory: 0,
   timerValue: 0,
+  unlockedBundleIds: [],
 };
 
 const globalStateContext = createContext<{
@@ -38,9 +43,8 @@ const globalStateContext = createContext<{
 });
 
 export const GlobalStateProvider: FC = ({ children }) => {
-  const [globalState, setGlobalState] = useState<GlobalState>(
-    defaultGlobalState,
-  );
+  const [globalState, setGlobalState] =
+    useState<GlobalState>(defaultGlobalState);
 
   return (
     <globalStateContext.Provider value={{ globalState, setGlobalState }}>

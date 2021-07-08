@@ -23,7 +23,10 @@ export const useGlobalGame = () => {
     scoreVictory,
     currentEvent,
     currentQuestion,
+    permanentQuestionAlreadySeenIds,
   } = globalState;
+
+  const isFirstGame = !permanentQuestionAlreadySeenIds.length;
 
   const getUpdatedPlayer = (player: Player, winnerId: string | null) => {
     switch (currentEvent?.id) {
@@ -131,5 +134,5 @@ export const useGlobalGame = () => {
     }));
   };
 
-  return { resetGame, answer, newTurn };
+  return { resetGame, answer, newTurn, isFirstGame };
 };

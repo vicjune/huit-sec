@@ -20,12 +20,8 @@ export const Verdict: FC<VerdictProps> = ({ onAnswer }) => {
   const styles = getStyles();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const {
-    playerAnswering,
-    players,
-    playerAsking,
-    secondaryPlayerAnswering,
-  } = useGlobalPlayers();
+  const { playerAnswering, players, playerAsking, secondaryPlayerAnswering } =
+    useGlobalPlayers();
   const { currentEvent } = useGlobalSpecialEvent();
   const basicVerdict =
     !currentEvent ||
@@ -185,7 +181,7 @@ const getStyles = () =>
     verdictText: {
       textAlign: 'center',
       fontSize: 25,
-      opacity: 0.5,
+      opacity: 0.6,
       color: colors.white,
       marginBottom: 20,
     },

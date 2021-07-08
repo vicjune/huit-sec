@@ -227,9 +227,9 @@ const getStyles = (currentEvent?: SpecialEvent) =>
       fontSize: 28,
     },
     questionNbr: {
-      color: colors.white,
+      color: colors.yellow,
       fontSize: 16,
-      opacity: 0.5,
+      opacity: 0.8,
     },
     mainAction: {
       flex: 2,

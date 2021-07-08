@@ -19,12 +19,13 @@ export const Timer: FC<TimerProps> = ({
   timerRunning,
   setTimerRunning,
 }) => {
-  const styles = getStyles();
   const { timerValue } = useGlobalTimer();
   const [timer, setTimer] = useState<number>(timerValue);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
+  const timerAlmostOver = timer <= 3000;
+  const styles = getStyles(timerAlmostOver);
 
   useEffect(() => {
     if (!timerRunning) {
@@ -87,7 +88,7 @@ export const Timer: FC<TimerProps> = ({
   );
 };
 
-const getStyles = () =>
+const getStyles = (timerAlmostOver: boolean) =>
   StyleSheet.create({
     timerButton: {
       alignSelf: 'center',
@@ -109,14 +110,14 @@ const getStyles = () =>
     },
     timerButtonText: {
       fontSize: 40,
-      color: colors.white,
+      color: colors.yellow,
       alignSelf: 'center',
-      opacity: 0.5,
+      opacity: 0.8,
       marginTop: 10,
     },
     timer: {
       alignSelf: 'center',
       fontSize: 160,
-      color: colors.white,
+      color: timerAlmostOver ? colors.error : colors.white,
     },
   });

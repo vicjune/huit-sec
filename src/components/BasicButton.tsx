@@ -10,6 +10,7 @@ interface ButtonProps {
   style?: Record<string, unknown>;
   icon: string;
   IconElem: ElementType;
+  color?: string;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
@@ -20,8 +21,9 @@ export const BasicButton: FC<ButtonProps> = ({
   style,
   icon,
   IconElem,
+  color = colors.white,
 }) => {
-  const styles = getStyles(!text, small, disabled);
+  const styles = getStyles(!text, color, small, disabled);
 
   return (
     <Pressable
@@ -37,7 +39,7 @@ export const BasicButton: FC<ButtonProps> = ({
           <IconElem
             name={icon}
             size={small ? 30 : 50}
-            color={pressed ? colors.background : colors.white}
+            color={pressed ? colors.background : color}
           />
           {text && (
             <Text
@@ -52,7 +54,12 @@ export const BasicButton: FC<ButtonProps> = ({
   );
 };
 
-const getStyles = (noText: boolean, small?: boolean, disabled?: boolean) =>
+const getStyles = (
+  noText: boolean,
+  color: string,
+  small?: boolean,
+  disabled?: boolean,
+) =>
   StyleSheet.create({
     button: {
       alignSelf: 'center',
@@ -63,16 +70,15 @@ const getStyles = (noText: boolean, small?: boolean, disabled?: boolean) =>
       justifyContent: 'center',
       paddingBottom: noText ? 0 : 5,
       borderWidth: small ? 1 : 5,
-      borderColor: colors.white,
-      backgroundColor: colors.background,
+      borderColor: color,
       opacity: disabled ? 0.5 : 1,
     },
     buttonPressed: {
-      backgroundColor: colors.white,
+      backgroundColor: color,
     },
     buttonText: {
       fontSize: small ? 10 : 16,
-      color: colors.white,
+      color,
       alignSelf: 'center',
     },
     buttonTextPressed: {

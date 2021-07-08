@@ -3,4 +3,5 @@ export enum Screen {
   QUESTION = 'QUESTION',
   SWITCH_PLAYER = 'SWITCH_PLAYER',
   VICTORY = 'VICTORY',
+  BUNDLES = 'BUNDLES',
 }

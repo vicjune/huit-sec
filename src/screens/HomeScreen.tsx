@@ -25,14 +25,10 @@ export const HomeScreen: FC = () => {
   const [newPlayerInput, setNewPlayerInput] = useState('');
   const { playSound } = useSound();
   const { openModal } = useModal();
-  const {
-    players,
-    addPlayer,
-    removePlayer,
-    removeAllPlayers,
-  } = useGlobalPlayers();
+  const { players, addPlayer, removePlayer, removeAllPlayers } =
+    useGlobalPlayers();
   const styles = getStyles(!!newPlayerInput);
-  const { resetGame } = useGlobalGame();
+  const { resetGame, isFirstGame } = useGlobalGame();
   const { initPlayers } = useGlobalPlayers();
   const { initQuestions } = useGlobalQuestions();
   const { initTimer } = useGlobalTimer();
@@ -54,22 +50,29 @@ export const HomeScreen: FC = () => {
   };
 
   return (
-    <ScreenWrapper style={styles.container}>
-      <View style={styles.startButton}>
-        <BasicButton
-          text="Lancer"
-          icon="arrow-bold-right"
-          IconElem={Icon}
-          disabled={players.length < PLAYERS_MIN}
-          onPress={() => {
-            Keyboard.dismiss();
-            playSound(Sound.CLICK);
-            resetGame();
-            navigation.navigate(Screen.SWITCH_PLAYER);
-          }}
-        />
-        {players.length < PLAYERS_MIN && (
-          <Text style={styles.playersMin}>{PLAYERS_MIN} joueurs requis</Text>
+    <ScreenWrapper>
+      <View style={styles.topView}>
+        {players.length >= PLAYERS_MIN ? (
+          <BasicButton
+            style={styles.logoButton}
+            text="Lancer"
+            icon="arrow-bold-right"
+            IconElem={Icon}
+            disabled={players.length < PLAYERS_MIN}
+            onPress={() => {
+              Keyboard.dismiss();
+              playSound(Sound.CLICK);
+              resetGame();
+              navigation.navigate(
+                isFirstGame ? Screen.SWITCH_PLAYER : Screen.BUNDLES,
+              );
+            }}
+          />
+        ) : (
+          <Text style={styles.logoButton}>LOGO</Text>
+        )}
+        {!!players.length && players.length < PLAYERS_MIN && (
+          <Text style={styles.tooltipText}>{PLAYERS_MIN} joueurs requis</Text>
         )}
       </View>
 
@@ -112,7 +115,7 @@ export const HomeScreen: FC = () => {
           <Text style={styles.tooltipText}>
             Commence par ajouter des joueurs
           </Text>
-          <Icon name="arrow-bold-down" size={60} color={colors.white} />
+          <Icon name="arrow-bold-down" size={60} color={colors.yellow} />
         </View>
       )}
       <View style={styles.inputWrapper}>
@@ -128,7 +131,7 @@ export const HomeScreen: FC = () => {
           onPress={newPlayer}
           disabled={!newPlayerInput}
         >
-          <Icon name="circle-with-plus" size={40} color={colors.white} />
+          <Icon name="circle-with-plus" size={40} color={colors.yellow} />
         </Pressable>
       </View>
       <BasicButton
@@ -146,11 +149,16 @@ export const HomeScreen: FC = () => {
 
 const getStyles = (input: boolean) =>
   StyleSheet.create({
-    container: {},
-    startButton: {
+    topView: {
+      alignItems: 'center',
       flexBasis: 250,
       flexShrink: 1,
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
+      marginBottom: 20,
+    },
+    logoButton: {
+      marginTop: 'auto',
+      marginBottom: 'auto',
     },
     playersMin: {
       textAlign: 'center',
@@ -193,7 +201,7 @@ const getStyles = (input: boolean) =>
       alignItems: 'center',
       margin: 5,
       borderWidth: 1,
-      borderColor: colors.chipsBorder,
+      borderColor: colors.white,
       borderRadius: 20,
       paddingLeft: 10,
     },
@@ -237,7 +245,7 @@ const getStyles = (input: boolean) =>
       marginBottom: 20,
     },
     tooltipText: {
-      color: colors.white,
+      color: colors.yellow,
       fontSize: 25,
       textAlign: 'center',
       marginBottom: 10,

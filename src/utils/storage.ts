@@ -4,6 +4,7 @@ export const STORAGE_PLAYERS_KEY = '@playerNames';
 export const STORAGE_VICTORY_KEY = '@victoryScore';
 export const STORAGE_TIMER_KEY = '@timerValue';
 export const STORAGE_QUESTIONS_SEEN_KEY = '@questionsSeen';
+export const STORAGE_PERMANENT_QUESTIONS_SEEN_KEY = '@permanentQuestionsSeen';
 
 export const storage = {
   set(key: string, value: any) {

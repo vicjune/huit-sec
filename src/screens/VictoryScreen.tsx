@@ -72,7 +72,7 @@ const getStyles = () =>
     winnerLabel: {
       marginTop: 40,
       marginBottom: 'auto',
-      opacity: 0.6,
+      opacity: 0.8,
       color: colors.white,
       fontSize: 50,
       textAlign: 'center',

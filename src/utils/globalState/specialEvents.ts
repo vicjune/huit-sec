@@ -18,11 +18,11 @@ export interface SpecialEvent {
   id: SpecialEventId;
   title: string;
   description: string;
-  probability: number;
+  probability: number; // in %
   iconType: ElementType;
   icon: string;
   color: string;
-  backgroundColor: string;
+  backgroundColors: string[];
   minPlayers?: number;
 }
 
@@ -35,7 +35,7 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     iconType: FAIcon,
     icon: 'baby-carriage',
     color: 'hsl(217, 100%, 78%)',
-    backgroundColor: 'hsl(217, 100%, 71%)',
+    backgroundColors: ['hsl(217, 100%, 65%)', 'hsl(217, 100%, 55%)'],
   },
   [SpecialEventId.DIRTY]: {
     id: SpecialEventId.DIRTY,
@@ -45,7 +45,7 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     iconType: EntIcon,
     icon: 'mask',
     color: 'hsl(292, 63%, 59%)',
-    backgroundColor: 'hsl(292, 100%, 18%)',
+    backgroundColors: ['hsl(292, 100%, 18%)', 'hsl(292, 100%, 8%)'],
   },
   [SpecialEventId.EVERYONE]: {
     id: SpecialEventId.EVERYONE,
@@ -56,7 +56,7 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     iconType: MIcon,
     icon: 'local-fire-department',
     color: 'hsl(18, 100%, 61%)',
-    backgroundColor: 'hsl(18, 100%, 50%)',
+    backgroundColors: ['hsl(18, 100%, 50%)', 'hsl(18, 100%, 40%)'],
     minPlayers: 4,
   },
   [SpecialEventId.FLASHBACK]: {
@@ -68,7 +68,7 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     iconType: EntIcon,
     icon: 'back-in-time',
     color: 'hsl(53, 100%, 50%)',
-    backgroundColor: 'hsl(53, 100%, 41%)',
+    backgroundColors: ['hsl(53, 100%, 41%)', 'hsl(53, 100%, 31%)'],
   },
   [SpecialEventId.DUEL]: {
     id: SpecialEventId.DUEL,
@@ -79,7 +79,7 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
     iconType: MCIcon,
     icon: 'lightning-bolt',
     color: 'hsl(115, 47%, 51%)',
-    backgroundColor: 'hsl(115, 71%, 22%)',
+    backgroundColors: ['hsl(115, 71%, 22%)', 'hsl(115, 71%, 12%)'],
     minPlayers: 3,
   },
 };

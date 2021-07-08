@@ -4,24 +4,21 @@ import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { useModal } from '../contexts/Modal';
 import { colors } from '../styles/colors';
 import { useGlobalPlayers } from '../utils/globalState/players';
-import {
-  SpecialEvent,
-  useGlobalSpecialEvent,
-} from '../utils/globalState/specialEvents';
+import { useGlobalSpecialEvent } from '../utils/globalState/specialEvents';
 import { BasicButton } from './BasicButton';
 import { ScreenWrapper } from './ScreenWrapper';
 
 export const SpecialEventModal: FC = () => {
   const { playerAnswering, secondaryPlayerAnswering } = useGlobalPlayers();
   const { currentEvent } = useGlobalSpecialEvent();
-  const styles = getStyles(currentEvent);
+  const styles = getStyles();
   const { closeModal } = useModal();
 
   if (!currentEvent) return null;
 
   return (
     <ScreenWrapper
-      wrapperStyle={styles.screenWrapperWrapper}
+      backgroundColors={currentEvent?.backgroundColors}
       style={styles.screenWrapper}
     >
       <View>
@@ -62,11 +59,8 @@ export const SpecialEventModal: FC = () => {
   );
 };
 
-const getStyles = (currentEvent?: SpecialEvent) =>
+const getStyles = () =>
   StyleSheet.create({
-    screenWrapperWrapper: {
-      backgroundColor: currentEvent?.backgroundColor,
-    },
     screenWrapper: {
       justifyContent: 'space-between',
       paddingLeft: 20,
@@ -74,13 +68,13 @@ const getStyles = (currentEvent?: SpecialEvent) =>
       paddingTop: 40,
     },
     icon: {
-      opacity: 0.3,
+      opacity: 0.4,
       alignSelf: 'center',
     },
     title: {
       color: colors.white,
       fontSize: 40,
-      opacity: 0.5,
+      opacity: 0.6,
       marginTop: 10,
       textAlign: 'center',
     },
@@ -115,6 +109,5 @@ const getStyles = (currentEvent?: SpecialEvent) =>
     },
     closeButton: {
       marginBottom: 20,
-      backgroundColor: currentEvent?.backgroundColor,
     },
   });

@@ -13,6 +13,7 @@ import { SoundProvider } from './contexts/Sound';
 import { VictoryScreen } from './screens/VictoryScreen';
 import { GlobalStateProvider } from './contexts/GlobalState';
 import { Screen } from './types/Screen';
+import { BundlesScreen } from './screens/BundlesScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,16 @@ export const App: FC = () => {
                     name={Screen.HOME}
                     component={HomeScreen}
                     options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name={Screen.BUNDLES}
+                    component={BundlesScreen}
+                    options={{
+                      headerTitle: 'Questions',
+                      headerBackTitle: 'Retour',
+                      headerTintColor: colors.white,
+                      headerTransparent: true,
+                    }}
                   />
                   <Stack.Screen
                     name={Screen.QUESTION}
