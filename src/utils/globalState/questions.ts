@@ -17,7 +17,7 @@ export interface Question {
   bundle: BundleId;
 }
 
-export interface Bundle {
+interface Bundle {
   id: BundleId;
   title: string;
   lockedByDefault?: boolean;
@@ -25,7 +25,7 @@ export interface Bundle {
   icon: string;
 }
 
-export interface BundleWithInfos {
+interface BundleWithInfos {
   id: BundleId;
   title: string;
   iconType: ElementType;
