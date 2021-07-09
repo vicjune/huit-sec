@@ -12,7 +12,7 @@ import { Overlay, OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
 import { VictoryScreen } from './screens/VictoryScreen';
 import { GlobalStateProvider } from './contexts/GlobalState';
-import { Screen } from './types/Screen';
+import { Screen } from './const/Screen';
 import { BundlesScreen } from './screens/BundlesScreen';
 
 const Stack = createStackNavigator();

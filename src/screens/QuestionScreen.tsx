@@ -25,7 +25,7 @@ import {
   useGlobalSpecialEvent,
 } from '../utils/globalState/specialEvents';
 import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
-import { Screen } from '../types/Screen';
+import { Screen } from '../const/Screen';
 
 const PLAYER_ANSWERING_OVERLAY_DURATION = 2500; // 2.5s
 

@@ -11,7 +11,7 @@ import { ScoreModal } from '../components/ScoreModal';
 import { colors } from '../styles/colors';
 import { useGlobalPlayers } from '../utils/globalState/players';
 import { useOnScreenFocus } from '../utils/useOnScreenFocus';
-import { Screen } from '../types/Screen';
+import { Screen } from '../const/Screen';
 
 export const VictoryScreen: FC = () => {
   const styles = getStyles();

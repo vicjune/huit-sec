@@ -1,14 +1,22 @@
 import React, { FC } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { useGlobalQuestions } from '../utils/globalState/questions';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { Sound, useSound } from '../contexts/Sound';
-import { Screen } from '../types/Screen';
+import { Screen } from '../const/Screen';
 import { colors } from '../styles/colors';
 import { pluralize } from '../utils/pluralize';
+import { useInAppPurchases } from '../utils/useInAppPurchases';
 
 export const BundlesScreen: FC = () => {
   const { bundlesWithInfos } = useGlobalQuestions();
@@ -19,7 +27,11 @@ export const BundlesScreen: FC = () => {
       locked ? prev : prev + questionsNotSeenNbr,
     0,
   );
-  const styles = getStyles(totalQuestionsNotSeen);
+  const { purchase, purchaseLoading, productsLoading } = useInAppPurchases();
+  const styles = getStyles(
+    totalQuestionsNotSeen,
+    purchaseLoading || productsLoading,
+  );
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -52,7 +64,7 @@ export const BundlesScreen: FC = () => {
                             bundle.questionsNbr,
                           )}`
                         : bundle.questionsNotSeenNbr
-                        ? `${bundle.questionsNotSeenNbr} pas ${pluralize(
+                        ? `${bundle.questionsNotSeenNbr} non-${pluralize(
                             'vue',
                             bundle.questionsNotSeenNbr,
                           )} / ${bundle.questionsNbr}`
@@ -65,7 +77,9 @@ export const BundlesScreen: FC = () => {
                         styles.unlockButton,
                         pressed && styles.unlockButtonPressed,
                       ]}
-                      onPress={() => {}}
+                      onPress={() => {
+                        purchase(bundle.id);
+                      }}
                     >
                       {({ pressed }) => (
                         <>
@@ -130,16 +144,22 @@ export const BundlesScreen: FC = () => {
         text="Lancer"
         icon="arrow-bold-right"
         IconElem={Icon}
+        disabled={purchaseLoading}
         onPress={() => {
           playSound(Sound.CLICK);
           navigation.navigate(Screen.SWITCH_PLAYER);
         }}
       />
+      {(purchaseLoading || productsLoading) && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color={colors.yellow} />
+        </View>
+      )}
     </ScreenWrapper>
   );
 };
 
-const getStyles = (totalQuestionsNotSeen: number) =>
+const getStyles = (totalQuestionsNotSeen: number, loading: boolean) =>
   StyleSheet.create({
     wrapper: {
       paddingTop: 50,
@@ -150,6 +170,7 @@ const getStyles = (totalQuestionsNotSeen: number) =>
       borderStyle: 'solid',
       borderBottomWidth: 1,
       flexShrink: 1,
+      opacity: loading ? 0.3 : 1,
     },
     bundles: {
       paddingLeft: 20,
@@ -214,6 +235,7 @@ const getStyles = (totalQuestionsNotSeen: number) =>
       paddingRight: 20,
       marginBottom: 30,
       marginTop: 20,
+      opacity: loading ? 0.3 : 1,
     },
     totalNotSeenIcon: {
       marginRight: 20,
@@ -262,5 +284,14 @@ const getStyles = (totalQuestionsNotSeen: number) =>
       marginLeft: 10,
       fontSize: 16,
       color: colors.yellow,
+    },
+    loader: {
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   });

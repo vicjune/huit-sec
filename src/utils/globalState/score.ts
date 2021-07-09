@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useGlobalState } from '../../contexts/GlobalState';
 import { storage, STORAGE_VICTORY_KEY } from '../storage';
 
@@ -9,22 +10,25 @@ export const useGlobalScore = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const { scoreVictory } = globalState;
 
-  const initScore = () => {
+  const initScore = useCallback(() => {
     storage.get<number>(STORAGE_VICTORY_KEY).then((scoreVic) => {
       setGlobalState((prev) => ({
         ...prev,
         scoreVictory: scoreVic || DEFAULT_SCORE_VICTORY,
       }));
     });
-  };
+  }, [setGlobalState]);
 
-  const setScoreVic = (value: number) => {
-    setGlobalState((prev) => ({
-      ...prev,
-      scoreVictory: value,
-    }));
-    storage.set(STORAGE_VICTORY_KEY, value);
-  };
+  const setScoreVic = useCallback(
+    (value: number) => {
+      setGlobalState((prev) => ({
+        ...prev,
+        scoreVictory: value,
+      }));
+      storage.set(STORAGE_VICTORY_KEY, value);
+    },
+    [setGlobalState],
+  );
 
   return { scoreVictory, setScoreVictory: setScoreVic, initScore };
 };

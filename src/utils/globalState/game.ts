@@ -3,6 +3,7 @@ import { INVALID_POINTS, VALID_POINTS } from './score';
 import { SpecialEventId, SpecialEvent, getRandomEvent } from './specialEvents';
 import { pickRandomItem } from '../pickRandomItem';
 import { useGlobalState } from '../../contexts/GlobalState';
+import { useCallback, useMemo } from 'react';
 
 const getLeastAnswerPlayers = (players: Player[]) =>
   players.reduce((prev, player) => {
@@ -26,63 +27,77 @@ export const useGlobalGame = () => {
     permanentQuestionAlreadySeenIds,
   } = globalState;
 
-  const isFirstGame = !permanentQuestionAlreadySeenIds.length;
+  const isFirstGame = useMemo(
+    () => !permanentQuestionAlreadySeenIds.length,
+    [permanentQuestionAlreadySeenIds.length],
+  );
 
-  const getUpdatedPlayer = (player: Player, winnerId: string | null) => {
-    switch (currentEvent?.id) {
-      case SpecialEventId.DUEL: {
-        if (
-          ![playerAnsweringId, secondaryPlayerAnsweringId].includes(player.id)
-        ) {
-          return player;
+  const getUpdatedPlayer = useCallback(
+    (player: Player, winnerId: string | null) => {
+      switch (currentEvent?.id) {
+        case SpecialEventId.DUEL: {
+          if (
+            ![playerAnsweringId, secondaryPlayerAnsweringId].includes(player.id)
+          ) {
+            return player;
+          }
+
+          return {
+            ...player,
+            nbrAnswered: player.nbrAnswered + 1,
+            score: player.score + (player.id === winnerId ? VALID_POINTS : 0),
+          };
         }
 
-        return {
-          ...player,
-          nbrAnswered: player.nbrAnswered + 1,
-          score: player.score + (player.id === winnerId ? VALID_POINTS : 0),
-        };
+        case SpecialEventId.EVERYONE: {
+          if (player.id === playerAskingId) {
+            return player;
+          }
+
+          return {
+            ...player,
+            nbrAnswered: player.nbrAnswered + 1,
+            score: player.score + (player.id === winnerId ? VALID_POINTS : 0),
+          };
+        }
+
+        default:
+          if (player.id !== playerAnsweringId) {
+            return player;
+          }
+
+          return {
+            ...player,
+            nbrAnswered: player.nbrAnswered + 1,
+            score: Math.max(
+              player.score +
+                (player.id === winnerId ? VALID_POINTS : INVALID_POINTS),
+              0,
+            ),
+          };
       }
+    },
+    [
+      currentEvent?.id,
+      playerAnsweringId,
+      playerAskingId,
+      secondaryPlayerAnsweringId,
+    ],
+  );
 
-      case SpecialEventId.EVERYONE: {
-        if (player.id === playerAskingId) {
-          return player;
-        }
+  const answer = useCallback(
+    (winnerId: string | null) => {
+      const newPlayers = players.map((player) =>
+        getUpdatedPlayer(player, winnerId),
+      );
 
-        return {
-          ...player,
-          nbrAnswered: player.nbrAnswered + 1,
-          score: player.score + (player.id === winnerId ? VALID_POINTS : 0),
-        };
-      }
+      setGlobalState((prev) => ({ ...prev, players: newPlayers }));
+      return !!newPlayers.find(({ score }) => score >= scoreVictory);
+    },
+    [getUpdatedPlayer, players, scoreVictory, setGlobalState],
+  );
 
-      default:
-        if (player.id !== playerAnsweringId) {
-          return player;
-        }
-
-        return {
-          ...player,
-          nbrAnswered: player.nbrAnswered + 1,
-          score: Math.max(
-            player.score +
-              (player.id === winnerId ? VALID_POINTS : INVALID_POINTS),
-            0,
-          ),
-        };
-    }
-  };
-
-  const answer = (winnerId: string | null) => {
-    const newPlayers = players.map((player) =>
-      getUpdatedPlayer(player, winnerId),
-    );
-
-    setGlobalState((prev) => ({ ...prev, players: newPlayers }));
-    return !!newPlayers.find(({ score }) => score >= scoreVictory);
-  };
-
-  const newTurn = () => {
+  const newTurn = useCallback(() => {
     let newEvent: SpecialEvent | undefined;
     if (currentQuestion) {
       newEvent = getRandomEvent(players.length);
@@ -123,16 +138,22 @@ export const useGlobalGame = () => {
       secondaryPlayerAnsweringId: newSecondaryPlayerAnswering?.id,
       currentEvent: newEvent,
     }));
-  };
+  }, [
+    currentQuestion,
+    playerAnsweringId,
+    playerAskingId,
+    players,
+    setGlobalState,
+  ]);
 
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     setGlobalState((prev) => ({
       ...prev,
       players: prev.players.map(({ name }) => getNewPlayer(name)),
       currentQuestion: undefined,
       currentEvent: undefined,
     }));
-  };
+  }, [setGlobalState]);
 
   return { resetGame, answer, newTurn, isFirstGame };
 };

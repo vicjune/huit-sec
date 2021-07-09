@@ -3,13 +3,22 @@ import { EffectCallback, useEffect } from 'react';
 
 export const useOnScreenFocus = (effect: EffectCallback) => {
   const navigation = useNavigation();
-  useEffect(() => navigation.addListener('focus', effect), [
-    navigation,
-    effect,
-  ]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', effect);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation, effect]);
 };
 
 export const useOnScreenBlur = (effect: EffectCallback) => {
   const navigation = useNavigation();
-  useEffect(() => navigation.addListener('blur', effect), [navigation, effect]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', effect);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation, effect]);
 };

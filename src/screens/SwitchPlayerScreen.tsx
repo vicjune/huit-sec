@@ -13,7 +13,7 @@ import { useActions } from '../utils/useActions';
 import { useGlobalPlayers } from '../utils/globalState/players';
 import { useGlobalGame } from '../utils/globalState/game';
 import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
-import { Screen } from '../types/Screen';
+import { Screen } from '../const/Screen';
 
 const BUTTON_TIMEOUT = 3000; // 3s
 

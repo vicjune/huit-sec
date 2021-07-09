@@ -6,9 +6,9 @@ import {
 } from '../storage';
 import { default as questionsJSON } from '../../json/questions.json';
 import { useGlobalState } from '../../contexts/GlobalState';
-import { ElementType, useMemo } from 'react';
-import { BundleId } from '../../types/BundleId';
-import { default as EntIcon } from 'react-native-vector-icons/Entypo';
+import { useCallback, useMemo } from 'react';
+import { BundleId, bundles, BundleWithInfos } from '../../const/bundles';
+import { useInAppPurchases } from '../useInAppPurchases';
 
 export interface Question {
   id: string;
@@ -17,64 +17,17 @@ export interface Question {
   bundle: BundleId;
 }
 
-interface Bundle {
-  id: BundleId;
-  title: string;
-  lockedByDefault?: boolean;
-  iconType: ElementType;
-  icon: string;
-}
-
-interface BundleWithInfos {
-  id: BundleId;
-  title: string;
-  iconType: ElementType;
-  icon: string;
-  locked: boolean;
-  questionsNbr: number;
-  questionsNotSeenNbr: number;
-}
-
-const bundles: Bundle[] = [
-  {
-    id: BundleId.BASE,
-    title: 'Questions de base',
-    iconType: EntIcon,
-    icon: 'box',
-  },
-  {
-    id: BundleId.BUNDLE_1,
-    title: 'Encore plus tordues',
-    iconType: EntIcon,
-    icon: 'water',
-    lockedByDefault: true,
-  },
-  {
-    id: BundleId.BUNDLE_2,
-    title: "Pour mettre l'ambiance",
-    iconType: EntIcon,
-    icon: 'traffic-cone',
-    lockedByDefault: true,
-  },
-  {
-    id: BundleId.BUNDLE_3,
-    title: 'Si tu veux perdre des potes',
-    iconType: EntIcon,
-    icon: 'hand',
-    lockedByDefault: true,
-  },
-];
-
 export const useGlobalQuestions = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
     questionAlreadySeenIds,
     permanentQuestionAlreadySeenIds,
     currentQuestion,
-    unlockedBundleIds,
+    purchasedBundleIds,
   } = globalState;
+  const { products } = useInAppPurchases();
 
-  const initQuestions = () => {
+  const initQuestions = useCallback(() => {
     storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
       if (!questionIds) return;
       setGlobalState((prev) => ({
@@ -92,14 +45,18 @@ export const useGlobalQuestions = () => {
           permanentQuestionAlreadySeenIds: questionIds,
         }));
       });
-  };
+  }, [setGlobalState]);
 
-  const availableBundleIds = bundles
-    .filter(
-      ({ id, lockedByDefault }) =>
-        !lockedByDefault || unlockedBundleIds.includes(id),
-    )
-    .map(({ id }) => id);
+  const availableBundleIds = useMemo(
+    () =>
+      bundles
+        .filter(
+          ({ id, lockedByDefault }) =>
+            !lockedByDefault || purchasedBundleIds.includes(id),
+        )
+        .map(({ id }) => id),
+    [purchasedBundleIds],
+  );
 
   const allQuestions = useMemo(() => questionsJSON as Question[], []);
 
@@ -111,27 +68,38 @@ export const useGlobalQuestions = () => {
 
   const bundlesWithInfos: BundleWithInfos[] = useMemo(
     () =>
-      bundles.map((bundle) => {
-        const questionsInBundle = allQuestions.filter(
-          ({ bundle: questionBundle }) => questionBundle === bundle.id,
-        );
+      bundles
+        .filter(
+          ({ id, lockedByDefault }) =>
+            !lockedByDefault ||
+            products.map(({ productId }) => productId).includes(id),
+        )
+        .map((bundle) => {
+          const questionsInBundle = allQuestions.filter(
+            ({ bundle: questionBundle }) => questionBundle === bundle.id,
+          );
 
-        const questionsNotSeenNbr = questionsInBundle.filter(
-          ({ id: questionId }) =>
-            !permanentQuestionAlreadySeenIds.includes(questionId),
-        ).length;
+          const questionsNotSeenNbr = questionsInBundle.filter(
+            ({ id: questionId }) =>
+              !permanentQuestionAlreadySeenIds.includes(questionId),
+          ).length;
 
-        return {
-          ...bundle,
-          locked: !availableBundleIds.includes(bundle.id),
-          questionsNbr: questionsInBundle.length,
-          questionsNotSeenNbr,
-        };
-      }),
-    [allQuestions, availableBundleIds, permanentQuestionAlreadySeenIds],
+          return {
+            ...bundle,
+            locked: !availableBundleIds.includes(bundle.id),
+            questionsNbr: questionsInBundle.length,
+            questionsNotSeenNbr,
+          };
+        }),
+    [
+      allQuestions,
+      availableBundleIds,
+      permanentQuestionAlreadySeenIds,
+      products,
+    ],
   );
 
-  const newQuestion = () => {
+  const newQuestion = useCallback(() => {
     const questionsNotSeen = questions.filter(
       ({ id }) => !questionAlreadySeenIds.includes(id),
     );
@@ -171,7 +139,12 @@ export const useGlobalQuestions = () => {
       STORAGE_PERMANENT_QUESTIONS_SEEN_KEY,
       newPermanentQuestionAlreadySeenIds,
     );
-  };
+  }, [
+    permanentQuestionAlreadySeenIds,
+    questionAlreadySeenIds,
+    questions,
+    setGlobalState,
+  ]);
 
   return { currentQuestion, newQuestion, initQuestions, bundlesWithInfos };
 };

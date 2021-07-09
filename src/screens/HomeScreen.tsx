@@ -16,8 +16,9 @@ import { useGlobalGame } from '../utils/globalState/game';
 import { useGlobalQuestions } from '../utils/globalState/questions';
 import { useGlobalTimer } from '../utils/globalState/timer';
 import { useGlobalScore } from '../utils/globalState/score';
-import { Screen } from '../types/Screen';
+import { Screen } from '../const/Screen';
 import { pluralize } from '../utils/pluralize';
+import { useInAppPurchases } from '../utils/useInAppPurchases';
 
 const PLAYERS_MIN = 2;
 
@@ -34,14 +35,21 @@ export const HomeScreen: FC = () => {
   const { initQuestions } = useGlobalQuestions();
   const { initTimer } = useGlobalTimer();
   const { initScore } = useGlobalScore();
+  const { updateAvailablePurchases } = useInAppPurchases();
 
   useEffect(() => {
     initPlayers();
     initQuestions();
     initTimer();
     initScore();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    updateAvailablePurchases();
+  }, [
+    initPlayers,
+    initQuestions,
+    initScore,
+    initTimer,
+    updateAvailablePurchases,
+  ]);
 
   const newPlayer = () => {
     const cleanedName = newPlayerInput.trim();
