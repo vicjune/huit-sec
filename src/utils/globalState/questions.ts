@@ -79,6 +79,10 @@ export const useGlobalQuestions = () => {
             ({ bundle: questionBundle }) => questionBundle === bundle.id,
           );
 
+          const product = products.find(
+            ({ productId }) => productId === bundle.id,
+          );
+
           const questionsNotSeenNbr = questionsInBundle.filter(
             ({ id: questionId }) =>
               !permanentQuestionAlreadySeenIds.includes(questionId),
@@ -89,6 +93,7 @@ export const useGlobalQuestions = () => {
             locked: !availableBundleIds.includes(bundle.id),
             questionsNbr: questionsInBundle.length,
             questionsNotSeenNbr,
+            price: product?.localizedPrice,
           };
         }),
     [

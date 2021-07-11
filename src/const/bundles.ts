@@ -24,6 +24,7 @@ export interface BundleWithInfos {
   locked: boolean;
   questionsNbr: number;
   questionsNotSeenNbr: number;
+  price?: string;
 }
 
 export const bundles: Bundle[] = [

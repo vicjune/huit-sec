@@ -21,7 +21,7 @@ export const BasicButton: FC<ButtonProps> = ({
   style,
   icon,
   IconElem,
-  color = colors.white,
+  color = colors.yellow,
 }) => {
   const styles = getStyles(!text, color, small, disabled);
 
@@ -39,7 +39,7 @@ export const BasicButton: FC<ButtonProps> = ({
           <IconElem
             name={icon}
             size={small ? 30 : 50}
-            color={pressed ? colors.background : color}
+            color={pressed ? colors.background : colors.white}
           />
           {text && (
             <Text
@@ -72,14 +72,17 @@ const getStyles = (
       borderWidth: small ? 1 : 5,
       borderColor: color,
       opacity: disabled ? 0.5 : 1,
+      borderStyle: 'solid',
     },
     buttonPressed: {
       backgroundColor: color,
+      borderStyle: 'solid',
     },
     buttonText: {
       fontSize: small ? 10 : 16,
-      color,
+      color: colors.white,
       alignSelf: 'center',
+      fontWeight: '600',
     },
     buttonTextPressed: {
       color: colors.background,

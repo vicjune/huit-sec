@@ -1,6 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { FC, useEffect, useState } from 'react';
-import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+} from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { Input } from '../components/Input';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -78,10 +85,11 @@ export const HomeScreen: FC = () => {
             }}
           />
         ) : (
-          <Text style={styles.logoButton}>LOGO</Text>
-        )}
-        {!!players.length && players.length < PLAYERS_MIN && (
-          <Text style={styles.playersMin}>{PLAYERS_MIN} joueurs requis</Text>
+          <Image
+            style={[styles.logoButton, styles.logo]}
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            source={require('../images/logo.png')}
+          />
         )}
       </View>
 
@@ -120,16 +128,25 @@ export const HomeScreen: FC = () => {
             </View>
           ))}
         </ScrollView>
-      </View>
 
-      {!players.length && (
-        <View style={styles.tooltip}>
-          <Text style={styles.tooltipText}>
-            Commence par ajouter des joueurs
-          </Text>
-          <Icon name="arrow-bold-down" size={60} color={colors.yellow} />
-        </View>
-      )}
+        {players.length < PLAYERS_MIN && (
+          <View style={styles.tooltip}>
+            <Text style={styles.tooltipText}>
+              {!players.length
+                ? 'Commence par ajouter des joueurs'
+                : `${PLAYERS_MIN} joueurs requis`}
+            </Text>
+            {!players.length && (
+              <Icon
+                name="arrow-bold-down"
+                size={60}
+                color={colors.yellow}
+                style={styles.tooltipIcon}
+              />
+            )}
+          </View>
+        )}
+      </View>
 
       <View style={styles.inputWrapper}>
         <Input
@@ -149,6 +166,7 @@ export const HomeScreen: FC = () => {
       </View>
       <BasicButton
         small
+        color={colors.white}
         icon="settings-sharp"
         IconElem={IonIcon}
         style={styles.settingsButton}
@@ -172,11 +190,10 @@ const getStyles = (input: boolean) =>
       marginTop: 'auto',
       marginBottom: 'auto',
     },
-    playersMin: {
-      marginTop: 'auto',
-      color: colors.yellow,
-      fontSize: 25,
-      textAlign: 'center',
+    logo: {
+      width: '80%',
+      height: '80%',
+      resizeMode: 'contain',
     },
     playersNumberClear: {
       flexDirection: 'row',
@@ -262,6 +279,8 @@ const getStyles = (input: boolean) =>
       color: colors.yellow,
       fontSize: 25,
       textAlign: 'center',
-      marginBottom: 10,
+    },
+    tooltipIcon: {
+      marginTop: 10,
     },
   });

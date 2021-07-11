@@ -94,7 +94,7 @@ export const BundlesScreen: FC = () => {
                               pressed && styles.buttonTextPressed,
                             ]}
                           >
-                            Débloquer
+                            {bundle.price}
                           </Text>
                         </>
                       )}
@@ -152,7 +152,7 @@ export const BundlesScreen: FC = () => {
       />
       {(purchaseLoading || productsLoading) && (
         <View style={styles.loader}>
-          <ActivityIndicator size="large" color={colors.yellow} />
+          <ActivityIndicator size="large" color={colors.white} />
         </View>
       )}
     </ScreenWrapper>

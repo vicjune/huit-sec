@@ -31,7 +31,7 @@ export const VictoryScreen: FC = () => {
     <ScreenWrapper>
       <View style={styles.winner}>
         <Text style={styles.winnerLabel}>C'est gagné!</Text>
-        <FAIcon name="crown" size={80} color={colors.first} />
+        <FAIcon name="crown" size={80} color={colors.yellow} />
         <Text style={styles.winnerName}>{winner?.name}</Text>
       </View>
       <BasicButton

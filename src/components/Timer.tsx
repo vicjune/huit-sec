@@ -96,14 +96,14 @@ const getStyles = (timerAlmostOver: boolean) =>
       width: 100,
       borderRadius: 100,
       borderWidth: 5,
-      borderColor: colors.white,
+      borderColor: colors.yellow,
       alignItems: 'center',
       justifyContent: 'center',
       opacity: 0.8,
       marginTop: 20,
     },
     timerButtonPressed: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.yellow,
     },
     timerButtonIcon: {
       marginLeft: 5,

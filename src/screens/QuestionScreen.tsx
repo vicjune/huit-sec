@@ -209,6 +209,7 @@ export const QuestionScreen: FC = () => {
           icon="menu"
           IconElem={EIcon}
           onPress={menuButtonPressed}
+          color={colors.white}
         />
       </ScreenWrapper>
     </>

@@ -117,7 +117,7 @@ const getStyles = () =>
       marginTop: 20,
       marginBottom: 20,
       marginLeft: 30,
-      color: colors.white,
+      color: colors.yellow,
       fontSize: 40,
     },
     settings: {

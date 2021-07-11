@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -26,10 +26,13 @@ export const SwitchPlayerScreen: FC = () => {
   const { newTurn } = useGlobalGame();
   const openActions = useActions();
   const { openModal } = useModal();
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useOnScreenFocus(() => {
     newTurn();
+    setButtonDisabled(true);
     setTimeout(() => {
+      setButtonDisabled(false);
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
@@ -82,6 +85,7 @@ export const SwitchPlayerScreen: FC = () => {
       >
         <BasicButton
           text="C'est fait"
+          disabled={buttonDisabled}
           icon="check"
           IconElem={Icon}
           onPress={() => {
@@ -96,6 +100,7 @@ export const SwitchPlayerScreen: FC = () => {
         icon="menu"
         IconElem={Icon}
         onPress={menuButtonPressed}
+        color={colors.white}
       />
     </ScreenWrapper>
   );
