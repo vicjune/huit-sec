@@ -226,7 +226,7 @@ const getStyles = (input: boolean) =>
       alignItems: 'center',
       margin: 5,
       borderWidth: 1,
-      borderColor: colors.white,
+      borderColor: colors.yellow,
       borderRadius: 20,
       paddingLeft: 10,
     },

@@ -179,6 +179,7 @@ const getStyles = (totalQuestionsNotSeen: number, loading: boolean) =>
       borderStyle: 'solid',
       borderBottomWidth: 1,
       flexShrink: 1,
+      flexGrow: 1,
     },
     bundles: {
       paddingLeft: 20,
