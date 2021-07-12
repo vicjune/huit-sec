@@ -6,9 +6,9 @@ import { HomeScreen } from './screens/HomeScreen';
 import { QuestionScreen } from './screens/QuestionScreen';
 import { colors } from './styles/colors';
 import { SwitchPlayerScreen } from './screens/SwitchPlayerScreen';
-import { Modal, ModalProvider } from './contexts/Modal';
+import { ModalProvider } from './contexts/Modal';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { Overlay, OverlayProvider } from './contexts/Overlay';
+import { OverlayProvider } from './contexts/Overlay';
 import { SoundProvider } from './contexts/Sound';
 import { VictoryScreen } from './screens/VictoryScreen';
 import { GlobalStateProvider } from './contexts/GlobalState';
@@ -61,8 +61,6 @@ export const App: FC = () => {
                     options={{ headerShown: false }}
                   />
                 </Stack.Navigator>
-                <Modal />
-                <Overlay />
               </NavigationContainer>
             </OverlayProvider>
           </ModalProvider>

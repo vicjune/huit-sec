@@ -64,6 +64,7 @@ export const OverlayProvider: FC = ({ children }) => {
       }}
     >
       {children}
+      <Overlay />
     </overlayContext.Provider>
   );
 };
@@ -73,7 +74,7 @@ export const useOverlay = () => {
   return { displayOverlay };
 };
 
-export const Overlay: FC = () => {
+const Overlay: FC = () => {
   const { overlayProps, closeOverlay } = useContext(overlayContext);
   const styles = getStyles();
   const fadeAnim = useRef(new Animated.Value(0)).current;

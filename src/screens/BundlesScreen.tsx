@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { useGlobalQuestions } from '../utils/globalState/questions';
+import { useQuestions } from '../utils/useQuestions';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
 import { Sound, useSound } from '../contexts/Sound';
@@ -20,7 +20,7 @@ import { pluralize } from '../utils/pluralize';
 import { useInAppPurchases } from '../utils/useInAppPurchases';
 
 export const BundlesScreen: FC = () => {
-  const { bundlesWithInfos } = useGlobalQuestions();
+  const { bundlesWithInfos } = useQuestions();
   const navigation = useNavigation();
   const { playSound } = useSound();
   const totalQuestionsNotSeen = bundlesWithInfos.reduce(

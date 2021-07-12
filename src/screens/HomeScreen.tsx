@@ -18,11 +18,11 @@ import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useModal } from '../contexts/Modal';
 import { SettingsModal } from '../components/SettingsModal';
-import { useGlobalPlayers } from '../utils/globalState/players';
-import { useGlobalGame } from '../utils/globalState/game';
-import { useGlobalQuestions } from '../utils/globalState/questions';
-import { useGlobalTimer } from '../utils/globalState/timer';
-import { useGlobalScore } from '../utils/globalState/score';
+import { usePlayers } from '../utils/usePlayers';
+import { useGame } from '../utils/useGame';
+import { useQuestions } from '../utils/useQuestions';
+import { useTimer } from '../utils/useTimer';
+import { useScore } from '../utils/useScore';
 import { Screen } from '../const/Screen';
 import { pluralize } from '../utils/pluralize';
 import { useInAppPurchases } from '../utils/useInAppPurchases';
@@ -34,14 +34,13 @@ export const HomeScreen: FC = () => {
   const [newPlayerInput, setNewPlayerInput] = useState('');
   const { playSound } = useSound();
   const { openModal } = useModal();
-  const { players, addPlayer, removePlayer, removeAllPlayers } =
-    useGlobalPlayers();
+  const { players, addPlayer, removePlayer, removeAllPlayers } = usePlayers();
   const styles = getStyles(!!newPlayerInput);
-  const { resetGame, isFirstGame } = useGlobalGame();
-  const { initPlayers } = useGlobalPlayers();
-  const { initQuestions } = useGlobalQuestions();
-  const { initTimer } = useGlobalTimer();
-  const { initScore } = useGlobalScore();
+  const { resetGame, isFirstGame } = useGame();
+  const { initPlayers } = usePlayers();
+  const { initQuestions } = useQuestions();
+  const { initTimer } = useTimer();
+  const { initScore } = useScore();
   const { loadProducts } = useInAppPurchases();
 
   useEffect(() => {
@@ -128,7 +127,7 @@ export const HomeScreen: FC = () => {
             <Text style={styles.tooltipText}>
               {!players.length
                 ? 'Commence par ajouter des joueurs'
-                : `${PLAYERS_MIN} joueurs requis`}
+                : `${PLAYERS_MIN} ${pluralize('joueur', PLAYERS_MIN)} requis`}
             </Text>
             {!players.length && (
               <Icon

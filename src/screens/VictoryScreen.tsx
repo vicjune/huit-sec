@@ -9,7 +9,7 @@ import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
 import { colors } from '../styles/colors';
-import { useGlobalPlayers } from '../utils/globalState/players';
+import { usePlayers } from '../utils/usePlayers';
 import { useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
 
@@ -18,7 +18,7 @@ export const VictoryScreen: FC = () => {
   const navigate = usePreventNavigation();
   const { playSound } = useSound();
   const { openModal } = useModal();
-  const { players } = useGlobalPlayers();
+  const { players } = usePlayers();
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
   const [winner] = sortedPlayers;

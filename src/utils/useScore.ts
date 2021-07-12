@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
-import { useGlobalState } from '../../contexts/GlobalState';
-import { storage, STORAGE_VICTORY_KEY } from '../storage';
+import { useGlobalState } from '../contexts/GlobalState';
+import { storage, STORAGE_VICTORY_KEY } from './storage';
 
 export const VALID_POINTS = 3;
 export const INVALID_POINTS = -1;
 const DEFAULT_SCORE_VICTORY = 10;
 
-export const useGlobalScore = () => {
+export const useScore = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const { scoreVictory } = globalState;
 

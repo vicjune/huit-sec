@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { useModal } from '../contexts/Modal';
 import { colors } from '../styles/colors';
-import { useGlobalPlayers } from '../utils/globalState/players';
-import { useGlobalSpecialEvent } from '../utils/globalState/specialEvents';
+import { usePlayers } from '../utils/usePlayers';
+import { useSpecialEvent } from '../utils/useSpecialEvents';
 import { BasicButton } from './BasicButton';
 import { ScreenWrapper } from './ScreenWrapper';
 
 export const SpecialEventModal: FC = () => {
-  const { playerAnswering, secondaryPlayerAnswering } = useGlobalPlayers();
-  const { currentEvent } = useGlobalSpecialEvent();
+  const { playerAnswering, secondaryPlayerAnswering } = usePlayers();
+  const { currentEvent } = useSpecialEvent();
   const styles = getStyles();
   const { closeModal } = useModal();
 

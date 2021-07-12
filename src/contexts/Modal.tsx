@@ -7,6 +7,21 @@ import React, {
 } from 'react';
 import { Modal as RnModal } from 'react-native';
 
+const Modal: FC = () => {
+  const { modalContent, closeModal } = useContext(modalContext);
+
+  return (
+    <RnModal
+      visible={!!modalContent}
+      animationType="slide"
+      onRequestClose={closeModal}
+      presentationStyle="pageSheet"
+    >
+      {modalContent}
+    </RnModal>
+  );
+};
+
 interface ModalContext {
   openModal: (content: ReactNode) => void;
   closeModal: () => void;
@@ -34,6 +49,7 @@ export const ModalProvider: FC = ({ children }) => {
       }}
     >
       {children}
+      <Modal />
     </modalContext.Provider>
   );
 };
@@ -41,19 +57,4 @@ export const ModalProvider: FC = ({ children }) => {
 export const useModal = () => {
   const { openModal, closeModal } = useContext(modalContext);
   return { openModal, closeModal };
-};
-
-export const Modal: FC = () => {
-  const { modalContent, closeModal } = useContext(modalContext);
-
-  return (
-    <RnModal
-      visible={!!modalContent}
-      animationType="slide"
-      onRequestClose={closeModal}
-      presentationStyle="pageSheet"
-    >
-      {modalContent}
-    </RnModal>
-  );
 };

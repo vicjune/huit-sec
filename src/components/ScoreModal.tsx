@@ -7,11 +7,11 @@ import { BasicButton } from './BasicButton';
 import { getRank } from '../utils/getRank';
 import { useModal } from '../contexts/Modal';
 import { ScreenWrapper } from './ScreenWrapper';
-import { useGlobalPlayers } from '../utils/globalState/players';
+import { usePlayers } from '../utils/usePlayers';
 
 export const ScoreModal: FC = () => {
   const styles = getStyles();
-  const { players } = useGlobalPlayers();
+  const { players } = usePlayers();
   const { closeModal } = useModal();
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score);

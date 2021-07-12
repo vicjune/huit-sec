@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { v4 as genUuid } from 'uuid';
-import { useGlobalState } from '../../contexts/GlobalState';
-import { storage, STORAGE_PLAYERS_KEY } from '../storage';
+import { useGlobalState } from '../contexts/GlobalState';
+import { storage, STORAGE_PLAYERS_KEY } from './storage';
 
 export interface Player {
   id: string;
@@ -17,7 +17,7 @@ export const getNewPlayer = (name: string) => ({
   nbrAnswered: 0,
 });
 
-export const useGlobalPlayers = () => {
+export const usePlayers = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
     players,

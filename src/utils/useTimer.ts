@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { useGlobalState } from '../../contexts/GlobalState';
-import { storage, STORAGE_TIMER_KEY } from '../storage';
+import { useGlobalState } from '../contexts/GlobalState';
+import { storage, STORAGE_TIMER_KEY } from './storage';
 
 const DEFAULT_TIMER_VALUE = 8000; // 8s
 
-export const useGlobalTimer = () => {
+export const useTimer = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const { timerValue } = globalState;
 

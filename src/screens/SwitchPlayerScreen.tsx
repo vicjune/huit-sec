@@ -9,9 +9,9 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Sound, useSound } from '../contexts/Sound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
-import { useActions } from '../utils/useActions';
-import { useGlobalPlayers } from '../utils/globalState/players';
-import { useGlobalGame } from '../utils/globalState/game';
+import { useActionMenu } from '../utils/useActions';
+import { usePlayers } from '../utils/usePlayers';
+import { useGame } from '../utils/useGame';
 import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
 
@@ -22,9 +22,9 @@ export const SwitchPlayerScreen: FC = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const styles = getStyles();
   const { playSound } = useSound();
-  const { playerAsking } = useGlobalPlayers();
-  const { newTurn } = useGlobalGame();
-  const openActions = useActions();
+  const { playerAsking } = usePlayers();
+  const { newTurn } = useGame();
+  const { openActionMenu } = useActionMenu();
   const { openModal } = useModal();
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
@@ -46,7 +46,7 @@ export const SwitchPlayerScreen: FC = () => {
   });
 
   const menuButtonPressed = () => {
-    openActions([
+    openActionMenu([
       {
         label: 'Quitter',
         red: true,

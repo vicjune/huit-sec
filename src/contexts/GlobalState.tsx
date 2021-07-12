@@ -7,9 +7,9 @@ import React, {
   useState,
 } from 'react';
 import { Product, Purchase } from 'react-native-iap';
-import { Player } from '../utils/globalState/players';
-import { Question } from '../utils/globalState/questions';
-import { SpecialEvent } from '../utils/globalState/specialEvents';
+import { Player } from '../utils/usePlayers';
+import { Question } from '../utils/useQuestions';
+import { SpecialEvent } from '../utils/useSpecialEvents';
 
 interface GlobalState {
   players: Player[];

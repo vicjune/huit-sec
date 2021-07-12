@@ -5,12 +5,9 @@ import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
 import { Sound, useSound } from '../contexts/Sound';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useGlobalPlayers, Player } from '../utils/globalState/players';
-import {
-  SpecialEventId,
-  useGlobalSpecialEvent,
-} from '../utils/globalState/specialEvents';
-import { INVALID_POINTS, VALID_POINTS } from '../utils/globalState/score';
+import { usePlayers, Player } from '../utils/usePlayers';
+import { SpecialEventId, useSpecialEvent } from '../utils/useSpecialEvents';
+import { INVALID_POINTS, VALID_POINTS } from '../utils/useScore';
 
 interface VerdictProps {
   onAnswer: (winnerId?: string) => void;
@@ -21,8 +18,8 @@ export const Verdict: FC<VerdictProps> = ({ onAnswer }) => {
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
   const { playerAnswering, players, playerAsking, secondaryPlayerAnswering } =
-    useGlobalPlayers();
-  const { currentEvent } = useGlobalSpecialEvent();
+    usePlayers();
+  const { currentEvent } = useSpecialEvent();
   const basicVerdict =
     !currentEvent ||
     ![SpecialEventId.DUEL, SpecialEventId.EVERYONE].includes(currentEvent.id);

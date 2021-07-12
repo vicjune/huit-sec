@@ -1,8 +1,12 @@
-import { Player, getNewPlayer } from './players';
-import { INVALID_POINTS, VALID_POINTS } from './score';
-import { SpecialEventId, SpecialEvent, getRandomEvent } from './specialEvents';
-import { pickRandomItem } from '../pickRandomItem';
-import { useGlobalState } from '../../contexts/GlobalState';
+import { Player, getNewPlayer } from './usePlayers';
+import { INVALID_POINTS, VALID_POINTS } from './useScore';
+import {
+  SpecialEventId,
+  SpecialEvent,
+  getRandomEvent,
+} from './useSpecialEvents';
+import { pickRandomItem } from './pickRandomItem';
+import { useGlobalState } from '../contexts/GlobalState';
 import { useCallback, useMemo } from 'react';
 
 const getLeastAnswerPlayers = (players: Player[]) =>
@@ -14,7 +18,7 @@ const getLeastAnswerPlayers = (players: Player[]) =>
     return [...prev, player];
   }, [] as Player[]);
 
-export const useGlobalGame = () => {
+export const useGame = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
     players,

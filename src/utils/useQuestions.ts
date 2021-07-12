@@ -1,13 +1,14 @@
-import { pickRandomItem } from '../pickRandomItem';
+import { pickRandomItem } from './pickRandomItem';
 import {
   storage,
   STORAGE_PERMANENT_QUESTIONS_SEEN_KEY,
   STORAGE_QUESTIONS_SEEN_KEY,
-} from '../storage';
-import { default as questionsJSON } from '../../json/questions.json';
-import { useGlobalState } from '../../contexts/GlobalState';
+} from './storage';
+import { default as questionsJSON } from '../json/questions.json';
+import { useGlobalState } from '../contexts/GlobalState';
 import { useCallback, useMemo } from 'react';
-import { BundleId, bundles, BundleWithInfos } from '../../const/bundles';
+import { BundleId, bundles, BundleWithInfos } from '../const/bundles';
+import { useInAppPurchases } from './useInAppPurchases';
 
 export interface Question {
   id: string;
@@ -16,15 +17,14 @@ export interface Question {
   bundle: BundleId;
 }
 
-export const useGlobalQuestions = () => {
+export const useQuestions = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
     questionAlreadySeenIds,
     permanentQuestionAlreadySeenIds,
     currentQuestion,
-    products,
-    availablePurchases,
   } = globalState;
+  const { products, availablePurchases } = useInAppPurchases();
 
   const initQuestions = useCallback(() => {
     storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {

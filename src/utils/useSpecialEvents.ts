@@ -1,10 +1,10 @@
 import { ElementType } from 'react';
-import { pickRandomItem } from '../pickRandomItem';
+import { pickRandomItem } from './pickRandomItem';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { default as MIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as MCIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useGlobalState } from '../../contexts/GlobalState';
+import { useGlobalState } from '../contexts/GlobalState';
 
 export enum SpecialEventId {
   INNOCENT = 'INNOCENT',
@@ -106,7 +106,7 @@ export const getRandomEvent = (playerNumber: number) => {
   return specialEvents[pickedEvent];
 };
 
-export const useGlobalSpecialEvent = () => {
+export const useSpecialEvent = () => {
   const { globalState } = useGlobalState();
   const { currentEvent } = globalState;
 

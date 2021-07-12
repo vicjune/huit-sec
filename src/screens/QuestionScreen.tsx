@@ -15,15 +15,15 @@ import { colors } from '../styles/colors';
 import { leadingZeros } from '../utils/leadingZeros';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { SpecialEventModal } from '../components/SpecialEventModal';
-import { useActions } from '../utils/useActions';
-import { useGlobalPlayers } from '../utils/globalState/players';
-import { useGlobalGame } from '../utils/globalState/game';
-import { useGlobalQuestions } from '../utils/globalState/questions';
+import { useActionMenu } from '../utils/useActions';
+import { usePlayers } from '../utils/usePlayers';
+import { useGame } from '../utils/useGame';
+import { useQuestions } from '../utils/useQuestions';
 import {
   SpecialEvent,
   SpecialEventId,
-  useGlobalSpecialEvent,
-} from '../utils/globalState/specialEvents';
+  useSpecialEvent,
+} from '../utils/useSpecialEvents';
 import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
 
@@ -33,13 +33,13 @@ export const QuestionScreen: FC = () => {
   const navigate = usePreventNavigation();
   const [timerRunning, setTimerRunning] = useState(false);
   const [verdict, setVerdict] = useState(false);
-  const openActions = useActions();
+  const { openActionMenu } = useActionMenu();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
-  const { playerAnswering, secondaryPlayerAnswering } = useGlobalPlayers();
-  const { answer } = useGlobalGame();
-  const { currentQuestion, newQuestion } = useGlobalQuestions();
-  const { currentEvent } = useGlobalSpecialEvent();
+  const { playerAnswering, secondaryPlayerAnswering } = usePlayers();
+  const { answer } = useGame();
+  const { currentQuestion, newQuestion } = useQuestions();
+  const { currentEvent } = useSpecialEvent();
   const { openModal } = useModal();
   const styles = getStyles(currentEvent);
   const flashback = currentEvent?.id === SpecialEventId.FLASHBACK;
@@ -71,7 +71,7 @@ export const QuestionScreen: FC = () => {
   });
 
   const menuButtonPressed = () => {
-    openActions([
+    openActionMenu([
       {
         label: 'Quitter',
         red: true,

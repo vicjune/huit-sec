@@ -1,5 +1,5 @@
 import { BundleId } from '../src/const/bundles';
-import { Question } from '../src/utils/globalState/questions';
+import { Question } from '../src/utils/useQuestions';
 
 // @ts-ignore
 const fs = require('fs');

@@ -19,29 +19,26 @@ export const useInAppPurchases = () => {
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const { showNotification } = useNotification();
   const { globalState, setGlobalState } = useGlobalState();
-
-  const loadAvailablePurchases = useCallback(async () => {
-    const availablePurchases = await getAvailablePurchases();
-    setGlobalState((prev) => ({ ...prev, availablePurchases }));
-  }, [setGlobalState]);
+  const { productsLoading, products, availablePurchases } = globalState;
 
   const loadProducts = useCallback(async () => {
     clearProductsIOS();
     setGlobalState((prev) => ({ ...prev, productsLoading: true }));
     try {
       await initConnection();
-      const products = await getProducts(
+      const prod = await getProducts(
         bundles
           .filter(({ lockedByDefault }) => lockedByDefault)
           .map(({ id }) => id),
       );
-      setGlobalState((prev) => ({ ...prev, products }));
-      await loadAvailablePurchases();
+      setGlobalState((prev) => ({ ...prev, products: prod }));
+      const purchases = await getAvailablePurchases();
+      setGlobalState((prev) => ({ ...prev, availablePurchases: purchases }));
     } catch (e) {
       showNotification(e.message);
     }
     setGlobalState((prev) => ({ ...prev, productsLoading: false }));
-  }, [setGlobalState, showNotification, loadAvailablePurchases]);
+  }, [setGlobalState, showNotification]);
 
   useEffect(() => {
     let purchaseUpdateSubscription: EmitterSubscription;
@@ -56,7 +53,7 @@ export const useInAppPurchases = () => {
             if (receipt) {
               try {
                 await finishTransaction(purchase);
-                loadAvailablePurchases();
+                loadProducts();
               } catch (e) {
                 showNotification(e.message);
               }
@@ -83,7 +80,7 @@ export const useInAppPurchases = () => {
         purchaseErrorSubscription.remove();
       }
     };
-  }, [showNotification, loadAvailablePurchases]);
+  }, [showNotification, loadProducts]);
 
   const purchase = useCallback(
     async (id: BundleId) => {
@@ -102,6 +99,8 @@ export const useInAppPurchases = () => {
     loadProducts,
     purchase,
     purchaseLoading,
-    productsLoading: globalState.productsLoading,
+    productsLoading,
+    products,
+    availablePurchases,
   };
 };
