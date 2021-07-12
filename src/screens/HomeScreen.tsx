@@ -42,21 +42,15 @@ export const HomeScreen: FC = () => {
   const { initQuestions } = useGlobalQuestions();
   const { initTimer } = useGlobalTimer();
   const { initScore } = useGlobalScore();
-  const { updateAvailablePurchases } = useInAppPurchases();
+  const { loadProducts } = useInAppPurchases();
 
   useEffect(() => {
     initPlayers();
     initQuestions();
     initTimer();
     initScore();
-    updateAvailablePurchases();
-  }, [
-    initPlayers,
-    initQuestions,
-    initScore,
-    initTimer,
-    updateAvailablePurchases,
-  ]);
+    loadProducts();
+  }, [initPlayers, initQuestions, initScore, initTimer, loadProducts]);
 
   const newPlayer = () => {
     const cleanedName = newPlayerInput.trim();

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -27,7 +28,8 @@ export const BundlesScreen: FC = () => {
       locked ? prev : prev + questionsNotSeenNbr,
     0,
   );
-  const { purchase, purchaseLoading, productsLoading } = useInAppPurchases();
+  const { purchase, purchaseLoading, productsLoading, loadProducts } =
+    useInAppPurchases();
   const styles = getStyles(
     totalQuestionsNotSeen,
     purchaseLoading || productsLoading,
@@ -39,6 +41,12 @@ export const BundlesScreen: FC = () => {
         <ScrollView
           alwaysBounceVertical={false}
           contentContainerStyle={styles.bundles}
+          refreshControl={
+            <RefreshControl
+              refreshing={productsLoading}
+              onRefresh={loadProducts}
+            />
+          }
         >
           {bundlesWithInfos.map((bundle) => (
             <View
@@ -77,6 +85,7 @@ export const BundlesScreen: FC = () => {
                         styles.unlockButton,
                         pressed && styles.unlockButtonPressed,
                       ]}
+                      disabled={purchaseLoading || productsLoading}
                       onPress={() => {
                         purchase(bundle.id);
                       }}
@@ -150,7 +159,7 @@ export const BundlesScreen: FC = () => {
           navigation.navigate(Screen.SWITCH_PLAYER);
         }}
       />
-      {(purchaseLoading || productsLoading) && (
+      {purchaseLoading && (
         <View style={styles.loader}>
           <ActivityIndicator size="large" color={colors.white} />
         </View>
@@ -162,7 +171,7 @@ export const BundlesScreen: FC = () => {
 const getStyles = (totalQuestionsNotSeen: number, loading: boolean) =>
   StyleSheet.create({
     wrapper: {
-      paddingTop: 50,
+      paddingTop: 60,
       paddingBottom: 20,
     },
     bundlesWrapper: {
@@ -170,13 +179,13 @@ const getStyles = (totalQuestionsNotSeen: number, loading: boolean) =>
       borderStyle: 'solid',
       borderBottomWidth: 1,
       flexShrink: 1,
-      opacity: loading ? 0.3 : 1,
     },
     bundles: {
       paddingLeft: 20,
       paddingRight: 20,
     },
     bundle: {
+      opacity: loading ? 0.3 : 1,
       backgroundColor: colors.bundleBackground,
       borderRadius: 6,
       marginBottom: 20,

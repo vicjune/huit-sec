@@ -2,7 +2,9 @@
 
 ## Install project
 
-`yarn && yarn rn-link`
+- https://reactnative.dev/docs/environment-setup
+
+- `yarn && yarn rn-link`
 
 ## Start development
 

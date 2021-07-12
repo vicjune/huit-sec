@@ -8,7 +8,6 @@ import { default as questionsJSON } from '../../json/questions.json';
 import { useGlobalState } from '../../contexts/GlobalState';
 import { useCallback, useMemo } from 'react';
 import { BundleId, bundles, BundleWithInfos } from '../../const/bundles';
-import { useInAppPurchases } from '../useInAppPurchases';
 
 export interface Question {
   id: string;
@@ -23,9 +22,9 @@ export const useGlobalQuestions = () => {
     questionAlreadySeenIds,
     permanentQuestionAlreadySeenIds,
     currentQuestion,
-    purchasedBundleIds,
+    products,
+    availablePurchases,
   } = globalState;
-  const { products } = useInAppPurchases();
 
   const initQuestions = useCallback(() => {
     storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
@@ -52,10 +51,11 @@ export const useGlobalQuestions = () => {
       bundles
         .filter(
           ({ id, lockedByDefault }) =>
-            !lockedByDefault || purchasedBundleIds.includes(id),
+            !lockedByDefault ||
+            availablePurchases.map(({ productId }) => productId).includes(id),
         )
         .map(({ id }) => id),
-    [purchasedBundleIds],
+    [availablePurchases],
   );
 
   const allQuestions = useMemo(() => questionsJSON as Question[], []);

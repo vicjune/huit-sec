@@ -2,10 +2,10 @@ import { ElementType } from 'react';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 
 export enum BundleId {
-  BASE = 'BASE',
-  BUNDLE_1 = 'BUNDLE_1',
-  BUNDLE_2 = 'BUNDLE_2',
-  BUNDLE_3 = 'BUNDLE_3',
+  base = 'base',
+  bundle_1 = 'bundle_1',
+  bundle_2 = 'bundle_2',
+  bundle_3 = 'bundle_3',
 }
 
 interface Bundle {
@@ -29,27 +29,27 @@ export interface BundleWithInfos {
 
 export const bundles: Bundle[] = [
   {
-    id: BundleId.BASE,
+    id: BundleId.base,
     title: 'Questions de base',
     iconType: EntIcon,
     icon: 'box',
   },
   {
-    id: BundleId.BUNDLE_1,
+    id: BundleId.bundle_1,
     title: 'Encore plus tordues',
     iconType: EntIcon,
     icon: 'water',
     lockedByDefault: true,
   },
   {
-    id: BundleId.BUNDLE_2,
+    id: BundleId.bundle_2,
     title: "Pour mettre l'ambiance",
     iconType: EntIcon,
     icon: 'traffic-cone',
     lockedByDefault: true,
   },
   {
-    id: BundleId.BUNDLE_3,
+    id: BundleId.bundle_3,
     title: 'Si tu veux perdre des potes',
     iconType: EntIcon,
     icon: 'hand',

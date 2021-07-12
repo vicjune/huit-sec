@@ -1,4 +1,5 @@
-import { BundleId, Question } from '../src/utils/globalState/questions';
+import { BundleId } from '../src/const/bundles';
+import { Question } from '../src/utils/globalState/questions';
 
 // @ts-ignore
 const fs = require('fs');
@@ -24,10 +25,10 @@ const writeFile = (path: string, content: any) => {
 };
 
 const getBundle = (questionNumber: number) => {
-  if (questionNumber <= 100) return BundleId.BASE;
-  if (questionNumber <= 200) return BundleId.BUNDLE_1;
-  if (questionNumber <= 300) return BundleId.BUNDLE_2;
-  return BundleId.BUNDLE_3;
+  if (questionNumber <= 100) return BundleId.base;
+  if (questionNumber <= 200) return BundleId.bundle_1;
+  if (questionNumber <= 300) return BundleId.bundle_2;
+  return BundleId.bundle_3;
 };
 
 const rawQuestions: string[] = readFile(rawQuestionsFile) || [];

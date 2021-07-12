@@ -6,7 +6,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { BundleId } from '../const/bundles';
+import { Product, Purchase } from 'react-native-iap';
 import { Player } from '../utils/globalState/players';
 import { Question } from '../utils/globalState/questions';
 import { SpecialEvent } from '../utils/globalState/specialEvents';
@@ -22,7 +22,9 @@ interface GlobalState {
   permanentQuestionAlreadySeenIds: string[];
   currentQuestion?: Question;
   currentEvent?: SpecialEvent;
-  purchasedBundleIds: BundleId[];
+  products: Product<string>[];
+  availablePurchases: Purchase[];
+  productsLoading: boolean;
 }
 
 const defaultGlobalState: GlobalState = {
@@ -31,7 +33,9 @@ const defaultGlobalState: GlobalState = {
   permanentQuestionAlreadySeenIds: [],
   scoreVictory: 0,
   timerValue: 0,
-  purchasedBundleIds: [],
+  products: [],
+  availablePurchases: [],
+  productsLoading: false,
 };
 
 const globalStateContext = createContext<{

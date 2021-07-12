@@ -1,78 +1,91 @@
 import { useCallback, useEffect, useState } from 'react';
+import { EmitterSubscription } from 'react-native';
 import {
   requestPurchase,
   useIAP,
-  getAvailablePurchases,
   purchaseErrorListener,
   IAPErrorCode,
+  clearProductsIOS,
+  initConnection,
+  getProducts,
+  getAvailablePurchases,
 } from 'react-native-iap';
 import { BundleId, bundles } from '../const/bundles';
 import { useGlobalState } from '../contexts/GlobalState';
 import { useNotification } from './useNotification';
 
 export const useInAppPurchases = () => {
-  const [productsLoading, setProductsLoading] = useState(false);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const { showNotification } = useNotification();
-  const { setGlobalState } = useGlobalState();
-  const {
-    connected,
-    products,
-    getProducts,
-    finishTransaction,
-    currentPurchase,
-  } = useIAP();
+  const { globalState, setGlobalState } = useGlobalState();
+  const { connected, finishTransaction, currentPurchase } = useIAP();
 
-  const updateAvailablePurchases = useCallback(async () => {
-    setProductsLoading(true);
+  const loadAvailablePurchases = useCallback(async () => {
+    const availablePurchases = await getAvailablePurchases();
+    setGlobalState((prev) => ({ ...prev, availablePurchases }));
+    console.log(
+      'availablePurchases',
+      availablePurchases.map(({ productId }) => productId),
+    );
+  }, [setGlobalState]);
+
+  const loadProducts = useCallback(async () => {
+    clearProductsIOS();
+    setGlobalState((prev) => ({ ...prev, productsLoading: true }));
     try {
-      const res = await getAvailablePurchases();
-      setGlobalState((prev) => ({
-        ...prev,
-        purchasedBundleIds: res.map(({ productId }) => productId as BundleId),
-      }));
+      await initConnection();
+      const products = await getProducts(
+        bundles
+          .filter(({ lockedByDefault }) => lockedByDefault)
+          .map(({ id }) => id),
+      );
+      setGlobalState((prev) => ({ ...prev, products }));
+      console.log(
+        'products',
+        products.map(({ productId }) => productId),
+      );
+      await loadAvailablePurchases();
     } catch (e) {
       showNotification(e.message);
     }
-    setProductsLoading(false);
-  }, [setGlobalState, showNotification]);
+    setGlobalState((prev) => ({ ...prev, productsLoading: false }));
+  }, [setGlobalState, showNotification, loadAvailablePurchases]);
 
   useEffect(() => {
-    const purchaseErrorSubscription = purchaseErrorListener((e) => {
-      setPurchaseLoading(false);
-      if (e.code !== IAPErrorCode.E_USER_CANCELLED) {
-        showNotification(e.message);
-      }
-    });
+    let purchaseErrorSubscription: EmitterSubscription;
+
+    if (connected) {
+      purchaseErrorSubscription = purchaseErrorListener((e) => {
+        setPurchaseLoading(false);
+        if (e.code !== IAPErrorCode.E_USER_CANCELLED) {
+          showNotification(e.message);
+        }
+      });
+    }
 
     return () => {
       if (purchaseErrorSubscription) {
         purchaseErrorSubscription.remove();
       }
     };
-  }, [showNotification]);
-
-  useEffect(() => {
-    if (connected) {
-      getProducts(
-        bundles
-          .filter(({ lockedByDefault }) => lockedByDefault)
-          .map(({ id }) => id),
-      );
-    }
-  }, [getProducts, connected]);
+  }, [connected, showNotification]);
 
   useEffect(() => {
     (async () => {
       if (currentPurchase) {
+        console.log('currentPurchase');
         const receipt = currentPurchase.transactionReceipt;
         if (receipt) {
+          console.log('receipt');
           try {
+            console.log('finishTransaction');
             await finishTransaction(currentPurchase);
-            updateAvailablePurchases();
+            loadAvailablePurchases();
           } catch (e) {
+            console.log('finishTransaction error', e.message);
             showNotification(e.message);
           }
+          console.log('finishTransaction done');
         }
       }
     })();
@@ -80,27 +93,29 @@ export const useInAppPurchases = () => {
     currentPurchase,
     finishTransaction,
     showNotification,
-    updateAvailablePurchases,
+    loadAvailablePurchases,
   ]);
 
   const purchase = useCallback(
     async (id: BundleId) => {
       setPurchaseLoading(true);
       try {
+        console.log('requestPurchase');
         await requestPurchase(id);
       } catch (e) {
         showNotification(e.message);
+        console.log('requestPurchase error', e.message);
       }
+      console.log('requestPurchase done');
       setPurchaseLoading(false);
     },
     [showNotification],
   );
 
   return {
-    updateAvailablePurchases,
-    products,
+    loadProducts,
     purchase,
     purchaseLoading,
-    productsLoading,
+    productsLoading: globalState.productsLoading,
   };
 };
