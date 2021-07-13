@@ -20,7 +20,6 @@ import {
   purchaseUpdatedListener,
   requestPurchase,
 } from 'react-native-iap';
-import { bundles } from '../const/bundles';
 import { useNotification } from '../utils/useNotification';
 
 interface InAppPurchasesContext {
@@ -41,7 +40,14 @@ const inAppPurchasesContext = createContext<InAppPurchasesContext>({
   availablePurchases: [],
 });
 
-export const InAppPurchasesProvider: FC = ({ children }) => {
+interface InAppPurchasesProviderProps {
+  productIds?: string[];
+}
+
+export const InAppPurchasesProvider: FC<InAppPurchasesProviderProps> = ({
+  productIds,
+  children,
+}) => {
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const [productsLoading, setProductsLoading] = useState(false);
   const [products, setProducts] = useState<Product<string>[]>([]);
@@ -53,11 +59,7 @@ export const InAppPurchasesProvider: FC = ({ children }) => {
     setProductsLoading(true);
     try {
       await initConnection();
-      const productsRes = await getProducts(
-        bundles
-          .filter(({ lockedByDefault }) => lockedByDefault)
-          .map(({ id }) => id),
-      );
+      const productsRes = await getProducts(productIds || []);
       setProducts(productsRes);
       const purchases = await getAvailablePurchases();
       setAvailablePurchases(purchases);
@@ -65,7 +67,7 @@ export const InAppPurchasesProvider: FC = ({ children }) => {
       showNotification(e.message);
     }
     setProductsLoading(false);
-  }, [showNotification]);
+  }, [showNotification, productIds]);
 
   useEffect(() => {
     loadProducts();

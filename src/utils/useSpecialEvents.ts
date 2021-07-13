@@ -100,11 +100,12 @@ export const useSpecialEvent = () => {
       0,
     );
 
+    const fillerNbr = 100 - turnsSinceLastEvent * 10 - totalProbability;
     const eventsChances = filteredSpecialEvents.reduce(
       (prev, { id, probability }) => {
         return [...prev, ...Array(probability).fill(id)];
       },
-      Array(100 - turnsSinceLastEvent * 10 - totalProbability).fill(
+      Array(fillerNbr > 0 ? fillerNbr : 0).fill(
         null,
       ) as (SpecialEventId | null)[],
     );

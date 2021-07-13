@@ -15,14 +15,19 @@ import { GlobalStateProvider } from './contexts/GlobalState';
 import { Screen } from './const/Screen';
 import { BundlesScreen } from './screens/BundlesScreen';
 import { InAppPurchasesProvider } from './contexts/InAppPurchases';
+import { bundles } from './const/bundles';
 
 const Stack = createStackNavigator();
 
 export const App: FC = () => {
+  const productIds = bundles
+    .filter(({ lockedByDefault }) => lockedByDefault)
+    .map(({ id }) => id);
+
   return (
     <GlobalStateProvider>
       <ActionSheetProvider>
-        <InAppPurchasesProvider>
+        <InAppPurchasesProvider productIds={productIds}>
           <SoundProvider>
             <ModalProvider>
               <OverlayProvider>
