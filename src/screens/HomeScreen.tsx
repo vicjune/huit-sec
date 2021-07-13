@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   Keyboard,
   Pressable,
@@ -20,12 +20,8 @@ import { useModal } from '../contexts/Modal';
 import { SettingsModal } from '../components/SettingsModal';
 import { usePlayers } from '../utils/usePlayers';
 import { useGame } from '../utils/useGame';
-import { useQuestions } from '../utils/useQuestions';
-import { useTimer } from '../utils/useTimer';
-import { useScore } from '../utils/useScore';
 import { Screen } from '../const/Screen';
 import { pluralize } from '../utils/pluralize';
-import { useInAppPurchases } from '../utils/useInAppPurchases';
 
 const PLAYERS_MIN = 2;
 
@@ -37,19 +33,6 @@ export const HomeScreen: FC = () => {
   const { players, addPlayer, removePlayer, removeAllPlayers } = usePlayers();
   const styles = getStyles(!!newPlayerInput);
   const { resetGame, isFirstGame } = useGame();
-  const { initPlayers } = usePlayers();
-  const { initQuestions } = useQuestions();
-  const { initTimer } = useTimer();
-  const { initScore } = useScore();
-  const { loadProducts } = useInAppPurchases();
-
-  useEffect(() => {
-    initPlayers();
-    initQuestions();
-    initTimer();
-    initScore();
-    loadProducts();
-  }, [initPlayers, initQuestions, initScore, initTimer, loadProducts]);
 
   const newPlayer = () => {
     const cleanedName = newPlayerInput.trim();

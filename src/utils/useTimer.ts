@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useGlobalState } from '../contexts/GlobalState';
 import { storage, STORAGE_TIMER_KEY } from './storage';
 
@@ -8,16 +8,18 @@ export const useTimer = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const { timerValue } = globalState;
 
-  const initTimer = useCallback(() => {
-    storage.get<number>(STORAGE_TIMER_KEY).then((timer) => {
-      setGlobalState((prev) => ({
-        ...prev,
-        timerValue: timer || DEFAULT_TIMER_VALUE,
-      }));
-    });
-  }, [setGlobalState]);
+  useEffect(() => {
+    if (timerValue === undefined) {
+      storage.get<number>(STORAGE_TIMER_KEY).then((timer) => {
+        setGlobalState((prev) => ({
+          ...prev,
+          timerValue: timer || DEFAULT_TIMER_VALUE,
+        }));
+      });
+    }
+  }, [timerValue, setGlobalState]);
 
-  const setTimer = useCallback(
+  const setTimerValue = useCallback(
     (value: number) => {
       setGlobalState((prev) => ({
         ...prev,
@@ -28,5 +30,5 @@ export const useTimer = () => {
     [setGlobalState],
   );
 
-  return { timerValue, setTimerValue: setTimer, initTimer };
+  return { timerValue: timerValue || DEFAULT_TIMER_VALUE, setTimerValue };
 };

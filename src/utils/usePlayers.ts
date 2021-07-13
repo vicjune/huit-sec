@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { v4 as genUuid } from 'uuid';
 import { useGlobalState } from '../contexts/GlobalState';
 import { storage, STORAGE_PLAYERS_KEY } from './storage';
@@ -20,11 +20,25 @@ export const getNewPlayer = (name: string) => ({
 export const usePlayers = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
-    players,
+    players: playersGS,
     playerAnsweringId,
     secondaryPlayerAnsweringId,
     playerAskingId,
   } = globalState;
+
+  useEffect(() => {
+    if (playersGS === undefined) {
+      storage.get<string[]>(STORAGE_PLAYERS_KEY).then((playerNames) => {
+        if (!playerNames) return;
+        setGlobalState((prev) => ({
+          ...prev,
+          players: playerNames.map(getNewPlayer),
+        }));
+      });
+    }
+  }, [playersGS, setGlobalState]);
+
+  const players = useMemo(() => playersGS || [], [playersGS]);
 
   const playerAnswering = useMemo(
     () => players.find(({ id }) => playerAnsweringId === id),
@@ -41,16 +55,6 @@ export const usePlayers = () => {
     [playerAskingId, players],
   );
 
-  const initPlayers = useCallback(() => {
-    storage.get<string[]>(STORAGE_PLAYERS_KEY).then((playerNames) => {
-      if (!playerNames) return;
-      setGlobalState((prev) => ({
-        ...prev,
-        players: playerNames.map(getNewPlayer),
-      }));
-    });
-  }, [setGlobalState]);
-
   const addPlayer = useCallback(
     (playerName: string) => {
       storage.set(STORAGE_PLAYERS_KEY, [
@@ -59,7 +63,7 @@ export const usePlayers = () => {
       ]);
       setGlobalState((prev) => ({
         ...prev,
-        players: [...prev.players, getNewPlayer(playerName)],
+        players: [...(prev.players || []), getNewPlayer(playerName)],
       }));
     },
     [players, setGlobalState],
@@ -96,6 +100,5 @@ export const usePlayers = () => {
     addPlayer,
     removePlayer,
     removeAllPlayers,
-    initPlayers,
   };
 };

@@ -54,7 +54,4 @@ export const SoundProvider: FC = ({ children }) => {
   );
 };
 
-export const useSound = () => {
-  const { playSound } = useContext(soundContext);
-  return { playSound };
-};
+export const useSound = () => useContext(soundContext);

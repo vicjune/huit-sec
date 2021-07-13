@@ -1,13 +1,14 @@
-import { Player, getNewPlayer } from './usePlayers';
-import { INVALID_POINTS, VALID_POINTS } from './useScore';
+import { Player, getNewPlayer, usePlayers } from './usePlayers';
+import { INVALID_POINTS, useScore, VALID_POINTS } from './useScore';
 import {
   SpecialEventId,
   SpecialEvent,
-  getRandomEvent,
+  useSpecialEvent,
 } from './useSpecialEvents';
 import { pickRandomItem } from './pickRandomItem';
 import { useGlobalState } from '../contexts/GlobalState';
 import { useCallback, useMemo } from 'react';
+import { useQuestions } from './useQuestions';
 
 const getLeastAnswerPlayers = (players: Player[]) =>
   players.reduce((prev, player) => {
@@ -20,20 +21,16 @@ const getLeastAnswerPlayers = (players: Player[]) =>
 
 export const useGame = () => {
   const { globalState, setGlobalState } = useGlobalState();
-  const {
-    players,
-    playerAnsweringId,
-    secondaryPlayerAnsweringId,
-    playerAskingId,
-    scoreVictory,
-    currentEvent,
-    currentQuestion,
-    permanentQuestionAlreadySeenIds,
-  } = globalState;
+  const { playerAnsweringId, secondaryPlayerAnsweringId, playerAskingId } =
+    globalState;
+  const { getRandomEvent, currentEvent } = useSpecialEvent();
+  const { players } = usePlayers();
+  const { scoreVictory } = useScore();
+  const { currentQuestion, permanentQuestionAlreadySeenIds } = useQuestions();
 
   const isFirstGame = useMemo(
-    () => !permanentQuestionAlreadySeenIds.length,
-    [permanentQuestionAlreadySeenIds.length],
+    () => !permanentQuestionAlreadySeenIds?.length,
+    [permanentQuestionAlreadySeenIds],
   );
 
   const getUpdatedPlayer = useCallback(
@@ -104,7 +101,7 @@ export const useGame = () => {
   const newTurn = useCallback(() => {
     let newEvent: SpecialEvent | undefined;
     if (currentQuestion) {
-      newEvent = getRandomEvent(players.length);
+      newEvent = getRandomEvent();
     }
 
     let newPlayerAnswering: Player | undefined;
@@ -148,14 +145,16 @@ export const useGame = () => {
     playerAskingId,
     players,
     setGlobalState,
+    getRandomEvent,
   ]);
 
   const resetGame = useCallback(() => {
     setGlobalState((prev) => ({
       ...prev,
-      players: prev.players.map(({ name }) => getNewPlayer(name)),
+      players: (prev.players || []).map(({ name }) => getNewPlayer(name)),
       currentQuestion: undefined,
       currentEvent: undefined,
+      turnsSinceLastEvent: 0,
     }));
   }, [setGlobalState]);
 

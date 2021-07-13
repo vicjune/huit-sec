@@ -6,9 +6,9 @@ import {
 } from './storage';
 import { default as questionsJSON } from '../json/questions.json';
 import { useGlobalState } from '../contexts/GlobalState';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { BundleId, bundles, BundleWithInfos } from '../const/bundles';
-import { useInAppPurchases } from './useInAppPurchases';
+import { useInAppPurchases } from '../contexts/InAppPurchases';
 
 export interface Question {
   id: string;
@@ -20,31 +20,47 @@ export interface Question {
 export const useQuestions = () => {
   const { globalState, setGlobalState } = useGlobalState();
   const {
-    questionAlreadySeenIds,
-    permanentQuestionAlreadySeenIds,
+    questionAlreadySeenIds: questionAlreadySeenIdsGS,
+    permanentQuestionAlreadySeenIds: permanentQuestionAlreadySeenIdsGS,
     currentQuestion,
   } = globalState;
   const { products, availablePurchases } = useInAppPurchases();
 
-  const initQuestions = useCallback(() => {
-    storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
-      if (!questionIds) return;
-      setGlobalState((prev) => ({
-        ...prev,
-        questionAlreadySeenIds: questionIds,
-      }));
-    });
-
-    storage
-      .get<string[]>(STORAGE_PERMANENT_QUESTIONS_SEEN_KEY)
-      .then((questionIds) => {
-        if (!questionIds) return;
+  useEffect(() => {
+    if (questionAlreadySeenIdsGS === undefined) {
+      storage.get<string[]>(STORAGE_QUESTIONS_SEEN_KEY).then((questionIds) => {
         setGlobalState((prev) => ({
           ...prev,
-          permanentQuestionAlreadySeenIds: questionIds,
+          questionAlreadySeenIds: questionIds || [],
         }));
       });
-  }, [setGlobalState]);
+    }
+
+    if (permanentQuestionAlreadySeenIdsGS === undefined) {
+      storage
+        .get<string[]>(STORAGE_PERMANENT_QUESTIONS_SEEN_KEY)
+        .then((questionIds) => {
+          setGlobalState((prev) => ({
+            ...prev,
+            permanentQuestionAlreadySeenIds: questionIds || [],
+          }));
+        });
+    }
+  }, [
+    questionAlreadySeenIdsGS,
+    permanentQuestionAlreadySeenIdsGS,
+    setGlobalState,
+  ]);
+
+  const questionAlreadySeenIds = useMemo(
+    () => questionAlreadySeenIdsGS || [],
+    [questionAlreadySeenIdsGS],
+  );
+
+  const permanentQuestionAlreadySeenIds = useMemo(
+    () => permanentQuestionAlreadySeenIdsGS || [],
+    [permanentQuestionAlreadySeenIdsGS],
+  );
 
   const availableBundleIds = useMemo(
     () =>
@@ -151,5 +167,10 @@ export const useQuestions = () => {
     setGlobalState,
   ]);
 
-  return { currentQuestion, newQuestion, initQuestions, bundlesWithInfos };
+  return {
+    currentQuestion,
+    newQuestion,
+    bundlesWithInfos,
+    permanentQuestionAlreadySeenIds,
+  };
 };

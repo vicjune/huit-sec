@@ -1,46 +1,75 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { EmitterSubscription } from 'react-native';
 import {
-  requestPurchase,
-  purchaseErrorListener,
-  IAPErrorCode,
   clearProductsIOS,
-  initConnection,
-  getProducts,
-  getAvailablePurchases,
-  purchaseUpdatedListener,
   finishTransaction,
+  getAvailablePurchases,
+  getProducts,
+  IAPErrorCode,
+  initConnection,
+  Product,
+  Purchase,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+  requestPurchase,
 } from 'react-native-iap';
-import { BundleId, bundles } from '../const/bundles';
-import { useGlobalState } from '../contexts/GlobalState';
-import { useNotification } from './useNotification';
+import { bundles } from '../const/bundles';
+import { useNotification } from '../utils/useNotification';
 
-export const useInAppPurchases = () => {
+interface InAppPurchasesContext {
+  loadProducts: () => Promise<void>;
+  purchase: (id: string) => Promise<void>;
+  purchaseLoading: boolean;
+  productsLoading: boolean;
+  products: Product<string>[];
+  availablePurchases: Purchase[];
+}
+
+const inAppPurchasesContext = createContext<InAppPurchasesContext>({
+  loadProducts: () => Promise.resolve(),
+  purchase: () => Promise.resolve(),
+  purchaseLoading: false,
+  productsLoading: false,
+  products: [],
+  availablePurchases: [],
+});
+
+export const InAppPurchasesProvider: FC = ({ children }) => {
   const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [products, setProducts] = useState<Product<string>[]>([]);
+  const [availablePurchases, setAvailablePurchases] = useState<Purchase[]>([]);
   const { showNotification } = useNotification();
-  const { globalState, setGlobalState } = useGlobalState();
-  const { productsLoading, products, availablePurchases } = globalState;
 
   const loadProducts = useCallback(async () => {
     clearProductsIOS();
-    setGlobalState((prev) => ({ ...prev, productsLoading: true }));
+    setProductsLoading(true);
     try {
       await initConnection();
-      const prod = await getProducts(
+      const productsRes = await getProducts(
         bundles
           .filter(({ lockedByDefault }) => lockedByDefault)
           .map(({ id }) => id),
       );
-      setGlobalState((prev) => ({ ...prev, products: prod }));
+      setProducts(productsRes);
       const purchases = await getAvailablePurchases();
-      setGlobalState((prev) => ({ ...prev, availablePurchases: purchases }));
+      setAvailablePurchases(purchases);
     } catch (e) {
       showNotification(e.message);
     }
-    setGlobalState((prev) => ({ ...prev, productsLoading: false }));
-  }, [setGlobalState, showNotification]);
+    setProductsLoading(false);
+  }, [showNotification]);
 
   useEffect(() => {
+    loadProducts();
+
     let purchaseUpdateSubscription: EmitterSubscription;
     let purchaseErrorSubscription: EmitterSubscription;
 
@@ -55,7 +84,8 @@ export const useInAppPurchases = () => {
                 await finishTransaction(purchase);
                 loadProducts();
               } catch (e) {
-                showNotification(e.message);
+                // To avoid Google error even when purchase was successful
+                // showNotification(e.message);
               }
             }
           },
@@ -83,7 +113,7 @@ export const useInAppPurchases = () => {
   }, [showNotification, loadProducts]);
 
   const purchase = useCallback(
-    async (id: BundleId) => {
+    async (id: string) => {
       setPurchaseLoading(true);
       try {
         await requestPurchase(id);
@@ -95,12 +125,20 @@ export const useInAppPurchases = () => {
     [showNotification],
   );
 
-  return {
-    loadProducts,
-    purchase,
-    purchaseLoading,
-    productsLoading,
-    products,
-    availablePurchases,
-  };
+  return (
+    <inAppPurchasesContext.Provider
+      value={{
+        loadProducts,
+        purchase,
+        products,
+        availablePurchases,
+        productsLoading,
+        purchaseLoading,
+      }}
+    >
+      {children}
+    </inAppPurchasesContext.Provider>
+  );
 };
+
+export const useInAppPurchases = () => useContext(inAppPurchasesContext);

@@ -1,10 +1,11 @@
-import { ElementType } from 'react';
+import { ElementType, useCallback } from 'react';
 import { pickRandomItem } from './pickRandomItem';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
 import { default as MIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as MCIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGlobalState } from '../contexts/GlobalState';
+import { usePlayers } from './usePlayers';
 
 export enum SpecialEventId {
   INNOCENT = 'INNOCENT',
@@ -84,31 +85,44 @@ const specialEvents: Record<SpecialEventId, SpecialEvent> = {
   },
 };
 
-export const getRandomEvent = (playerNumber: number) => {
-  const filteredSpecialEvents = Object.values(specialEvents).filter(
-    ({ minPlayers }) => !minPlayers || playerNumber >= minPlayers,
-  );
-
-  const totalProbability = filteredSpecialEvents.reduce(
-    (prev, { probability }) => prev + probability,
-    0,
-  );
-
-  const eventsChances = filteredSpecialEvents.reduce(
-    (prev, { id, probability }) => {
-      return [...prev, ...Array(probability).fill(id)];
-    },
-    Array(100 - totalProbability).fill(null) as (SpecialEventId | null)[],
-  );
-
-  const pickedEvent = pickRandomItem(eventsChances);
-  if (!pickedEvent) return undefined;
-  return specialEvents[pickedEvent];
-};
-
 export const useSpecialEvent = () => {
-  const { globalState } = useGlobalState();
-  const { currentEvent } = globalState;
+  const { globalState, setGlobalState } = useGlobalState();
+  const { currentEvent, turnsSinceLastEvent } = globalState;
+  const { players } = usePlayers();
 
-  return { currentEvent };
+  const getRandomEvent = useCallback(() => {
+    const filteredSpecialEvents = Object.values(specialEvents).filter(
+      ({ minPlayers }) => !minPlayers || players.length >= minPlayers,
+    );
+
+    const totalProbability = filteredSpecialEvents.reduce(
+      (prev, { probability }) => prev + probability,
+      0,
+    );
+
+    const eventsChances = filteredSpecialEvents.reduce(
+      (prev, { id, probability }) => {
+        return [...prev, ...Array(probability).fill(id)];
+      },
+      Array(100 - turnsSinceLastEvent * 10 - totalProbability).fill(
+        null,
+      ) as (SpecialEventId | null)[],
+    );
+
+    const pickedEvent = pickRandomItem(eventsChances);
+    if (!pickedEvent) {
+      setGlobalState((prev) => ({
+        ...prev,
+        turnsSinceLastEvent: prev.turnsSinceLastEvent + 1,
+      }));
+      return undefined;
+    }
+    setGlobalState((prev) => ({
+      ...prev,
+      turnsSinceLastEvent: 0,
+    }));
+    return specialEvents[pickedEvent];
+  }, [players.length, setGlobalState, turnsSinceLastEvent]);
+
+  return { currentEvent, getRandomEvent };
 };

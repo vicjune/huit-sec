@@ -17,7 +17,7 @@ import { Sound, useSound } from '../contexts/Sound';
 import { Screen } from '../const/Screen';
 import { colors } from '../styles/colors';
 import { pluralize } from '../utils/pluralize';
-import { useInAppPurchases } from '../utils/useInAppPurchases';
+import { useInAppPurchases } from '../contexts/InAppPurchases';
 
 export const BundlesScreen: FC = () => {
   const { bundlesWithInfos } = useQuestions();
@@ -145,7 +145,7 @@ export const BundlesScreen: FC = () => {
             ? `Encore ${totalQuestionsNotSeen} ${pluralize(
                 'question',
                 totalQuestionsNotSeen,
-              )} jamais ${pluralize('vue', totalQuestionsNotSeen)} !`
+              )} jamais ${pluralize('vue', totalQuestionsNotSeen)}`
             : 'Toutes les questions sélectionnées ont déjà été vues'}
         </Text>
       </View>

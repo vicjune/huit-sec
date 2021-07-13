@@ -54,6 +54,7 @@ export const SpecialEventModal: FC = () => {
         IconElem={EntIcon}
         onPress={closeModal}
         style={styles.closeButton}
+        color={colors.white}
       />
     </ScreenWrapper>
   );
