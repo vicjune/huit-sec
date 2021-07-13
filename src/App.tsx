@@ -16,6 +16,7 @@ import { Screen } from './const/Screen';
 import { BundlesScreen } from './screens/BundlesScreen';
 import { InAppPurchasesProvider } from './contexts/InAppPurchases';
 import { bundles } from './const/bundles';
+import { TutorialScreen } from './screens/TutorialScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,16 @@ export const App: FC = () => {
                       name={Screen.HOME}
                       component={HomeScreen}
                       options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name={Screen.TUTORIAL}
+                      component={TutorialScreen}
+                      options={{
+                        headerTitle: 'Comment jouer ?',
+                        headerBackTitle: 'Retour',
+                        headerTintColor: colors.white,
+                        headerTransparent: true,
+                      }}
                     />
                     <Stack.Screen
                       name={Screen.BUNDLES}

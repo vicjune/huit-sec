@@ -12,7 +12,6 @@ export const colors = {
   invalid: 'hsl(0, 100%, 50%)',
   inputBackground: 'hsla(0, 0%, 100%, 0.1)',
   border: 'hsla(0, 0%, 100%, 0.1)',
-  chipsBorder: 'hsla(0, 0%, 100%, 0.5)',
   first: 'hsl(44, 100%, 50%)',
   firstShadow: 'hsla(44, 100%, 50%, 0.5)',
   second: 'hsl(0, 0%, 80%)',

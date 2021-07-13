@@ -56,7 +56,7 @@ export const HomeScreen: FC = () => {
               playSound(Sound.CLICK);
               resetGame();
               navigation.navigate(
-                isFirstGame ? Screen.SWITCH_PLAYER : Screen.BUNDLES,
+                isFirstGame ? Screen.TUTORIAL : Screen.BUNDLES,
               );
             }}
           />
