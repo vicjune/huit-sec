@@ -24,9 +24,10 @@
 		44FD29ED258E5F1E00604050 /* blip.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29EC258E5F1E00604050 /* blip.mp3 */; };
 		44FD29F4258E63E100604050 /* click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29F2258E63E100604050 /* click.mp3 */; };
 		44FD29F5258E63E100604050 /* timesup_buzzer.wav in Resources */ = {isa = PBXBuildFile; fileRef = 44FD29F3258E63E100604050 /* timesup_buzzer.wav */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		AA2099727F7E680194E778C1 /* libPods-HuitSec-HuitSecTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DAA48C1067BEC8B372C936F /* libPods-HuitSec-HuitSecTests.a */; };
 		C744F4BF269763B8005D760A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C744F4BE269763B8005D760A /* StoreKit.framework */; };
+		C79032F526A6100E005B3FDC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C79032F426A6100E005B3FDC /* Launch Screen.storyboard */; };
+		C79032F626A6100E005B3FDC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C79032F426A6100E005B3FDC /* Launch Screen.storyboard */; };
 		CFBC35828C645067BDEF0D4A /* libPods-HuitSec-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DCB6F40443B666A53B6F8C2 /* libPods-HuitSec-tvOSTests.a */; };
 		D8C3749F87BF1A32A3B28B7A /* libPods-HuitSec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A1A2F1CA76376EB75E69B75 /* libPods-HuitSec.a */; };
 /* End PBXBuildFile section */
@@ -76,7 +77,6 @@
 		4523E8A5DC8A47C0ABA26BF1 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		4BF44FD18B444C8994EA2129 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		5DAA48C1067BEC8B372C936F /* libPods-HuitSec-HuitSecTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HuitSec-HuitSecTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = HuitSec/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8223EB8175204AD5BBAC25C2 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		87A028E9E5BC4696935033AA /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		8C6944A63C595C00C47B1C0F /* Pods-HuitSec-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-HuitSec-tvOSTests/Pods-HuitSec-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +93,7 @@
 		C280B5F7BF7D4DF48C9B3148 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		C4C702780E92139496081552 /* libPods-HuitSec-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HuitSec-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C744F4BE269763B8005D760A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C79032F426A6100E005B3FDC /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D69CA95C58ACE5498A60FA80 /* Pods-HuitSec.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec.debug.xcconfig"; path = "Target Support Files/Pods-HuitSec/Pods-HuitSec.debug.xcconfig"; sourceTree = "<group>"; };
 		DAF72AC79542776BE376A74B /* Pods-HuitSec.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec.release.xcconfig"; path = "Target Support Files/Pods-HuitSec/Pods-HuitSec.release.xcconfig"; sourceTree = "<group>"; };
 		E1686B47B932D2E96C289E7B /* Pods-HuitSec-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HuitSec-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-HuitSec-tvOSTests/Pods-HuitSec-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -188,8 +189,8 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				C79032F426A6100E005B3FDC /* Launch Screen.storyboard */,
 			);
 			name = HuitSec;
 			sourceTree = "<group>";
@@ -416,7 +417,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				44D0DA0425A893BA00C252AD /* ooooh.mp3 in Resources */,
 				44FD29E1258E526D00604050 /* bad_buzzer.mp3 in Resources */,
@@ -425,6 +425,7 @@
 				44FD29ED258E5F1E00604050 /* blip.mp3 in Resources */,
 				44FD29F5258E63E100604050 /* timesup_buzzer.wav in Resources */,
 				44DB0BB025925A9300C87BD3 /* kids_cheering.mp3 in Resources */,
+				C79032F526A6100E005B3FDC /* Launch Screen.storyboard in Resources */,
 				44FD29A1258E4AB700604050 /* tick.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +434,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C79032F626A6100E005B3FDC /* Launch Screen.storyboard in Resources */,
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

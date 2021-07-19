@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,10 +17,15 @@ import { BundlesScreen } from './screens/BundlesScreen';
 import { InAppPurchasesProvider } from './contexts/InAppPurchases';
 import { bundles } from './const/bundles';
 import { TutorialScreen } from './screens/TutorialScreen';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createStackNavigator();
 
 export const App: FC = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   const productIds = bundles
     .filter(({ lockedByDefault }) => lockedByDefault)
     .map(({ id }) => id);
