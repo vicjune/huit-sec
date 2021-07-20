@@ -12,6 +12,7 @@ import { colors } from '../styles/colors';
 import { usePlayers } from '../utils/usePlayers';
 import { useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
+import { openAppRating } from '../utils/openAppRating';
 
 export const VictoryScreen: FC = () => {
   const styles = getStyles();
@@ -49,6 +50,7 @@ export const VictoryScreen: FC = () => {
         IconElem={Icon}
         onPress={() => {
           navigate(Screen.HOME);
+          openAppRating();
         }}
         style={styles.homeButton}
       />

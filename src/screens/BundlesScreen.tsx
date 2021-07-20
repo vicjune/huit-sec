@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useLayoutEffect } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { BasicButton } from '../components/BasicButton';
@@ -34,6 +35,27 @@ export const BundlesScreen: FC = () => {
     totalQuestionsNotSeen,
     purchaseLoading || productsLoading,
   );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={loadProducts}
+          style={styles.restoreButton}
+          disabled={purchaseLoading || productsLoading}
+        >
+          <Text style={styles.restoreButtonText}>Restaurer</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [
+    purchaseLoading,
+    productsLoading,
+    navigation,
+    loadProducts,
+    styles.restoreButton,
+    styles.restoreButtonText,
+  ]);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -303,5 +325,12 @@ const getStyles = (totalQuestionsNotSeen: number, loading: boolean) =>
       position: 'absolute',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    restoreButton: {
+      marginRight: 8,
+    },
+    restoreButtonText: {
+      color: colors.white,
+      fontSize: 18,
     },
   });
