@@ -1,4 +1,4 @@
-import Rate from 'react-native-rate';
+import Rate, { AndroidMarket } from 'react-native-rate';
 import { storage, STORAGE_LAST_RATING } from './storage';
 
 const DELAY_BETWEEN_DEMAND = 2629800000; // 1 month
@@ -14,6 +14,7 @@ export const openAppRating = async () => {
       {
         AppleAppID: '1575772508',
         GooglePackageName: 'com.huitsec',
+        preferredAndroidMarket: AndroidMarket.Google,
         preferInApp: true,
         openAppStoreIfInAppFails: false,
       },
