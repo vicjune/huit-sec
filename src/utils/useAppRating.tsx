@@ -1,5 +1,8 @@
+import React, { useCallback } from 'react';
 import Rate, { AndroidMarket } from 'react-native-rate';
+import { useDialog } from '../contexts/Dialog';
 import { storage, STORAGE_LAST_RATING } from './storage';
+import { DialogTitle } from 'react-native-popup-dialog';
 
 const DELAY_BETWEEN_DEMAND = 2629800000; // 1 month
 
@@ -25,4 +28,16 @@ export const openAppRating = async () => {
       },
     );
   }
+};
+
+export const useAppRating = () => {
+  const { openDialog, closeDialog } = useDialog();
+
+  const open = useCallback(() => {
+    openDialog({
+      dialogTitle: <DialogTitle title="Aimez-vous l'application ?" />,
+    });
+  }, [openDialog]);
+
+  return { open };
 };

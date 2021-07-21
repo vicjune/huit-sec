@@ -12,7 +12,7 @@ import { colors } from '../styles/colors';
 import { usePlayers } from '../utils/usePlayers';
 import { useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
-import { openAppRating } from '../utils/openAppRating';
+import { openAppRating } from '../utils/useAppRating';
 
 export const VictoryScreen: FC = () => {
   const styles = getStyles();

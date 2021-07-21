@@ -22,6 +22,7 @@ import { usePlayers } from '../utils/usePlayers';
 import { useGame } from '../utils/useGame';
 import { Screen } from '../const/Screen';
 import { pluralize } from '../utils/pluralize';
+import { useAppRating } from '../utils/useAppRating';
 
 const PLAYERS_MIN = 2;
 
@@ -41,6 +42,8 @@ export const HomeScreen: FC = () => {
     addPlayer(cleanedName);
   };
 
+  const { open } = useAppRating();
+
   return (
     <ScreenWrapper>
       <View style={styles.topView}>
@@ -58,6 +61,7 @@ export const HomeScreen: FC = () => {
               navigation.navigate(
                 isFirstGame ? Screen.TUTORIAL : Screen.BUNDLES,
               );
+              open();
             }}
           />
         ) : (

@@ -18,6 +18,7 @@ import { InAppPurchasesProvider } from './contexts/InAppPurchases';
 import { bundles } from './const/bundles';
 import { TutorialScreen } from './screens/TutorialScreen';
 import SplashScreen from 'react-native-splash-screen';
+import { DialogProvider } from './contexts/Dialog';
 
 const Stack = createStackNavigator();
 
@@ -35,58 +36,60 @@ export const App: FC = () => {
       <ActionSheetProvider>
         <InAppPurchasesProvider productIds={productIds}>
           <SoundProvider>
-            <ModalProvider>
-              <OverlayProvider>
-                <NavigationContainer>
-                  <StatusBar
-                    barStyle="light-content"
-                    backgroundColor={colors.background}
-                  />
-                  <Stack.Navigator>
-                    <Stack.Screen
-                      name={Screen.HOME}
-                      component={HomeScreen}
-                      options={{ headerShown: false }}
+            <DialogProvider>
+              <ModalProvider>
+                <OverlayProvider>
+                  <NavigationContainer>
+                    <StatusBar
+                      barStyle="light-content"
+                      backgroundColor={colors.background}
                     />
-                    <Stack.Screen
-                      name={Screen.TUTORIAL}
-                      component={TutorialScreen}
-                      options={{
-                        headerTitle: 'Comment jouer ?',
-                        headerBackTitle: 'Retour',
-                        headerTintColor: colors.white,
-                        headerTransparent: true,
-                      }}
-                    />
-                    <Stack.Screen
-                      name={Screen.BUNDLES}
-                      component={BundlesScreen}
-                      options={{
-                        headerTitle: 'Questions',
-                        headerBackTitle: 'Retour',
-                        headerTintColor: colors.white,
-                        headerTransparent: true,
-                      }}
-                    />
-                    <Stack.Screen
-                      name={Screen.QUESTION}
-                      component={QuestionScreen}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name={Screen.SWITCH_PLAYER}
-                      component={SwitchPlayerScreen}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name={Screen.VICTORY}
-                      component={VictoryScreen}
-                      options={{ headerShown: false }}
-                    />
-                  </Stack.Navigator>
-                </NavigationContainer>
-              </OverlayProvider>
-            </ModalProvider>
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name={Screen.HOME}
+                        component={HomeScreen}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name={Screen.TUTORIAL}
+                        component={TutorialScreen}
+                        options={{
+                          headerTitle: 'Comment jouer ?',
+                          headerBackTitle: 'Retour',
+                          headerTintColor: colors.white,
+                          headerTransparent: true,
+                        }}
+                      />
+                      <Stack.Screen
+                        name={Screen.BUNDLES}
+                        component={BundlesScreen}
+                        options={{
+                          headerTitle: 'Questions',
+                          headerBackTitle: 'Retour',
+                          headerTintColor: colors.white,
+                          headerTransparent: true,
+                        }}
+                      />
+                      <Stack.Screen
+                        name={Screen.QUESTION}
+                        component={QuestionScreen}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name={Screen.SWITCH_PLAYER}
+                        component={SwitchPlayerScreen}
+                        options={{ headerShown: false }}
+                      />
+                      <Stack.Screen
+                        name={Screen.VICTORY}
+                        component={VictoryScreen}
+                        options={{ headerShown: false }}
+                      />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </OverlayProvider>
+              </ModalProvider>
+            </DialogProvider>
           </SoundProvider>
         </InAppPurchasesProvider>
       </ActionSheetProvider>
