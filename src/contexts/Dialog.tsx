@@ -12,7 +12,7 @@ type ContextDialogProps = Pick<
   Exclude<keyof DialogProps, 'visible' | 'onTouchOutside' | 'children'>
 > & { content?: ReactNode };
 
-export type OpenDialogType = (props: ContextDialogProps) => void;
+type OpenDialogType = (props: ContextDialogProps) => void;
 
 const Dialog: FC = () => {
   const { closeDialog, dialogProps } = useContext(dialogContext);
