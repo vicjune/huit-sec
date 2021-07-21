@@ -1,55 +1,88 @@
-import React, { FC } from 'react';
+import React, { ElementType, FC } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { colors } from '../styles/colors';
 
-type Size = 'normal' | 'small';
-
 interface ButtonProps {
-  text: string;
+  text?: string;
   onPress?: () => void;
-  size?: Size;
+  small?: boolean;
   disabled?: boolean;
+  style?: Record<string, unknown>;
+  icon: string;
+  IconElem: ElementType;
+  color?: string;
 }
 
 export const BasicButton: FC<ButtonProps> = ({
   text,
   onPress,
-  size = 'normal',
+  small,
   disabled,
+  style,
+  icon,
+  IconElem,
+  color = colors.yellow,
 }) => {
-  const styles = getStyles(size);
+  const styles = getStyles(!text, color, small, disabled);
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+      style={({ pressed }) => [
+        { ...styles.button, ...style },
+        pressed && styles.buttonPressed,
+      ]}
       onPress={onPress}
       disabled={disabled}
     >
       {({ pressed }) => (
-        <Text style={[styles.buttonText, pressed && styles.buttonTextPressed]}>
-          {text}
-        </Text>
+        <>
+          <IconElem
+            name={icon}
+            size={small ? 30 : 50}
+            color={pressed ? colors.background : colors.white}
+          />
+          {text && (
+            <Text
+              style={[styles.buttonText, pressed && styles.buttonTextPressed]}
+            >
+              {text}
+            </Text>
+          )}
+        </>
       )}
     </Pressable>
   );
 };
 
-const getStyles = (size: Size) =>
+const getStyles = (
+  noText: boolean,
+  color: string,
+  small?: boolean,
+  disabled?: boolean,
+) =>
   StyleSheet.create({
     button: {
-      alignItems: 'center',
-      borderColor: colors.basicButton,
-      borderWidth: 1,
-      padding: size === 'normal' ? 15 : 12,
       alignSelf: 'center',
+      height: small ? 60 : 120,
+      width: small ? 60 : 120,
+      borderRadius: small ? 60 : 120,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingBottom: noText ? 0 : 5,
+      borderWidth: small ? 1 : 5,
+      borderColor: color,
+      opacity: disabled ? 0.5 : 1,
+      borderStyle: 'solid',
     },
     buttonPressed: {
-      backgroundColor: colors.basicButton,
+      backgroundColor: color,
+      borderStyle: 'solid',
     },
     buttonText: {
-      color: 'white',
-      textTransform: 'uppercase',
-      fontSize: size === 'normal' ? 20 : 16,
+      fontSize: small ? 10 : 16,
+      color: colors.white,
+      alignSelf: 'center',
+      fontWeight: '600',
     },
     buttonTextPressed: {
       color: colors.background,
