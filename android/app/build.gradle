@@ -132,8 +132,8 @@ android {
         applicationId "com.huitsec"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "1.6"
+        versionCode 20
+        versionName "2.0"
         missingDimensionStrategy 'store', 'play'
     }
     splits {
