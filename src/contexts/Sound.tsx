@@ -1,11 +1,13 @@
 import React, {
   createContext,
   FC,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from 'react';
 import RnSound from 'react-native-sound';
+import { storage, STORAGE_MUTED } from '../utils/storage';
 
 export enum Sound {
   CLICK,
@@ -20,14 +22,19 @@ export enum Sound {
 
 interface SoundContext {
   playSound: (sound: Sound) => void;
+  muted: boolean;
+  setMuted: (muted: boolean) => void;
 }
 
 const soundContext = createContext<SoundContext>({
   playSound: () => {},
+  muted: false,
+  setMuted: () => {},
 });
 
 export const SoundProvider: FC = ({ children }) => {
   const [sounds, setSounds] = useState<Record<Sound, RnSound> | null>(null);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     RnSound.setCategory('Ambient');
@@ -41,14 +48,31 @@ export const SoundProvider: FC = ({ children }) => {
       [Sound.VICTORY]: new RnSound('kids_cheering.mp3', RnSound.MAIN_BUNDLE),
       [Sound.SURPRISE]: new RnSound('ooooh.mp3', RnSound.MAIN_BUNDLE),
     });
+
+    storage.get<boolean>(STORAGE_MUTED).then((storedMuted) => {
+      storedMuted && setMuted(storedMuted);
+    });
   }, []);
 
-  const playSound = (sound: Sound) => {
-    sounds?.[sound]?.play();
-  };
+  const playSound = useCallback(
+    (sound: Sound) => {
+      if (!muted) {
+        sounds?.[sound]?.play();
+      }
+    },
+    [sounds, muted],
+  );
+
+  const setMutedCb = useCallback(
+    (m: boolean) => {
+      setMuted(m);
+      storage.set(STORAGE_MUTED, m);
+    },
+    [setMuted],
+  );
 
   return (
-    <soundContext.Provider value={{ playSound }}>
+    <soundContext.Provider value={{ playSound, muted, setMuted: setMutedCb }}>
       {children}
     </soundContext.Provider>
   );

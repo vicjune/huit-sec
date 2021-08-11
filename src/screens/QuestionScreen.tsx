@@ -1,5 +1,12 @@
 import React, { FC, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';
@@ -28,11 +35,13 @@ import { useOnScreenBlur, useOnScreenFocus } from '../utils/useOnScreenFocus';
 import { Screen } from '../const/Screen';
 
 const PLAYER_ANSWERING_OVERLAY_DURATION = 2500; // 2.5s
+const CHANGE_QUESTION_DISAPPEAR = 1000; // 1s
 
 export const QuestionScreen: FC = () => {
   const navigate = usePreventNavigation();
   const [timerRunning, setTimerRunning] = useState(false);
   const [verdict, setVerdict] = useState(false);
+  const [changeQuestionDisplayed, setChangeQuestionDisplayed] = useState(true);
   const { openActionMenu } = useActionMenu();
   const { displayOverlay } = useOverlay();
   const { playSound } = useSound();
@@ -80,14 +89,6 @@ export const QuestionScreen: FC = () => {
         },
       },
       {
-        label: 'Passer la question',
-        disabled: flashback,
-        callback: () => {
-          newQuestion();
-          resetScreen();
-        },
-      },
-      {
         label: 'Voir les scores',
         callback: () => {
           openModal(<ScoreModal />);
@@ -98,6 +99,14 @@ export const QuestionScreen: FC = () => {
         cancel: true,
       },
     ]);
+  };
+
+  const changeQuestionPressed = () => {
+    newQuestion();
+    setChangeQuestionDisplayed(false);
+    setTimeout(() => {
+      setChangeQuestionDisplayed(true);
+    }, CHANGE_QUESTION_DISAPPEAR);
   };
 
   const onAnswer = (winnerId?: string) => {
@@ -112,6 +121,16 @@ export const QuestionScreen: FC = () => {
   return (
     <>
       <ScreenWrapper style={styles.wrapper}>
+        {!timerRunning && !verdict && !flashback && changeQuestionDisplayed && (
+          <TouchableOpacity
+            onPress={changeQuestionPressed}
+            style={styles.changeQuestionButton}
+          >
+            <Text style={styles.changeQuestionButtonText}>
+              Changer de question
+            </Text>
+          </TouchableOpacity>
+        )}
         {(!flashback || verdict) && (
           <View>
             <Text style={styles.questionNbr}>
@@ -256,12 +275,12 @@ const getStyles = (currentEvent?: SpecialEvent) =>
         currentEvent?.id === SpecialEventId.DUEL ? 'center' : 'space-between',
     },
     playerAnsweringLabel: {
-      opacity: 0.5,
+      opacity: 0.7,
       color: colors.white,
       fontSize: 18,
     },
     playerAnsweringIcon: {
-      opacity: 0.5,
+      opacity: 0.7,
       marginRight: 10,
       marginLeft: 10,
     },
@@ -307,5 +326,15 @@ const getStyles = (currentEvent?: SpecialEvent) =>
     },
     eventTitlePressed: {
       color: colors.background,
+    },
+    changeQuestionButton: {
+      position: 'absolute',
+      top: Platform.OS === 'android' ? 10 : 0,
+      right: 10,
+    },
+    changeQuestionButtonText: {
+      color: colors.white,
+      opacity: 0.6,
+      fontSize: 18,
     },
   });

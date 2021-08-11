@@ -86,8 +86,8 @@ export const useQuestions = () => {
     () =>
       bundles
         .filter(
-          ({ id, lockedByDefault }) =>
-            !lockedByDefault ||
+          ({ id }) =>
+            availableBundleIds.map((bundleId) => bundleId).includes(id) ||
             products.map(({ productId }) => productId).includes(id),
         )
         .map((bundle) => {

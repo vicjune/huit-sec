@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { colors } from '../styles/colors';
 import { BasicButton } from './BasicButton';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -8,6 +8,7 @@ import { useModal } from '../contexts/Modal';
 import { ScreenWrapper } from './ScreenWrapper';
 import { useTimer } from '../utils/useTimer';
 import { useScore } from '../utils/useScore';
+import { useSound } from '../contexts/Sound';
 
 const MIN_SCORE_VICTORY = 1;
 const MAX_SCORE_VICTORY = 30;
@@ -20,6 +21,7 @@ export const SettingsModal: FC = () => {
   const { closeModal } = useModal();
   const { timerValue, setTimerValue } = useTimer();
   const { scoreVictory, setScoreVictory } = useScore();
+  const { muted, setMuted } = useSound();
 
   const incrementScore = () => {
     if (scoreVictory >= MAX_SCORE_VICTORY) return;
@@ -41,6 +43,8 @@ export const SettingsModal: FC = () => {
     setTimerValue(timerValue - 1000);
   };
 
+  const setSounds = (soundsOn: boolean) => setMuted(!soundsOn);
+
   return (
     <ScreenWrapper>
       <Text style={styles.title}>Réglages</Text>
@@ -57,7 +61,7 @@ export const SettingsModal: FC = () => {
               ]}
               onPress={decrementScore}
             >
-              <Icon name="squared-minus" size={35} color={colors.white} />
+              <Icon name="squared-minus" size={30} color={colors.white} />
             </Pressable>
             <Text style={styles.settingValue}>{scoreVictory}</Text>
             <Pressable
@@ -69,7 +73,7 @@ export const SettingsModal: FC = () => {
               ]}
               onPress={incrementScore}
             >
-              <Icon name="squared-plus" size={35} color={colors.white} />
+              <Icon name="squared-plus" size={30} color={colors.white} />
             </Pressable>
           </View>
         </View>
@@ -84,7 +88,7 @@ export const SettingsModal: FC = () => {
               ]}
               onPress={decrementTimer}
             >
-              <Icon name="squared-minus" size={35} color={colors.white} />
+              <Icon name="squared-minus" size={30} color={colors.white} />
             </Pressable>
             <Text style={styles.settingValue}>{timerValue / 1000}s</Text>
             <Pressable
@@ -95,8 +99,22 @@ export const SettingsModal: FC = () => {
               ]}
               onPress={incrementTimer}
             >
-              <Icon name="squared-plus" size={35} color={colors.white} />
+              <Icon name="squared-plus" size={30} color={colors.white} />
             </Pressable>
+          </View>
+        </View>
+        <View style={styles.setting}>
+          <Text style={styles.settingLabel}>Sons</Text>
+          <View style={styles.settingAction}>
+            <Switch
+              onValueChange={setSounds}
+              value={!muted}
+              trackColor={{
+                false: colors.background,
+                true: colors.darkerYellow,
+              }}
+              thumbColor={colors.yellow}
+            />
           </View>
         </View>
       </ScrollView>

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, Vibration } from 'react-native';
+import { Pressable, StyleSheet, Text, Vibration, View } from 'react-native';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
@@ -43,10 +43,18 @@ export const Timer: FC<TimerProps> = ({
         text: 'Temps écoulé!',
         icon: 'stopwatch',
         IconElem: EIcon,
+        style: styles.overlay,
       }).then(onComplete);
       setTimerRunning(false);
     }
-  }, [timer, displayOverlay, setTimerRunning, onComplete, playSound]);
+  }, [
+    timer,
+    displayOverlay,
+    setTimerRunning,
+    onComplete,
+    playSound,
+    styles.overlay,
+  ]);
 
   const startTimer = useCallback(() => {
     playSound(Sound.BLIP);
@@ -62,7 +70,11 @@ export const Timer: FC<TimerProps> = ({
   }, [setTimerRunning, setTimer, setIntervalRef, playSound]);
 
   if (timerRunning) {
-    return <Text style={styles.timer}>{Math.floor(timer / 1000)}</Text>;
+    return (
+      <View style={styles.timer}>
+        <Text style={styles.timerText}>{Math.floor(timer / 1000)}</Text>
+      </View>
+    );
   }
 
   return (
@@ -117,7 +129,13 @@ const getStyles = (timerAlmostOver: boolean) =>
     },
     timer: {
       alignSelf: 'center',
+    },
+    timerText: {
       fontSize: 160,
+      lineHeight: 160,
       color: timerAlmostOver ? colors.error : colors.white,
+    },
+    overlay: {
+      backgroundColor: colors.black,
     },
   });
