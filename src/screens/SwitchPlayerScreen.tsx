@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -6,7 +6,7 @@ import { BasicButton } from '../components/BasicButton';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { colors } from '../styles/colors';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { useActionMenu } from '../utils/useActions';
@@ -27,11 +27,12 @@ export const SwitchPlayerScreen: FC = () => {
   const { openActionMenu } = useActionMenu();
   const { openModal } = useModal();
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const timeout = useRef<any>(null);
 
   useOnScreenFocus(() => {
     newTurn();
     setButtonDisabled(true);
-    setTimeout(() => {
+    timeout.current = setTimeout(() => {
       setButtonDisabled(false);
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -44,6 +45,13 @@ export const SwitchPlayerScreen: FC = () => {
   useOnScreenBlur(() => {
     fadeAnim.setValue(0);
   });
+
+  useEffect(
+    () => () => {
+      clearTimeout(timeout.current);
+    },
+    [],
+  );
 
   const menuButtonPressed = () => {
     openActionMenu([

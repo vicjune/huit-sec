@@ -6,22 +6,24 @@ import { BasicButton } from './BasicButton';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useModal } from '../contexts/Modal';
 import { ScreenWrapper } from './ScreenWrapper';
-import { useTimer } from '../utils/useTimer';
-import { useScore } from '../utils/useScore';
-import { useSound } from '../contexts/Sound';
+import { useSettings } from '../utils/useSettings';
 
 const MIN_SCORE_VICTORY = 1;
 const MAX_SCORE_VICTORY = 30;
-
-const MIN_TIMER = 5000;
-const MAX_TIMER = 15000;
+const MIN_TIMER = 5000; // 5s
+const MAX_TIMER = 15000; // 15s
 
 export const SettingsModal: FC = () => {
   const styles = getStyles();
   const { closeModal } = useModal();
-  const { timerValue, setTimerValue } = useTimer();
-  const { scoreVictory, setScoreVictory } = useScore();
-  const { muted, setMuted } = useSound();
+  const {
+    timerValue,
+    setTimerValue,
+    scoreVictory,
+    setScoreVictory,
+    muted,
+    setMuted,
+  } = useSettings();
 
   const incrementScore = () => {
     if (scoreVictory >= MAX_SCORE_VICTORY) return;

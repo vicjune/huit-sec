@@ -22,6 +22,7 @@ interface GlobalState {
   currentQuestion?: Question;
   currentEvent?: SpecialEvent;
   turnsSinceLastEvent: number;
+  muted?: boolean;
 }
 
 const defaultGlobalState: GlobalState = {

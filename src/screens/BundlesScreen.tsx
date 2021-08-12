@@ -14,7 +14,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { useQuestions } from '../utils/useQuestions';
 import Icon from 'react-native-vector-icons/Entypo';
 import { useNavigation } from '@react-navigation/native';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { Screen } from '../const/Screen';
 import { colors } from '../styles/colors';
 import { pluralize } from '../utils/pluralize';

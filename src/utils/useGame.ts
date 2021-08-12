@@ -1,5 +1,4 @@
 import { Player, getNewPlayer, usePlayers } from './usePlayers';
-import { INVALID_POINTS, useScore, VALID_POINTS } from './useScore';
 import {
   SpecialEventId,
   SpecialEvent,
@@ -9,6 +8,10 @@ import { pickRandomItem } from './pickRandomItem';
 import { useGlobalState } from '../contexts/GlobalState';
 import { useCallback, useMemo } from 'react';
 import { useQuestions } from './useQuestions';
+import { useSettings } from './useSettings';
+
+export const VALID_POINTS = 3;
+export const INVALID_POINTS = -1;
 
 const getLeastAnswerPlayers = (players: Player[]) =>
   players.reduce((prev, player) => {
@@ -25,7 +28,7 @@ export const useGame = () => {
     globalState;
   const { getRandomEvent, currentEvent } = useSpecialEvent();
   const { players } = usePlayers();
-  const { scoreVictory } = useScore();
+  const { scoreVictory } = useSettings();
   const { currentQuestion, permanentQuestionAlreadySeenIds } = useQuestions();
 
   const isFirstGame = useMemo(
