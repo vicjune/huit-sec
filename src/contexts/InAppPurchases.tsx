@@ -20,6 +20,7 @@ import {
   purchaseUpdatedListener,
   requestPurchase,
 } from 'react-native-iap';
+import { storage, STORAGE_AVAILABLE_PURCHASES } from '../utils/storage';
 import { useNotification } from '../utils/useNotification';
 
 interface InAppPurchasesContext {
@@ -58,11 +59,18 @@ export const InAppPurchasesProvider: FC<InAppPurchasesProviderProps> = ({
     clearProductsIOS();
     setProductsLoading(true);
     try {
+      const storedPurchases = await storage.get<Purchase[]>(
+        STORAGE_AVAILABLE_PURCHASES,
+      );
+      if (storedPurchases) {
+        setAvailablePurchases(storedPurchases);
+      }
       await initConnection();
       const productsRes = await getProducts(productIds || []);
       setProducts(productsRes);
       const purchases = await getAvailablePurchases();
       setAvailablePurchases(purchases);
+      storage.set(STORAGE_AVAILABLE_PURCHASES, purchases);
     } catch (e) {
       showNotification(e.message);
     }
