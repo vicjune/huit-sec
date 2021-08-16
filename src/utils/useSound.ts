@@ -1,6 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSettings } from './useSettings';
 import RnSound from 'react-native-sound';
+
+RnSound.setCategory('Ambient');
 
 export enum Sound {
   CLICK,
@@ -26,10 +28,6 @@ const sounds: Record<Sound, RnSound> = {
 
 export const useSound = () => {
   const { muted } = useSettings();
-
-  useEffect(() => {
-    RnSound.setCategory('Ambient');
-  }, []);
 
   const playSound = useCallback(
     (sound: Sound) => {
