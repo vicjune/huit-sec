@@ -4,7 +4,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { useNavigation } from '@react-navigation/native';
 import { BasicButton } from '../components/BasicButton';
 import { default as EntIcon } from 'react-native-vector-icons/Entypo';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { Screen } from '../const/Screen';
 
 export const TutorialScreen: FC = () => {

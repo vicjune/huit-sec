@@ -3,11 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { ScrollView } from 'react-native-gesture-handler';
 import { usePlayers, Player } from '../utils/usePlayers';
 import { SpecialEventId, useSpecialEvent } from '../utils/useSpecialEvents';
-import { INVALID_POINTS, VALID_POINTS } from '../utils/useScore';
+import { INVALID_POINTS, VALID_POINTS } from '../utils/useGame';
 
 interface VerdictProps {
   onAnswer: (winnerId?: string) => void;

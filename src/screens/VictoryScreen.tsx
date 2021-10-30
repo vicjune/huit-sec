@@ -4,7 +4,7 @@ import { BasicButton } from '../components/BasicButton';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import Icon from 'react-native-vector-icons/Entypo';
 import { default as FAIcon } from 'react-native-vector-icons/FontAwesome5';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { usePreventNavigation } from '../utils/usePreventNavigation';
 import { useModal } from '../contexts/Modal';
 import { ScoreModal } from '../components/ScoreModal';

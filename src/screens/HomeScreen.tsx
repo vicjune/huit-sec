@@ -11,7 +11,7 @@ import {
 import { BasicButton } from '../components/BasicButton';
 import { Input } from '../components/Input';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { colors } from '../styles/colors';
 import Icon from 'react-native-vector-icons/Entypo';
 import { default as IonIcon } from 'react-native-vector-icons/Ionicons';

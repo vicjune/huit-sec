@@ -3,8 +3,8 @@ import { Pressable, StyleSheet, Text, Vibration, View } from 'react-native';
 import { default as EIcon } from 'react-native-vector-icons/Entypo';
 import { colors } from '../styles/colors';
 import { useOverlay } from '../contexts/Overlay';
-import { useSound, Sound } from '../contexts/Sound';
-import { useTimer } from '../utils/useTimer';
+import { Sound, useSound } from '../utils/useSound';
+import { useSettings } from '../utils/useSettings';
 
 const INTERVAL = 1000; // 1s
 
@@ -19,7 +19,7 @@ export const Timer: FC<TimerProps> = ({
   timerRunning,
   setTimerRunning,
 }) => {
-  const { timerValue } = useTimer();
+  const { timerValue } = useSettings();
   const [timer, setTimer] = useState<number>(timerValue);
   const [intervalRef, setIntervalRef] = useState<any>(null);
   const { displayOverlay } = useOverlay();

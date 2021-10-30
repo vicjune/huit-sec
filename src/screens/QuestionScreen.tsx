@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -15,7 +15,7 @@ import { useModal } from '../contexts/Modal';
 import { useOverlay } from '../contexts/Overlay';
 import { ScoreModal } from '../components/ScoreModal';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Sound, useSound } from '../contexts/Sound';
+import { Sound, useSound } from '../utils/useSound';
 import { Timer } from '../components/Timer';
 import { Verdict } from '../components/Verdict';
 import { colors } from '../styles/colors';
@@ -52,6 +52,7 @@ export const QuestionScreen: FC = () => {
   const { openModal } = useModal();
   const styles = getStyles(currentEvent);
   const flashback = currentEvent?.id === SpecialEventId.FLASHBACK;
+  const timeout = useRef<any>(null);
 
   const resetScreen = () => {
     setTimerRunning(false);
@@ -79,6 +80,13 @@ export const QuestionScreen: FC = () => {
     resetScreen();
   });
 
+  useEffect(
+    () => () => {
+      clearTimeout(timeout.current);
+    },
+    [],
+  );
+
   const menuButtonPressed = () => {
     openActionMenu([
       {
@@ -104,7 +112,7 @@ export const QuestionScreen: FC = () => {
   const changeQuestionPressed = () => {
     newQuestion();
     setChangeQuestionDisplayed(false);
-    setTimeout(() => {
+    timeout.current = setTimeout(() => {
       setChangeQuestionDisplayed(true);
     }, CHANGE_QUESTION_DISAPPEAR);
   };

@@ -1,38 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
+import { useOnScreenFocus } from './useOnScreenFocus';
 
 export const usePreventNavigation = () => {
   const navigation = useNavigation();
   const [allowNav, setAllowNav] = useState(false);
-  const [pageIsFocus, setPageIsFocus] = useState(false);
+
+  useOnScreenFocus(() => {
+    setAllowNav(false);
+  });
 
   useEffect(() => {
-    const unsubscribeBeforeRemove = navigation.addListener(
-      'beforeRemove',
-      (e) => {
-        if (!allowNav) {
-          e.preventDefault();
-        }
-      },
-    );
-
-    const unsubscribeFocus = navigation.addListener('focus', () => {
-      setPageIsFocus(true);
-    });
-    const unsubscribeBlur = navigation.addListener('blur', () => {
-      setPageIsFocus(false);
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!allowNav) {
+        e.preventDefault();
+      }
     });
 
     return () => {
-      unsubscribeBeforeRemove();
-      unsubscribeFocus();
-      unsubscribeBlur();
+      unsubscribe();
     };
-  }, [navigation, allowNav, pageIsFocus]);
-
-  useEffect(() => {
-    if (pageIsFocus) setAllowNav(false);
-  }, [pageIsFocus]);
+  }, [navigation, allowNav]);
 
   return (args: any) => {
     setAllowNav(true);
